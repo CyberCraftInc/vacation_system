@@ -23,3 +23,9 @@ gem 'jbuilder', '~> 2.0'
 group :development, :test do
   gem 'spring'
 end
+
+group :development do
+  gem 'brice',          require: false
+  gem 'hirb',           require: false
+  gem 'awesome_print',  require: false
+end
