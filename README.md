@@ -49,7 +49,7 @@ http://condor.depaul.edu/sjost/it231/documents/one-to-many.htm
 - Generate model:
   ```
   rails g model ApprovalRequest \
-      manager_id:integer
+      manager_id:integer \
       vacation_request:references
   ```
 - Define relations:
