@@ -4,14 +4,47 @@
 https://github.com/turingschool/lesson_plans/tree/master/ruby_02-web_applications_with_ruby
 http://condor.depaul.edu/sjost/it231/documents/one-to-many.htm
 
+https://github.com/preston/railroady
+
 ##  Models
-### `DayOff`
+### `User`
+- Generate User model:
+```
+rails g model User \
+    first_name:string \
+    last_name:string \
+    position:string \
+    birth_date:date \
+    username:string:uniq
+```
+- Define relations:
+  ```ruby
+  has_many  :team_roles
+  has_many  :vacation_requests
+  has_many  :available_vacations
+  has_many  :approval_requests
+  ```
+
+
+### `Team`
 - Generate model:
   ```
-  rails g model DayOff \
-      description:string \
-      start:date \
-      duration:integer
+  rails g model Team \
+      name:string
+  ```
+- Define relations:
+  ```ruby
+  has_many  :team_roles
+  ```
+
+
+### `TeamRole`
+- Generate model:
+  ```
+  rails g model TeamRole \
+      role:string \
+      user:references \
+      team:references
   ```
 
 
@@ -26,22 +59,10 @@ http://condor.depaul.edu/sjost/it231/documents/one-to-many.htm
       status:string \
       user:references
   ```
-
-- Define one-to-many relation with `VacationRequest` in `vacation_requests.rb`:
+- Define relations:
   ```ruby
   has_many  :approval_requests
   ```
-
-
-### `AvailableVacation`
-- Generate model:
-  ```
-  rails g model AvailableVacation \
-      type:string \
-      available_days:float \
-      user:references
-  ```
-  <!-- TODO: float? -->
 
 
 ### `ApprovalRequest`
@@ -58,43 +79,28 @@ http://condor.depaul.edu/sjost/it231/documents/one-to-many.htm
   ```
 
 
-### `TeamRole`
+### `AvailableVacation`
 - Generate model:
   ```
-  rails g model TeamRole \
-      role:string \
-      holder:references{polymorphic}
+  rails g model AvailableVacation \
+      type:string \
+      available_days:float \
+      user:references
   ```
 
 
-### `Team`
+### `DayOff`
 - Generate model:
   ```
-  rails g model Team \
-      name:string
-  ```
-
-- Define relations:
-  ```ruby
-  has_many  :team_roles, as: :holder
+  rails g model DayOff \
+      description:string \
+      start:date \
+      duration:integer
   ```
 
 
-### `User`
-- Generate User model:
-```
-rails g model User \
-    first_name:string \
-    last_name:string \
-    position:string \
-    birth_date:date \
-    username:string:uniq
-```
-
-- Define relations:
-  ```ruby
-  has_many  :team_roles, as: :holder
-  has_many  :vacation_requests
-  has_many  :available_vacations
-  has_many  :approval_requests
+##  UML
+- Generate UML diagram for the models:
+  ```
+  railroady -M | dot -Tsvg > models.svg
   ```
