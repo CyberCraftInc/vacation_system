@@ -10,11 +10,12 @@
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 #
 default: &default
+  host: <%= Rails.application.secrets[:database][:host] %>
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: root
-  password: <%= Rails.application.secrets.db_pass %>
+  username: <%= Rails.application.secrets[:database][:username] %>
+  password: <%= Rails.application.secrets[:database][:password] %>
   socket: /var/run/mysqld/mysqld.sock
 
 development:
