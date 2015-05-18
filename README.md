@@ -112,8 +112,18 @@ rails g model User \
 - Run the `bundle` command to install it.
 - Create initializer:
   ```
-  rails generate devise:install
+  rails g devise:install
   ```
+- Integrate into `User` model:
+  ```
+  rails g devise User
+  ```
+- Remove `registerable` from the model:
+- Update DB:
+  ```
+  rake db:migrate
+  ```
+
 
 ##  UML
 - Generate UML diagram for the models:
