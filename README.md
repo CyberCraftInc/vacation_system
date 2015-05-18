@@ -6,6 +6,8 @@ http://condor.depaul.edu/sjost/it231/documents/one-to-many.htm
 
 https://github.com/preston/railroady
 
+http://ondras.zarovi.cz/sql/demo/?keyword=vacations
+
 ##  Models
 ### `User`
 - Generate User model:
