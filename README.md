@@ -8,6 +8,8 @@ https://github.com/preston/railroady
 
 http://ondras.zarovi.cz/sql/demo/?keyword=vacations
 
+
+
 ##  Models
 ### `User`
 - Generate User model:
@@ -100,6 +102,18 @@ rails g model User \
       duration:integer
   ```
 
+
+
+##  Integrate Devise
+- Add the following line to the `Gemfile`:
+  ```ruby
+  gem 'devise'
+  ```
+- Run the `bundle` command to install it.
+- Create initializer:
+  ```
+  rails generate devise:install
+  ```
 
 ##  UML
 - Generate UML diagram for the models:
