@@ -105,11 +105,12 @@ rails g model User \
 
 
 ##  Integrate Devise
+### Add the core `devise`
+- Run the `bundle` command to install it.
 - Add the following line to the `Gemfile`:
   ```ruby
   gem 'devise'
   ```
-- Run the `bundle` command to install it.
 - Create initializer:
   ```
   rails g devise:install
@@ -123,6 +124,26 @@ rails g model User \
   ```
   rake db:migrate
   ```
+
+
+### Add Devise extension `devise_invitable`
+- Add the following line to the `Gemfile`:
+  ```ruby
+  gem 'devise_invitable'
+  ```
+- Update Devise initializer:
+  ```
+  rails g devise_invitable:install
+  ```
+- Integrate into `User` model:
+  ```
+  rails g devise_invitable User
+  ```
+- Update DB:
+  ```
+  rake db:migrate
+  ```
+
 
 
 ##  UML
