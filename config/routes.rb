@@ -1,3 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
+  root to: 'teams#index'
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+
+  resources :teams
 end

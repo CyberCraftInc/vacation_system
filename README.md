@@ -162,6 +162,22 @@ rails g model User \
 - Add SMTP email account credentials
 
 
+### Add `Teams` controllers
+- Update `routes.rb` as follows
+  ```ruby
+  root to: 'teams#index'
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+
+  resources :teams
+  ```
+- Generate controller
+```
+rails g controller Teams
+```
+- Add view for the `teams#index`
 
 ##  UML
 - Generate UML diagram for the models:
