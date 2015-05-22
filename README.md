@@ -181,6 +181,10 @@ rails g controller Teams
 - Remove controllers that are not needed yet
 
 
+### Configure Mailer
+- Update `config/environments/development.rb`
+
+
 ##  UML
 - Generate UML diagram for the models:
   ```
