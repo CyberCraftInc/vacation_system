@@ -8,6 +8,8 @@ https://github.com/preston/railroady
 
 http://ondras.zarovi.cz/sql/demo/?keyword=vacations
 
+Devise related screencasts:
+http://railscasts.com/episodes/209-introducing-devise
 
 
 ##  Models
@@ -143,6 +145,21 @@ rails g model User \
   ```
   rake db:migrate
   ```
+
+
+### Add Devise controllers
+- For `User` [`TODO`]
+  ```
+  rails g devise:controllers users
+  ```
+
+
+### Update Application view
+- Add links for login/logout
+
+
+### Update Secrets
+- Add SMTP email account credentials
 
 
 
