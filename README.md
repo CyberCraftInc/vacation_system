@@ -147,13 +147,6 @@ rails g model User \
   ```
 
 
-### Add Devise controllers
-- For `User` [`TODO`]
-  ```
-  rails g devise:controllers users
-  ```
-
-
 ### Update Application view
 - Add links for login/logout
 
@@ -178,6 +171,15 @@ rails g model User \
 rails g controller Teams
 ```
 - Add view for the `teams#index`
+
+
+### Add Devise controllers
+- For `User`
+  ```
+  rails g devise:controllers users
+  ```
+- Remove controllers that are not needed yet
+
 
 ##  UML
 - Generate UML diagram for the models:
