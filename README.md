@@ -151,7 +151,7 @@ rails g model User \
 - Add links for login/logout
 
 
-### Update Secrets
+### Update secrets
 - Add SMTP email account credentials
 
 
@@ -167,9 +167,9 @@ rails g model User \
   resources :teams
   ```
 - Generate controller
-```
-rails g controller Teams
-```
+  ```
+  rails g controller Teams
+  ```
 - Add view for the `teams#index`
 
 
@@ -184,7 +184,14 @@ rails g controller Teams
 ### Configure Mailer
 - Update `config/environments/development.rb`
 
+##  Views
+- Add flash messages into Application view by adding the following:
+  ```html
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+  ```
 
+###
 ##  UML
 - Generate UML diagram for the models:
   ```
