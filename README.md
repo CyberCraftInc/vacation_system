@@ -186,10 +186,18 @@ rails g model User \
 
 ##  Views
 - Add flash messages into Application view by adding the following:
-  ```html
+  ```
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
   ```
+
+##  Backbone
+### Integration
+- Clear the pipeline.
+- Create application tree:
+```
+mkdir -v
+```
 
 ###
 ##  UML
