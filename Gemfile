@@ -12,6 +12,7 @@ gem 'devise_invitable'
 
 group :development, :test do
   gem 'spring'
+  gem 'jasmine'
 end
 
 group :development do
