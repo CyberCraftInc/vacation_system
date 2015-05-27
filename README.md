@@ -208,13 +208,17 @@ mkdir -v app/assets/javascripts/{collections,models,routers,views,templates}
 
 ### Integrate `Jasmine`
 - Add `jasmine` gem
-- Install `jasmine`:
+- Install Jasmine:
   ```
   rails g jasmine:install
   ```
 - Generate examples:
   ```
   rails g jasmine:examples
+  ```
+- Start Jasmine test server:
+  ```
+  rake jasmine
   ```
 
 ### Integrate `HAML`
