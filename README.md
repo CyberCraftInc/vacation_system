@@ -203,9 +203,12 @@ rails g model User \
 mkdir -v app/assets/javascripts/{collections,models,routers,views,templates}
 ```
 - Update js manifest
+- Add corresponding map-files
+
 
 ### Integrate `Jasmine`
 
+### Integrate `HAML`
 
 ##  UML
 - Generate UML diagram for the models:

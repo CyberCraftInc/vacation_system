@@ -13,7 +13,7 @@
 //= require jquery2
 //= require jquery_ujs
 //
-//= require backbone-min-1.2.0.js
-//= require underscore-min-1.8.3.js
+//= require underscore.js
+//= require backbone.js
 //
 //= require_tree .
