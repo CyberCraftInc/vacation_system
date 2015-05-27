@@ -193,13 +193,20 @@ rails g model User \
 
 ##  Backbone
 ### Integration
+- Check assets path list within `rails c`
+  ```ruby
+  Rails.application.config.assets.paths
+  ```
 - Clear the pipeline.
 - Create application tree:
 ```
-mkdir -v
+mkdir -v app/assets/javascripts/{collections,models,routers,views,templates}
 ```
+- Update js manifest
 
-###
+### Integrate `Jasmine`
+
+
 ##  UML
 - Generate UML diagram for the models:
   ```
