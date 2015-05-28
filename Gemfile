@@ -19,4 +19,5 @@ group :development do
   gem 'brice',          require: false
   gem 'hirb',           require: false
   gem 'awesome_print',  require: false
+  gem 'ruby-haml-js'
 end

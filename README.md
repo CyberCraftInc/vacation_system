@@ -206,7 +206,7 @@ mkdir -v app/assets/javascripts/{collections,models,routers,views,templates}
 - Add corresponding map-files
 
 
-### Integrate `Jasmine`
+## Integrate `Jasmine`
 - Add `jasmine` gem
 - Install Jasmine:
   ```
@@ -221,7 +221,12 @@ mkdir -v app/assets/javascripts/{collections,models,routers,views,templates}
   rake jasmine
   ```
 
-### Integrate `HAML`
+
+## Integrate HAML
+- Add `ruby-haml-js` gem
+  ```ruby
+  gem 'ruby-haml-js'
+  ```
 
 ##  UML
 - Generate UML diagram for the models:
