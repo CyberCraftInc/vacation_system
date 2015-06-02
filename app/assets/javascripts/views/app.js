@@ -4,6 +4,7 @@ app.AppView = Backbone.View.extend({
   initialize: function() {
     alert('Hi there!');
     console.log('app.AppView');
+    
     // this.allCheckbox  = this.$('#toggle-all')[0];
     // this.$input       = this.$('#new-todo');
     // this.$footer      = this.$('#footer');

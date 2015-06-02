@@ -17,11 +17,10 @@ group :development do
   gem 'awesome_print',  require: false
 end
 
-group :assets do
-  gem 'sass-rails', '~> 5.0'
-  gem 'uglifier', '>= 1.3.0'
-  gem 'coffee-rails', '~> 4.1.0'
-  gem 'jquery-rails'
-  gem 'ruby-haml-js'
-  gem 'bootstrap-sass', '~> 3.3'
-end
+# Assets
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails', '~> 4.1.0'
+gem 'jquery-rails'
+gem 'ruby-haml-js'
+gem 'bootstrap-sass', '~> 3.3'
