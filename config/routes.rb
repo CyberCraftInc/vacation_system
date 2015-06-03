@@ -5,5 +5,5 @@ Rails.application.routes.draw do
     sessions: 'users/sessions'
   }
 
-  resources :teams
+  resources :teams, defaults: { format: :json }
 end
