@@ -4,11 +4,10 @@ var Workspace = Backbone.Router.extend({
   },
 
   index: function() {
-    alert('Home page');
     console.log('Home page');
   }
 
 });
 
-app.TodoRouter = new Workspace();
+app.TeamsRouter = new Workspace();
 Backbone.history.start();

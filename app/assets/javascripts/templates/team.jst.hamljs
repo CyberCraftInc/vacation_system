@@ -1,0 +1,5 @@
+.view
+  = name
+  %input.remove{type:'button', value:'Delete'}
+
+%input.edit{type:'text', value:"#{name}"}

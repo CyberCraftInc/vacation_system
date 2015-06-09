@@ -1,0 +1,9 @@
+#teams
+  .team-create
+    %strong Add a team
+      %br
+    %label Name:
+
+      %input#team-name{type:'text', placeholder:'Type name here...', autofocus:true}
+    %button.create Create Team!
+  %ul.teams-list

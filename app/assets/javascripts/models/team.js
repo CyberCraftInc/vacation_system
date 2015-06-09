@@ -1,14 +1,9 @@
 var app = app || {};
 
+console.log('Inside model file');
+
 app.Team = Backbone.Model.extend({
   defaults: {
-    'title': '',
-    'completed': false,
+    'name': '',
   },
-  // Toggle the `completed` state of this todo item.
-  toggle: function() {
-    this.save({
-      completed: !this.get('completed')
-    });
-  }
 });
