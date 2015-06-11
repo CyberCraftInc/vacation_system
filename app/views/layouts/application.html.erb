@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CyberVacations</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
@@ -14,11 +15,14 @@
     <% else %>
       <%= link_to "Sign in", new_user_session_path %>
     <% end %>
+    | <%= link_to "Home",       '/#/dashboard' %>
+    | <%= link_to "Teams",      '/#/teams' %>
+    | <%= link_to "Calendar",   '/#/calendar' %>
   </div>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
-
-<%= yield %>
-
+  <section class="content">
+    <%= yield %>
+  </section>
 </body>
 </html>

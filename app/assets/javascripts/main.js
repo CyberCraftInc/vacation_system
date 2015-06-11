@@ -1,8 +1,9 @@
-var app = app || {};
 var ENTER_KEY = 13;
 
-$(function() {
-
-  new app.AppView();
-
-});
+window.App = {
+  Collections: {},
+  Router: {},
+  Models: {},
+  Views: {},
+};
+console.log('main');

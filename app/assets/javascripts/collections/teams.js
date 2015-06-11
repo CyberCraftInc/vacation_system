@@ -1,9 +1,4 @@
-var app = app || {};
-
-var TeamList = Backbone.Collection.extend({
+App.Collections.Teams = Backbone.Collection.extend({
   url: '/teams',
-  model: app.Team,
-
+  model: App.Models.Team,
 });
-
-app.Teams = new TeamList();

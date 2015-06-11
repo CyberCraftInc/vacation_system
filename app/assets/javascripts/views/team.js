@@ -1,19 +1,24 @@
-var app = app || {};
-
-app.TeamListItemView = Backbone.View.extend({
+App.Views.Team = Backbone.View.extend({
   tagName: 'li',
   className: 'team',
   template: JST['templates/team'],
 
-  initialize: function() {
-    console.log('init, el: ' + this.el);
-  },
+  // initialize: function() {
+  //   console.log('init, el: ' + this.el);
+  // },
 
   render: function() {
-    console.log('render, el: ' + this.el);
+    // console.log('render, el: ' + this.el);
     var html = this.template(this.model.attributes);
+    this.listenTo( this.model, 'change:name', this.updateName );
     this.$el.html(html);
     return this;
+  },
+
+  updateName: function( model, value, options) {
+    console.log('updateName');
+    console.log(model + ' - ' + value + ' - ', options);
+    this.$el.html( this.template(this.model.attributes) );
   },
 
   events: {
