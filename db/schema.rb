@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150518152925) do
+ActiveRecord::Schema.define(version: 20150615115213) do
 
   create_table "approval_requests", force: :cascade do |t|
     t.integer  "manager_id",          limit: 4
@@ -40,12 +40,18 @@ ActiveRecord::Schema.define(version: 20150518152925) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "team_roles", force: :cascade do |t|
-    t.string   "role",       limit: 255
-    t.integer  "user_id",    limit: 4
-    t.integer  "team_id",    limit: 4
+  create_table "roles", force: :cascade do |t|
+    t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "team_roles", force: :cascade do |t|
+    t.integer  "role_id",    limit: 4
+    t.integer  "user_id",    limit: 4
+    t.integer  "team_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   add_index "team_roles", ["team_id"], name: "index_team_roles_on_team_id", using: :btree

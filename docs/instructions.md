@@ -106,6 +106,33 @@ rails g model User \
 
 
 
+
+##  Migrations
+
+### `Role`
+- Generate model:
+  ```
+  rails g model Role \
+      name:string
+  ```
+- Update model:
+  ```ruby
+  has_many  :team_roles
+  ```
+
+### Update `TeamRole`
+- Consider to generate `Role` model first
+- Generate migration
+  ```
+  rails g migration ChangeRoleTypeInTeamRoles
+  ```
+- Describe migration inside `change` method:
+  ```ruby
+  rename_column :team_roles, :role, :role_id
+  change_column :team_roles, :role_id, :integer, references: :roles
+  ```
+
+
 ##  Integrate Devise
 ### Add the core `devise`
 - Run the `bundle` command to install it.
