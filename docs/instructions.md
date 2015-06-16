@@ -119,9 +119,6 @@ rails g model User \
   ```ruby
   has_many  :team_roles
   ```
-
-### Update `TeamRole`
-- Consider to generate `Role` model first
 - Generate migration
   ```
   rails g migration ChangeRoleTypeInTeamRoles
