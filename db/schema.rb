@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150616152241) do
+ActiveRecord::Schema.define(version: 20150616191356) do
 
   create_table "approval_requests", force: :cascade do |t|
     t.integer  "manager_id",          limit: 4
@@ -23,11 +23,11 @@ ActiveRecord::Schema.define(version: 20150616152241) do
   add_index "approval_requests", ["vacation_request_id"], name: "index_approval_requests_on_vacation_request_id", using: :btree
 
   create_table "available_vacations", force: :cascade do |t|
-    t.integer  "type_id",        limit: 4
+    t.integer  "kind",           limit: 4,  default: 0
     t.float    "available_days", limit: 24
     t.integer  "user_id",        limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
   add_index "available_vacations", ["user_id"], name: "index_available_vacations_on_user_id", using: :btree
@@ -40,18 +40,12 @@ ActiveRecord::Schema.define(version: 20150616152241) do
     t.datetime "updated_at",              null: false
   end
 
-  create_table "roles", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
   create_table "team_roles", force: :cascade do |t|
-    t.integer  "role_id",    limit: 4
+    t.string   "role",       limit: 255
     t.integer  "user_id",    limit: 4
     t.integer  "team_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   add_index "team_roles", ["team_id"], name: "index_team_roles_on_team_id", using: :btree
@@ -99,29 +93,17 @@ ActiveRecord::Schema.define(version: 20150616152241) do
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "vacation_requests", force: :cascade do |t|
-    t.integer  "type_id",    limit: 4
+    t.integer  "kind",       limit: 4, default: 0
     t.date     "start"
     t.date     "end"
     t.integer  "duration",   limit: 4
-    t.integer  "status_id",  limit: 4
+    t.integer  "status",     limit: 4, default: 0
     t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "vacation_requests", ["user_id"], name: "index_vacation_requests_on_user_id", using: :btree
-
-  create_table "vacation_statuses", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "vacation_types", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
 
   add_foreign_key "approval_requests", "vacation_requests"
   add_foreign_key "available_vacations", "users"

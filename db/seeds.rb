@@ -53,21 +53,23 @@ avengers    = Team.create(name: 'Avengers')
 autobots    = Team.create(name: 'Autobots')
 decepticons = Team.create(name: 'Decepticons')
 
+# DEPRECATED
 # *****************************************************************************
 # Populate DB with Vacation Types
-vacation_types = [
-  { name: 'planned' },
-  { name: 'unpaid' },
-  { name: 'sickness' }
-]
+# vacation_types = [
+#   { name: 'planned' },
+#   { name: 'unpaid' },
+#   { name: 'sickness' }
+# ]
+#
+# VacationType.create vacation_types
 
-VacationType.create vacation_types
-
+# DEPRECATED
 # *****************************************************************************
 # Populate DB with Roles
-guest   = Role.create name: 'guest'
-member  = Role.create name: 'member'
-manager = Role.create name: 'manager'
+# guest   = Role.create name: 'guest'
+# member  = Role.create name: 'member'
+# manager = Role.create name: 'manager'
 
 # *****************************************************************************
 # Assign leaders to their teams
