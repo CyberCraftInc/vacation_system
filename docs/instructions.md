@@ -129,6 +129,36 @@ rails g model User \
   change_column :team_roles, :role_id, :integer, references: :roles
   ```
 
+### `VacationType`
+- Generate model:
+  ```
+  rails g model VacationType \
+      name:string
+  ```
+- Update model:
+  ```ruby
+  has_many  :vacation_requests
+  has_many  :available_vacations
+  ```
+- Generate migrations for updating `vacation_requests` and `available_vacations`
+
+
+### `VacationStatus`
+- Generate model:
+  ```
+  rails g model VacationStatus \
+      name:string
+  ```
+- Update model:
+  ```ruby
+  has_many  :vacation_requests
+  ```
+- Update `VacationRequest` model:
+  ```
+  belongs_to  :vacation_statuses
+  ```
+- Add the following migration:
+
 
 ##  Integrate Devise
 ### Add the core `devise`
