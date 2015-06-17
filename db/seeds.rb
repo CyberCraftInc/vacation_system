@@ -74,19 +74,19 @@ decepticons = Team.create(name: 'Decepticons')
 # *****************************************************************************
 # Assign leaders to their teams
 TeamRole.create do |r|
-  r.role_id = manager.id
+  r.role    = 'manager'
   r.user_id = User.find_by(first_name: 'J.A.R.V.I.S').id
   r.team_id = avengers.id
 end
 
 TeamRole.create do |r|
-  r.role_id = manager.id
+  r.role    = 'manager'
   r.user_id = User.find_by(first_name: 'Optimus').id
   r.team_id = autobots.id
 end
 
 TeamRole.create do |r|
-  r.role_id = manager.id
+  r.role    = 'manager'
   r.user_id = User.find_by(first_name: 'Megatron').id
   r.team_id = decepticons.id
 end
@@ -94,34 +94,35 @@ end
 # Populate teams with members
 avengers_members.each do |m|
   TeamRole.create do |r|
-    r.role_id = member.id
+    r.role    = 'member'
     r.user_id = User.find_by(email: m[:email]).id
     r.team_id = avengers.id
   end
 end
 TeamRole.create do |r|
-  r.role_id = guest.id
+  r.role    = 'guest'
   r.user_id = User.find_by(first_name: 'Optimus').id
   r.team_id = avengers.id
 end
 TeamRole.create do |r|
-  r.role_id = guest.id
+  r.role    = 'guest'
   r.user_id = User.find_by(first_name: 'Megatron').id
   r.team_id = avengers.id
 end
 
-
+# Form autobots team
 autobots_members.each do |m|
   TeamRole.create do |r|
-    r.role_id = member.id
+    r.role    = 'member'
     r.user_id = User.find_by(email: m[:email]).id
     r.team_id = autobots.id
   end
 end
 
+# Form decepticons team
 decepticons_members.each do |m|
   TeamRole.create do |r|
-    r.role_id = member.id
+    r.role    = 'member'
     r.user_id = User.find_by(email: m[:email]).id
     r.team_id = decepticons.id
   end
@@ -129,7 +130,7 @@ end
 
 # Let Tony become a guest
 TeamRole.create do |r|
-  r.role_id = guest.id
+  r.role    = 'guest'
   r.user_id = User.find_by(first_name: 'Tony').id
   r.team_id = avengers.id
 end
