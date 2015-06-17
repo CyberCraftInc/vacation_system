@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150616191356) do
+ActiveRecord::Schema.define(version: 20150617084012) do
 
   create_table "approval_requests", force: :cascade do |t|
     t.integer  "manager_id",          limit: 4
@@ -41,11 +41,11 @@ ActiveRecord::Schema.define(version: 20150616191356) do
   end
 
   create_table "team_roles", force: :cascade do |t|
-    t.string   "role",       limit: 255
+    t.integer  "role",       limit: 4, default: 0
     t.integer  "user_id",    limit: 4
     t.integer  "team_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "team_roles", ["team_id"], name: "index_team_roles_on_team_id", using: :btree
