@@ -5,5 +5,15 @@ Rails.application.routes.draw do
     sessions: 'users/sessions'
   }
 
-  resources :teams, defaults: { format: :json }
+  resources :teams,
+            only: [:index, :create, :edit, :update, :destroy],
+            defaults: { format: :json }
+
+  resources :available_vacations,
+            only: [:index, :create, :edit, :update, :destroy],
+            defaults: { format: :json }
+
+  resources :vacation_requests,
+            only: [:index, :create, :edit, :update, :destroy],
+            defaults: { format: :json }
 end

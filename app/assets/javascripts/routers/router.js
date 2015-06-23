@@ -3,9 +3,10 @@
 
 App.Router = Backbone.Router.extend({
   routes: {
-    'dashboard': 'dashboard',
-    'teams':     'teams',
-    'calendar':  'calendar',
+    'dashboard':          'dashboard',
+    'teams':              'teams',
+    'vacation_requests':  'vacation_requests',
+    'calendar':           'calendar',
   },
 
   dashboard: function() {
@@ -24,6 +25,11 @@ App.Router = Backbone.Router.extend({
     $('.content').html("Just a stub for the future Calendar...");
   },
 
+  vacation_requests: function() {
+    console.log('vacation_requests');
+    $('.content').html("You should see the <strong>Request</strong> form... that's all I can tell you, dude O_O");
+    App.vacation_requests = new App.Views.VacationRequest();
+  }
   // default: function() {
   //   console.log('O_O');
   // },
