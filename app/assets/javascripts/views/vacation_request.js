@@ -4,61 +4,120 @@ App.Views.VacationRequest = Backbone.View.extend({
 
   initialize: function() {
     this.$el.html( this.template() );
+    // Prepare handy access for the controls
+    this.$available_days  = this.$('#available_days');
+    this.$vacation_type   = this.$('select[name=vacation_type]');
+
     this.available_vacations  = new App.Collections.AvailableVacations();
     this.vacation_requests    = new App.Collections.VacationRequests();
-    this.listenTo( this.vacation_requests,    'add',    this.createRequest );
     this.listenTo( this.available_vacations,  'reset',  this.render );
     this.listenTo( this.vacation_requests,    'all',  this.logg );
     // this.listenTo( this.collection, 'sync', this.render );
     this.available_vacations.fetch({reset: true});
     this.vacation_requests.fetch({reset: true});
-  },
-
-  createRequest: function( model, collection, options ) {
-    console.log('createRequest');
-    // var newItem = new App.Views.VacationRequest({'model': model});
-    // TODO: Recalculate available days
+    // Set date picker variables
+    this.startDate  = new Date();
+    this.endDate    = this.startDate;
+    this.duration = 0;
   },
 
   render: function() {
-    console.log(JSON.stringify(this.available_vacations));
-    console.log(JSON.stringify(this.vacation_requests));
-    var $label  = this.$('#available_days');
-    var $select = this.$('select[name=vacation_type]');
+    // console.log(JSON.stringify(this.available_vacations));
+    // console.log(JSON.stringify(this.vacation_requests));
+    this.updateAvailableDays();
+    this.updateOkButton();
 
-    $label.text('Please, select vacation type above...');
-    console.log($select.val());
-    // $select.val('planned').change();
-    // console.log($select.val());
+    // TODO: Disable option as described below when there is no days available
+    // http://www.mkyong.com/jquery/how-to-set-a-dropdown-box-value-in-jquery/
 
     return this;
   },
 
   events: {
-    'click  .ok':         'onCreate',
-    'click  .cancel':     'onCancel',
-    'change select[name=vacation_type]':     'onTypeChange',
+    'click  .ok':                         'onCreate',
+    'click  .cancel':                     'onCancel',
+    'change select[name=vacation_type]':  'onTypeChange',
+    'change input[name=start]':           'onStartDate',
+    'change input[name=end]':             'onEndDate',
   },
 
-  onTypeChange: function(e) {
-    var value = e.target.value;
-    console.log('onTypeChange');
-    console.log(value);
-    this.$('#available_days').text('Number of <' + value + '> days!');
-    // TODO: Disable option as described below when there is no days available
-    // http://www.mkyong.com/jquery/how-to-set-a-dropdown-box-value-in-jquery/
+  calculateDuration: function( a, b ) {
+    d1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    d2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    var diff = d2 - d1;
+    // TODO: Swap values of controls if `startDate` is bigger than `endDate`
+    if (diff < 0) {
+      diff = -diff;
+      // this.$('input[name=start]').val(this.endDate.format);
+      // this.$('input[name=end]').val(this.startDate);
+    }
+    this.duration = (diff)/(1000*3600*24) + 1;
+    console.log( this.duration );
+    this.updateAvailableDays();
+  },
+
+  onStartDate: function( e ) {
+    this.startDate = new Date(e.target.value);
+    this.calculateDuration(this.startDate, this.endDate);
+  },
+
+  onEndDate: function( e ) {
+    this.endDate = new Date(e.target.value);
+    this.calculateDuration(this.startDate, this.endDate);
+  },
+
+  onTypeChange: function( e ) {
+    this.updateAvailableDays();
+    this.updateOkButton();
   },
 
   onCreate: function() {
     console.log('onCreate');
+    this.vacation_requests.create({
+      'start':    this.startDate.getTime(),
+      'duration': this.duration,
+      'kind':     this.$vacation_type.val(),
+    });
   },
 
   onCancel: function( op ) {
-    console.log('onDestroy' + op);
+    console.log('onCancel' + op);
   },
 
   logg: function( e, p ) {
-    // console.log(e + ' with ' + p);
     console.log(e);
   },
+
+  updateOkButton: function() {
+    var isDisabled = true;
+
+    isWrongVacationType = ( this.$vacation_type.val() == '-1' );
+    isWrongDuration     = ( (this.getAvailableDays() - this.duration) < 0 );
+
+    isDisabled = isWrongVacationType || isWrongDuration;
+
+    this.$('button.ok').prop( "disabled", isDisabled );
+  },
+
+  updateAvailableDays: function() {
+    if ( this.$vacation_type.val() == '-1' ) {
+      this.$available_days.text('Please, select vacation type above...');
+    } else { // Update with current duration
+      var availableDays = this.getAvailableDays();
+      var newValue      = availableDays - this.duration;
+      this.$available_days.text(newValue);
+    }
+  },
+
+  getAvailableDays: function() {
+    var result = 0;
+    var value   = this.$vacation_type.val();
+    if ( value !== '-1' ) {
+      result  = this.available_vacations
+                    .findWhere({kind:value})
+                    .get('available_days');
+    }
+    return result;
+  },
+
 });

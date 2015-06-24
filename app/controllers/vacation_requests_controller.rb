@@ -1,4 +1,6 @@
 class VacationRequestsController < ApplicationController
+  respond_to :json
+
   before_action :authenticate_user!
 
   # GET
@@ -12,6 +14,8 @@ class VacationRequestsController < ApplicationController
   # /resource
   def create
     @vacation_request = VacationRequest.new vacation_requests_params
+    # Convert JS Date/Time in miliseconds to Ruby Date format
+    @vacation_request.start = Time.at(@vacation_request.start / 1000)
     @vacation_request.user_id = current_user.id
     if @vacation_request.save
       respond_with @vacation_request
@@ -35,6 +39,6 @@ private
   # Only allow a trusted parameter "white list" through.
   # TODO: update list of params
   def vacation_requests_params
-    params.require(:vacation_requests).permit(:kind, :start, :duration, :end)
+    params.require(:vacation_request).permit(:kind, :start, :duration)
   end
 end
