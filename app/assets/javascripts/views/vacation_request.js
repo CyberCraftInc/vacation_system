@@ -2,17 +2,24 @@ App.Views.VacationRequest = Backbone.View.extend({
   el: 'section',
   template: JST['templates/vacation_request'],
 
+  events: {
+    'click  .ok':                         'onCreate',
+    'click  .cancel':                     'onCancel',
+    'change select[name=vacation_type]':  'onTypeChange',
+    'change input[name=start]':           'onStartDate',
+    'change input[name=end]':             'onEndDate',
+  },
+
   initialize: function() {
-    this.$el.html( this.template() );
+    this.$el.html(this.template());
     // Prepare handy access for the controls
     this.$available_days  = this.$('#available_days');
     this.$vacation_type   = this.$('select[name=vacation_type]');
 
     this.available_vacations  = new App.Collections.AvailableVacations();
     this.vacation_requests    = new App.Collections.VacationRequests();
-    this.listenTo( this.available_vacations,  'reset',  this.render );
-    this.listenTo( this.vacation_requests,    'all',  this.logg );
-    // this.listenTo( this.collection, 'sync', this.render );
+    this.listenTo(this.available_vacations,  'reset',  this.render);
+
     this.available_vacations.fetch({reset: true});
     this.vacation_requests.fetch({reset: true});
     // Set date picker variables
@@ -22,10 +29,8 @@ App.Views.VacationRequest = Backbone.View.extend({
   },
 
   render: function() {
-    // console.log(JSON.stringify(this.available_vacations));
-    // console.log(JSON.stringify(this.vacation_requests));
     this.updateAvailableDays();
-    this.updateOkButton();
+    this.updateOkButtonState();
 
     // TODO: Disable option as described below when there is no days available
     // http://www.mkyong.com/jquery/how-to-set-a-dropdown-box-value-in-jquery/
@@ -33,17 +38,9 @@ App.Views.VacationRequest = Backbone.View.extend({
     return this;
   },
 
-  events: {
-    'click  .ok':                         'onCreate',
-    'click  .cancel':                     'onCancel',
-    'change select[name=vacation_type]':  'onTypeChange',
-    'change input[name=start]':           'onStartDate',
-    'change input[name=end]':             'onEndDate',
-  },
-
-  calculateDuration: function( a, b ) {
-    d1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    d2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  calculateDuration: function( begin, end ) {
+    d1 = Date.UTC(begin.getFullYear(), begin.getMonth(), begin.getDate());
+    d2 = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
     var diff = d2 - d1;
     // TODO: Swap values of controls if `startDate` is bigger than `endDate`
     if (diff < 0) {
@@ -52,7 +49,6 @@ App.Views.VacationRequest = Backbone.View.extend({
       // this.$('input[name=end]').val(this.startDate);
     }
     this.duration = (diff)/(1000*3600*24) + 1;
-    console.log( this.duration );
     this.updateAvailableDays();
   },
 
@@ -68,11 +64,10 @@ App.Views.VacationRequest = Backbone.View.extend({
 
   onTypeChange: function( e ) {
     this.updateAvailableDays();
-    this.updateOkButton();
+    this.updateOkButtonState();
   },
 
   onCreate: function() {
-    console.log('onCreate');
     this.vacation_requests.create({
       'start':    this.startDate.getTime(),
       'duration': this.duration,
@@ -81,22 +76,18 @@ App.Views.VacationRequest = Backbone.View.extend({
   },
 
   onCancel: function( op ) {
-    console.log('onCancel' + op);
+    // TODO: remove this function; or think about how to interpret this event
   },
 
-  logg: function( e, p ) {
-    console.log(e);
-  },
-
-  updateOkButton: function() {
+  updateOkButtonState: function() {
     var isDisabled = true;
 
-    isWrongVacationType = ( this.$vacation_type.val() == '-1' );
-    isWrongDuration     = ( (this.getAvailableDays() - this.duration) < 0 );
+    isWrongVacationType = (this.$vacation_type.val() == '-1');
+    isWrongDuration     = ((this.getAvailableDays() - this.duration) < 0);
 
     isDisabled = isWrongVacationType || isWrongDuration;
 
-    this.$('button.ok').prop( "disabled", isDisabled );
+    this.$('button.ok').prop("disabled", isDisabled);
   },
 
   updateAvailableDays: function() {
@@ -119,5 +110,4 @@ App.Views.VacationRequest = Backbone.View.extend({
     }
     return result;
   },
-
 });

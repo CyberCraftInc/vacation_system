@@ -3,12 +3,13 @@ App.Views.Team = Backbone.View.extend({
   className: 'team',
   template: JST['templates/team'],
 
-  // initialize: function() {
-  //   console.log('init, el: ' + this.el);
-  // },
+  events: {
+    'click .remove':  'onRemove',
+    'dblclick':       'edit',
+    'keypress .edit': 'updateOnEnter',
+  },
 
   render: function() {
-    // console.log('render, el: ' + this.el);
     var html = this.template(this.model.attributes);
     this.listenTo( this.model, 'change:name', this.updateName );
     this.$el.html(html);
@@ -16,41 +17,27 @@ App.Views.Team = Backbone.View.extend({
   },
 
   updateName: function( model, value, options) {
-    console.log('updateName');
-    console.log(model + ' - ' + value + ' - ', options);
     this.$el.html( this.template(this.model.attributes) );
   },
 
-  events: {
-    'click .remove':  'onRemove',
-    'dblclick':       'edit',
-    'keypress .edit': 'updateOnEnter',
-  },
-
   edit: function() {
-    console.log('edit');
     this.$el.addClass('editing');
   },
 
   // If you hit `enter`, we're through editing the item.
   updateOnEnter: function( e ) {
-    console.log('Inside TodoView.updateOnEnter' + e);
     if ( e.which === ENTER_KEY ) {
       this.close();
     }
   },
 
-  // Close the `"editing"` mode, saving changes to the todo.
+  // Close the `"editing"` mode, saving changes.
   close: function() {
-    // var value = this.$input.val().trim();
-    console.log(this.$('input.edit'));
     var value = this.$('input.edit').val().trim();
-    console.log('GOT: ' + value);
 
     if ( value ) {
       this.model.save({ name: value });
     } else {
-      // this.clear();
       this.model.destroy();
     }
 
@@ -58,12 +45,13 @@ App.Views.Team = Backbone.View.extend({
   },
 
   onRemove: function() {
-    console.log('remove, el: ' + this.el);
     this.model.destroy({
       wait: true,
+      // TODO: assign something here
       success: function( model, response ) {
         console.log('OK: ' + response);
       },
+      // TODO: assign something here
       error: function( model, response ) {
         console.log('FAIL: ' + response);
       }

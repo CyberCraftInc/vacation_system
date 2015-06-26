@@ -1,9 +1,9 @@
 class TeamsController < ApplicationController
   respond_to :json
-  # GET /teams
+  before_action :set_team, only: [:update, :destroy]
+
   def index
     @teams = Team.all
-    # respond_with @teams
 
     respond_to do |format|
       format.html
@@ -11,7 +11,6 @@ class TeamsController < ApplicationController
     end
   end
 
-  # POST      /teams
   def create
     @team = Team.new team_params
     if @team.save
@@ -21,14 +20,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  # GET       /teams/:id
-  def show
-  end
-
-  # PUT/PATCH /teams/:id
   def update
-    team = Team.find params[:id]
-
     if team.update(team_params)
       render nothing: true, status: :no_content
     else
@@ -36,15 +28,12 @@ class TeamsController < ApplicationController
     end
   end
 
-  # DELETE    /teams/:id
   def destroy
-    team = Team.find params[:id]
     if team
       team.destroy
       render nothing: true, status: :no_content
-      # render nothing: true, status: :ok
     else
-      render nothing: true, status: :no_found
+      render nothing: true, status: :not_found
     end
   end
 
@@ -53,5 +42,9 @@ private
   # Only allow a trusted parameter "white list" through.
   def team_params
     params.require(:team).permit(:name)
+  end
+
+  def set_team
+    @team = Team.find params[:id]
   end
 end
