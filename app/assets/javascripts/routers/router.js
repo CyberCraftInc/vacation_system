@@ -3,10 +3,11 @@
 
 App.Router = Backbone.Router.extend({
   routes: {
-    'dashboard':          'dashboard',
-    'teams':              'teams',
-    'vacation_requests':  'vacation_requests',
-    'calendar':           'calendar',
+    'dashboard':              'dashboard',
+    'teams':                  'teams',
+    'new_vacation_request':   'new_vacation_request',
+    'vacation_requests_list': 'vacation_requests_list',
+    'calendar':               'calendar',
   },
 
   dashboard: function() {
@@ -18,12 +19,17 @@ App.Router = Backbone.Router.extend({
     App.teams = new App.Views.Teams();
   },
 
-  calendar: function() {
-    $('.content').html("Just a stub for the future Calendar...");
+  new_vacation_request: function() {
+    $('.content').html("You should see the <strong>Request</strong> form... that's all I can tell you, dude O_O");
+    App.new_vacation_request = new App.Views.VacationRequestForm();
   },
 
-  vacation_requests: function() {
-    $('.content').html("You should see the <strong>Request</strong> form... that's all I can tell you, dude O_O");
-    App.vacation_requests = new App.Views.VacationRequest();
+  vacation_requests_list: function() {
+    $('.content').html("You should see the <strong>List of Requests</strong>... that's all I can tell you, dude O_O");
+    App.vacation_requests = new App.Views.VacationRequestsList();
+  },
+
+  calendar: function() {
+    $('.content').html("Just a stub for the future Calendar...");
   }
 });
