@@ -9,7 +9,6 @@
       %label{for:'vacation-status'} Status:
       %br
       %select{name:'vacation-status', multiple:true}
-        %option{value:'reserved'}   reserved
         %option{value:'requested'}  requested
         %option{value:'accepted'}   accepted
         %option{value:'declined'}   declined

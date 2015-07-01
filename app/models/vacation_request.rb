@@ -3,7 +3,6 @@ class VacationRequest < ActiveRecord::Base
   has_many    :approval_requests
 
   enum status: [
-    :reserved,
     :requested,
     :accepted,
     :declined,
