@@ -12,10 +12,11 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.$el.html(this.template());
     this.collection = new App.Collections.VacationRequests();
     // Prepare handy access for the controls
-    this.$table   = this.$('table.vacation-requests');
-    this.$select  = this.$('select[name=vacation-status]');
-    this.$from    = this.$('input[name=from]');
-    this.$to      = this.$('input[name=to]');
+    this.$table     = this.$('table.vacation-requests');
+    this.$tableRows = this.$('table.vacation-requests tbody');
+    this.$select    = this.$('select[name=vacation-status]');
+    this.$from      = this.$('input[name=from]');
+    this.$to        = this.$('input[name=to]');
 
     this.listenTo(this.collection,  'sync',  this.render);
     this.listenTo(this.collection,  'all',  this.logger);
@@ -27,14 +28,22 @@ App.Views.VacationRequestsList = Backbone.View.extend({
   },
 
   render: function() {
-    this.$table.empty();
+    var numberOfVisibleVacations = 0;
+    this.$tableRows.empty();
+    // Hide empty table
+    this.$table.hide();
 
     this.collection.each(function(model) {
       if (this.isVacationVisible(model)) {
+        numberOfVisibleVacations++;
         var item = new App.Views.VacationRequest({'model': model});
-        this.$table.append(item.render().$el);
+        this.$tableRows.append(item.render().$el);
       }
     }, this);
+
+    if (numberOfVisibleVacations > 0) {
+      this.$table.show();
+    }
 
     return this;
   },

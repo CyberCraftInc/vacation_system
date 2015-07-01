@@ -16,7 +16,10 @@
         %option{value:'inprogress'} inprogress
         %option{value:'used'}       used
   %table.vacation-requests{border:1}
-    %tr
-      %th Date range
-      %th Status
-      %th &nbsp;
+    %thead
+      %tr
+        %th Date range
+        %th Status
+        %th &nbsp;
+    %tbody
+    
