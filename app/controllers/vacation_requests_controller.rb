@@ -18,6 +18,11 @@ class VacationRequestsController < ApplicationController
     end
   end
 
+  def show
+    @vacation_request = VacationRequest.find params[:id]
+    render json: @vacation_request
+  end
+
 private
 
   def vacation_requests_params

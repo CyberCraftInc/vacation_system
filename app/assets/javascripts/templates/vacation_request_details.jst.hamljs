@@ -1,0 +1,12 @@
+#vacation-request-details
+  %label You requested:&nbsp;
+  = duration
+  &nbsp;
+  = kind
+  &nbsp;days
+  %br
+  %label Status:&nbsp;
+  = status
+  %br
+  %button.cancel Cancel request
+  %button.finish Finish vacation

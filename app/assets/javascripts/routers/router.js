@@ -7,6 +7,7 @@ App.Router = Backbone.Router.extend({
     'teams':                  'teams',
     'new_vacation_request':   'new_vacation_request',
     'vacation_requests_list': 'vacation_requests_list',
+    'vacation_request/:id':   'vacation_request_details',
     'calendar':               'calendar',
   },
 
@@ -27,6 +28,11 @@ App.Router = Backbone.Router.extend({
   vacation_requests_list: function() {
     $('.content').html("You should see the <strong>List of Requests</strong>... that's all I can tell you, dude O_O");
     App.vacation_requests = new App.Views.VacationRequestsList();
+  },
+
+  vacation_request_details: function( id ) {
+    $('.content').html("You should see the <strong>Vacation Request Details</strong>... that's all I can tell you, dude O_O");
+    App.vacation_request_details = new App.Views.VacationRequestDetails({modelID:id});
   },
 
   calendar: function() {
