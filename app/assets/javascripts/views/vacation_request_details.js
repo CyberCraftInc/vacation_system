@@ -4,15 +4,14 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
 
   events: {
     'click button.cancel':  'onCancel',
-    // 'click button.finish':  'onFinish',
+    'click button.finish':  'onFinish',
   },
 
   initialize: function( options ) {
     this.cancelStatuses = ['requested', 'accepted'];
-    // this.statuses = ['declined', 'cancelled', 'inprogress', 'used'];
     this.model = new App.Models.VacationRequest({id:options.modelID});
 
-    this.listenTo(this.model,  'sync',  this.render);
+    this.listenTo(this.model,  'sync',          this.render);
     this.listenTo(this.model,  'all',   this.logger); // TODO: remove later
 
     this.model.fetch();
@@ -22,6 +21,14 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     this.$el.html(this.template(this.model.attributes));
     this.updateCancelButtonState();
     return this;
+  },
+
+  onCancel: function( e ) {
+    this.model.save({'status': 'cancelled'},{patch: true});
+  },
+
+  onFinish: function( e ) {
+    console.log('onFinish');
   },
 
   updateCancelButtonState: function() {

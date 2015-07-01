@@ -12,6 +12,6 @@ Rails.application.routes.draw do
             defaults: { format: :json }
 
   resources :vacation_requests,
-            only: [:index, :show, :create],
+            only: [:index, :show, :create, :update],
             defaults: { format: :json }
 end
