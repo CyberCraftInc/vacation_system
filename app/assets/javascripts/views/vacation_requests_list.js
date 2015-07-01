@@ -19,7 +19,6 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.$to        = this.$('input[name=to]');
 
     this.listenTo(this.collection,  'sync',  this.render);
-    this.listenTo(this.collection,  'all',  this.logger);
 
     this.collection.fetch();
     this.statusFilter = null;
@@ -86,9 +85,5 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     isVisible = hasProperStatus && hasProperDateRange;
 
     return isVisible;
-  },
-
-  logger: function( e, p ) {
-    console.log(e);
   },
 });
