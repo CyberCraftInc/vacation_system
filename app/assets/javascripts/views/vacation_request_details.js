@@ -3,9 +3,11 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
   template: JST['templates/vacation_request_details'],
 
   events: {
+    'click button.manual-edit':     'onEdit',
     'click button.cancel':          'onCancel',
     'click button.finish':          'onFinish',
     'click button.accept':          'onAccept',
+    'click button.update':          'onUpdate',
     'change input[name=end-date]':  'onEndDate',
   },
 
@@ -18,7 +20,7 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     this.listenTo(this.model, 'all',  this.logger); // TODO: remove later
 
     this.model.fetch();
-    this.endDate = null;
+    this.endDate = '';
   },
 
   render: function() {
@@ -26,6 +28,12 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     this.updateCancelButtonState();
     this.updateFinishButtonState();
     return this;
+  },
+
+  onEdit: function( e ) {
+    this.$('select[name=type]').val(this.model.get('kind'));
+    this.$('select[name=status]').val(this.model.get('status'));
+    this.$('.dialog-edit').show();
   },
 
   onCancel: function( e ) {
@@ -44,7 +52,24 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
 
     this.model.save(attributes,{patch: true});
     this.$('.dialog-finish').hide();
-    // this.updateFinishButtonState();
+  },
+
+  onUpdate: function( e ) {
+    var fromDate  = this.$('input[name=from-date]').val();
+    var toDate    = this.$('input[name=to-date]').val();
+    var attributes = {
+      kind:     this.$('select[name=type]').val(),
+      start:    this.stringDateToMS(fromDate),
+      end:      this.stringDateToMS(toDate),
+      duration: this.$('input[name=duration]').val(),
+      status:   this.$('select[name=status]').val(),
+    };
+
+    this.model.save(attributes,{patch: true});
+    this.model.set('start',fromDate);
+    this.model.set('end',toDate);
+    this.$('.dialog-edit').hide();
+    console.log(attributes);
   },
 
   onEndDate: function( e ) {
@@ -77,6 +102,18 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     var result = _.include(allowedStatuses, vacationStatus);
     return result;
   },
+
+  stringDateToMS: function( dateString ) {
+    var result = null;
+    if (dateString.length === 10) {
+      result = (new Date(dateString)).getTime();
+    }
+    return result;
+  },
+
+  // dateToString: function( date ) {
+  //   return date.toJSON().slice(0, 10);
+  // },
 
   logger: function( e ) {
     console.log(e);
