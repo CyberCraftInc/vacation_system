@@ -29,8 +29,8 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    if team
-      team.destroy
+    if @team
+      @team.destroy
       render nothing: true, status: :no_content
     else
       render nothing: true, status: :not_found
