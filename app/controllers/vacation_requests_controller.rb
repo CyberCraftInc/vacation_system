@@ -8,8 +8,6 @@ class VacationRequestsController < ApplicationController
 
   def create
     @vacation_request = VacationRequest.new vacation_request_params
-    # Convert JS Date/Time in miliseconds to Ruby Date format
-    @vacation_request.start = Time.zone.at(@vacation_request.start / 1000)
     @vacation_request.user_id = current_user.id
 
     if @vacation_request.save
@@ -33,12 +31,26 @@ class VacationRequestsController < ApplicationController
 
 private
 
-  def vacation_request_params
-    params.require(:vacation_request)
-      .permit(:kind, :start, :end, :duration, :status)
-  end
-
   def set_vacation_request
     @vacation_request = VacationRequest.find params[:id]
+  end
+
+  # Convert JS Date/Time in miliseconds to Ruby Date format
+  def date_from_ms(ms)
+    Time.zone.at(ms / 1000) unless ms.nil?
+  end
+
+  def prepare_date
+    date_in_ms = params[:vacation_request][:start]
+    params[:vacation_request][:start] = date_from_ms(date_in_ms) if date_in_ms
+
+    date_in_ms = params[:vacation_request][:end]
+    params[:vacation_request][:end]   = date_from_ms(date_in_ms) if date_in_ms
+  end
+
+  def vacation_request_params
+    prepare_date
+    params.require(:vacation_request)
+      .permit(:kind, :start, :end, :duration, :status)
   end
 end

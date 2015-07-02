@@ -10,3 +10,8 @@
   %br
   %button.cancel Cancel request
   %button.finish Finish vacation
+
+  .dialog-finish{style:'display: none;'}
+    %label Please select actual end date of the vacation:&nbsp;
+    %input{type:'date',name:'end-date'}
+    %button.accept{disabled:'disabled'} Accept
