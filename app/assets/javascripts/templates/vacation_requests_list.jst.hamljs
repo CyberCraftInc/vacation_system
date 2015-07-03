@@ -1,25 +1,33 @@
-#vacation-requests-list
-  %label{for:'from'} From:&nbsp;
-  %input{type:'date', name:'from',  placeholder:'yyyy-mm-dd'}
-  %br
-  %label{for:'to'} To:&nbsp;
-  %input{type:'date', name:'to',    placeholder:'yyyy-mm-dd'}
-  %ul
-    %li
-      %label{for:'vacation-status'} Status:
-      %br
-      %select{name:'vacation-status', multiple:true}
-        %option{value:'requested'}  requested
-        %option{value:'accepted'}   accepted
-        %option{value:'declined'}   declined
-        %option{value:'cancelled'}  cancelled
-        %option{value:'inprogress'} inprogress
-        %option{value:'used'}       used
-  %table.vacation-requests{border:1}
-    %thead
-      %tr
-        %th Date range
-        %th Status
-        %th &nbsp;
-    %tbody
-    
+.panel.panel-primary
+  .panel-heading List of Vacations
+  .panel-body
+    %form
+      .row
+        .col-md-4
+          .input-group
+            %label.input-group-addon{for:'from'} From:
+            %input.form-control{type:'date', name:'from',  placeholder:'yyyy-mm-dd'}
+
+        .col-md-4
+          .input-group
+            %label.input-group-addon{for:'to'} To:
+            %input.form-control{type:'date', name:'to',    placeholder:'yyyy-mm-dd'}
+
+        .col-md-4
+          .input-group
+            %label.input-group-addon{for:'vacation-status'} Status:
+            %select.form-control{name:'vacation-status', multiple:true}
+              %option{value:'requested'}  requested
+              %option{value:'accepted'}   accepted
+              %option{value:'declined'}   declined
+              %option{value:'cancelled'}  cancelled
+              %option{value:'inprogress'} inprogress
+              %option{value:'used'}       used
+
+    %table.table.table-condesed.vacation-requests
+      %thead
+        %tr
+          %th Date range
+          %th Status
+          %th &nbsp;
+      %tbody

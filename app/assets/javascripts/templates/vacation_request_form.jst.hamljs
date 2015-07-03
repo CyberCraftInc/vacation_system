@@ -1,19 +1,22 @@
-#vacation-request_form
-  %ul
-    %li
-      %label{for:'vacation_type'} Select type:&nbsp;
-      %select{name:'vacation_type'}
-        %option{value:-1}
-        %option{value:'planned'}  planned
-        %option{value:'unpaid'}   unpaid
-        %option{value:'sickness'} sickness
-    %li
-      %label Available days:&nbsp;
-      %label#available_days
-    %li
-      %label Select days:&nbsp;
-      %input{type:'date', name:'start', placeholder:'yyyy-mm-dd'}
-      &nbsp;
-      %input{type:'date', name:'end', placeholder:'yyyy-mm-dd'}
-  %button.ok      Ok
-  %button.cancel  Cancel
+.panel.panel-primary
+  .panel-heading Request New Vacation
+  .panel-body
+    %form
+      .input-group
+        %label{for:'vacation_type'} Select type:&nbsp;
+        %select{name:'vacation_type'}
+          %option{value:-1}
+          %option{value:'planned'}  planned
+          %option{value:'unpaid'}   unpaid
+          %option{value:'sickness'} sickness
+      .input-group
+        %label Available days:&nbsp;
+        %label#available_days
+
+      .input-group
+        %label Select days:&nbsp;
+        %input.form-control{type:'date', name:'start', placeholder:'yyyy-mm-dd'}
+        &nbsp;
+        %input.form-control{type:'date', name:'end', placeholder:'yyyy-mm-dd'}
+      %button.btn.btn-sm.btn-default.ok      Ok
+      %button.btn.btn-sm.btn-default.cancel  Cancel

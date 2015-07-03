@@ -59,7 +59,6 @@ App.Views.VacationRequestsList = Backbone.View.extend({
 
   onDateTo: function( e ) {
     this.dateTo = this.$to.val();
-    console.log(this.dateTo);
     this.render();
   },
 
