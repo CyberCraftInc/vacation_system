@@ -17,7 +17,6 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     this.model = new App.Models.VacationRequest({id:options.modelID});
 
     this.listenTo(this.model, 'sync', this.render);
-    this.listenTo(this.model, 'all',  this.logger); // TODO: remove later
 
     this.model.fetch();
     this.endDate = '';
@@ -110,10 +109,6 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     }
     return result;
   },
-
-  // dateToString: function( date ) {
-  //   return date.toJSON().slice(0, 10);
-  // },
 
   logger: function( e ) {
     console.log(e);
