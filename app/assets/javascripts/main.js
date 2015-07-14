@@ -6,4 +6,3 @@ window.App = {
   Models: {},
   Views: {},
 };
-console.log('main');

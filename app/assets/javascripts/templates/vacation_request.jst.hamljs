@@ -1,19 +1,8 @@
-#vacation-requests
-  %ul
-    %li
-      %label{for:'vacation_type'} Select type:&nbsp;
-      %select{name:'vacation_type'}
-        %option{value:-1}
-        %option{value:'planned'}  planned
-        %option{value:'unpaid'}   unpaid
-        %option{value:'sickness'} sickness
-    %li
-      %label Available days:&nbsp;
-      %label#available_days
-    %li
-      %label Select days:&nbsp;
-      %input{type:'date', name:'start', placeholder:'yyyy-mm-dd'}
-      &nbsp;
-      %input{type:'date', name:'end', placeholder:'yyyy-mm-dd'}
-  %button.ok      Ok
-  %button.cancel  Cancel
+%td
+  = start
+  &nbsp;&mdash;&nbsp;
+  = finish
+%td
+  = status
+%td
+  %a.details{href:ref} Details
