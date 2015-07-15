@@ -1,0 +1,49 @@
+#vacation-request-details
+  %label You requested:&nbsp;
+  = duration
+  &nbsp;
+  = kind
+  &nbsp;days
+  %br
+  %label Status:&nbsp;
+  = status
+  %br
+  %button.manual-edit Edit
+  %button.cancel      Cancel request
+  %button.finish      Finish vacation
+  %br
+
+  .dialog-finish{style:'display: none;'}
+    %label Please select actual end date of the vacation:&nbsp;
+    %input{type:'date',name:'end-date'}
+    %button.accept{disabled:'disabled'} Accept
+
+  .dialog-edit{style:'display: none;'}
+    %legend Vacation Details
+
+    %label{for:'type'} Type:&nbsp;
+    %select{name:'type'}
+      %option{value:'planned'}  planned
+      %option{value:'unpaid'}   unpaid
+      %option{value:'sickness'} sickness
+    %br
+    %label{for:'from-date'} From
+    %input{type:'date',name:'from-date',value:start}
+    &nbsp;
+    %label{for:'to-date'} To
+    %input{type:'date',name:'to-date',  value:end}
+    %br
+    %label{for:'duration'} Duration:&nbsp;
+    %input{type:'number',name:'duration',value:duration}
+    %br
+    %label{for:'status'} Status:&nbsp;
+    %select{name:'status'}
+      %option{value:'requested'}  requested
+      %option{value:'accepted'}   accepted
+      %option{value:'declined'}   declined
+      %option{value:'cancelled'}  cancelled
+      %option{value:'inprogress'} inprogress
+      %option{value:'used'}       used
+
+    %br
+    %button.update Update
