@@ -14,6 +14,9 @@
 //= require jquery2
 //= require jquery_ujs
 //
+//= require moment
+//= require moment-range
+//
 //= require bootstrap
 //= require bootstrap-table
 //
