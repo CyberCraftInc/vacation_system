@@ -1,0 +1,17 @@
+.input-group
+  %label.input-group-addon{for:'teams'} Team:
+  %select.form-control{name:'teams'}
+    :each item in teams
+      %option{value:item.attributes.id} #{item.attributes.name}
+
+.panel.panel-primary.personal-requests
+  .panel-heading Requests
+  .panel-body
+
+.panel.panel-primary.pending-requests{style:'display:none'}
+  .panel-heading Pending Approval Requests
+  .panel-body
+
+.panel.panel-primary
+  .panel-heading Vacations Time Table
+  .panel-body#time-table-content

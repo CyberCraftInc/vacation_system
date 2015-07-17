@@ -3,14 +3,12 @@ App.Views.Teams = Backbone.View.extend({
   template: JST['templates/teams'],
 
   events: {
-    'click .create':  'onCreate',
+    'click #create':  'onCreate',
   },
 
   initialize: function() {
     this.collection = new App.Collections.Teams();
     this.$el.html( this.template() );
-    // The following is for FF, as it ignores `autofocus`
-    this.$('#team-name').focus();
     this.collection.fetch({reset: true});
     this.listenTo( this.collection, 'add',    this.addTeam );
     this.listenTo( this.collection, 'reset',  this.render );

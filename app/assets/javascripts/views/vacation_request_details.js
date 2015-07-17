@@ -68,7 +68,6 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
     this.model.set('start',fromDate);
     this.model.set('end',toDate);
     this.$('.dialog-edit').hide();
-    console.log(attributes);
   },
 
   onEndDate: function( e ) {

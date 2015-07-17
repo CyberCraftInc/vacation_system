@@ -1,6 +1,6 @@
 App.Views.Team = Backbone.View.extend({
   tagName: 'li',
-  className: 'team',
+  className: 'list-group-item',
   template: JST['templates/team'],
 
   events: {

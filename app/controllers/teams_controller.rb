@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   respond_to :json
-  before_action :set_team, only: [:update, :destroy]
+  before_action :set_team, only: [:update, :destroy, :members, :vacations]
 
   def index
     @teams = Team.all
@@ -21,7 +21,7 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if team.update(team_params)
+    if @team.update(team_params)
       render nothing: true, status: :no_content
     else
       render nothing: true, status: :not_found
@@ -37,9 +37,28 @@ class TeamsController < ApplicationController
     end
   end
 
+  def members
+    if @team
+      members = @team.users
+      render json: members
+    else
+      head  status: :not_found
+    end
+  end
+
+  def vacations
+    if @team
+      vacations = @team.users.collect do |user|
+        user.vacation_requests.requested_accepted_inprogress
+      end
+      render json: vacations
+    else
+      head  status: :not_found
+    end
+  end
+
 private
 
-  # Only allow a trusted parameter "white list" through.
   def team_params
     params.require(:team).permit(:name)
   end

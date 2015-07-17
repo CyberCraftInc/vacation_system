@@ -11,8 +11,14 @@ App.Router = Backbone.Router.extend({
     'calendar':               'calendar',
   },
 
+  initialize: function( options ) {
+    App.currentUser = new App.Models.CurrentUser();
+    App.currentUser.fetch();
+  },
+
   dashboard: function() {
     $('.content').html("Dashboard =)");
+    App.dashboard = new App.Views.Dashboard();
   },
 
   teams: function() {

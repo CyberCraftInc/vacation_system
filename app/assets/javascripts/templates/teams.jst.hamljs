@@ -1,9 +1,10 @@
-#teams
-  .team-create
-    %strong Add a team
-      %br
-    %label Name:
-
-      %input#team-name{type:'text', placeholder:'Type name here...', autofocus:true}
-    %button.create Create Team!
-  %ul.teams-list
+.panel.panel-primary
+  .panel-heading Teams
+  .panel-body
+    #teams
+      %form.team-create{role:'form'}
+        .input-group
+          %input.form-control#team-name{type:'text', placeholder:'Team name...', autofocus:true}
+          %span.input-group-btn
+            %button.btn.btn-default#create Add
+      %ul.teams-list.list-group
