@@ -87,10 +87,10 @@ App.Views.Dashboard = Backbone.View.extend({
 
   renderTimeTable: function() {
     var options = {team_id: this.teamID};
-    if (_.isUndefined(this.timeTable)) {
-      this.timeTable = new App.Views.TimeTable(options);
+    if (_.isUndefined(this.timeTables)) {
+      this.timeTables = new App.Views.TimeTables(options);
     } else {
-      this.timeTable.update(options.team_id);
+      this.timeTables.update(options.team_id);
     }
   },
 

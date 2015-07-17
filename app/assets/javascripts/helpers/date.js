@@ -58,3 +58,9 @@ App.Helpers.getMonthNameFromDate = function(date) {
 
   return monthNames[date.getMonth()];
 };
+
+// Provide the beginning of the week
+App.Helpers.getWeekRange = function(date) {
+  return moment.range(date.clone().startOf('isoweek'),
+                      date.clone().endOf('isoweek'));
+};
