@@ -49,7 +49,7 @@ class TeamsController < ApplicationController
   def vacations
     if @team
       vacations = @team.users.collect do |user|
-        filter_user_requests_by_status user
+        user.vacation_requests.requested_accepted_inprogress
       end
       render json: vacations
     else
@@ -59,14 +59,6 @@ class TeamsController < ApplicationController
 
 private
 
-  def filter_user_requests_by_status(user)
-    user.vacation_requests.where ['status = ? or status= ? or status = ?',
-                                  VacationRequest.statuses[:requested],
-                                  VacationRequest.statuses[:accepted],
-                                  VacationRequest.statuses[:inprogress]]
-  end
-
-  # Only allow a trusted parameter "white list" through.
   def team_params
     params.require(:team).permit(:name)
   end

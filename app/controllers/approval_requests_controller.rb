@@ -1,8 +1,8 @@
 class ApprovalRequestsController < ApplicationController
   def index
-    requests = current_user.approval_requests.collect do |record|
-      VacationRequest.find record.vacation_request_id
-    end
+    approval_requests_ids = current_user.approval_requests
+                            .pluck(:vacation_request_id).compact
+    requests = VacationRequest.find approval_requests_ids
     render json: requests
   end
 end
