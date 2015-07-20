@@ -39,6 +39,13 @@
     }
   }
 
+  .weeks {
+    td {
+      border-color: $gray-light;
+      text-align: center;
+    }
+  }
+
   .days {
     td {
       border-color: $gray-light;
@@ -71,5 +78,34 @@
     border-color: $gray-lighter;
     border-width: 1px;
     text-align: right;
+  }
+}
+
+.time-table-by-week {
+  border-collapse: collapse;
+
+  .head {
+    td {
+      border: 1px solid;
+      text-align: center;
+    }
+  }
+
+  td {
+    border-bottom: solid;
+    border-top: solid;
+    border-width: 1px;
+    height: 21px;
+    width: 20px;
+  }
+
+  .left-cell {
+    border-left: solid;
+    border-width: 1px;
+  }
+
+  .right-cell {
+    border-right-style: solid;
+    border-width: 1px;
   }
 }
