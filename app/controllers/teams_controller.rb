@@ -48,9 +48,11 @@ class TeamsController < ApplicationController
 
   def vacations
     if @team
-      vacations = @team.users.collect do |user|
-        user.vacation_requests.requested_accepted_inprogress
-      end
+      vacations = VacationRequest
+                  .joins(user: { team_roles: :team })
+                  .where(team_roles: { team_id: @team })
+                  .select(:id, :user_id, :start, :duration, :kind, :status)
+                  .requested_accepted_inprogress
       render json: vacations
     else
       head  status: :not_found

@@ -132,12 +132,8 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
   },
 
   markVacations: function() {
-    this.vacations.each(function(vacations) {
-      if (!vacations.isEmpty()) {
-        vacations.values().forEach(function(vacation) {
-          this.markVacation(vacation);
-        }, this);
-      }
+    this.vacations.each(function(vacation) {
+      this.markVacation(vacation.attributes);
     }, this);
   },
 
@@ -147,17 +143,15 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         weekRange = null,
         weekendCounter = 0,
         vacationRange = null,
-        beginDate = moment(vacation.start),
-        duration  = vacation.duration,
-        userID    = vacation.user_id,
-        type      = vacation.kind;
+        duration = vacation.duration,
+        beginDate = moment(vacation.start);
 
     for (date = beginDate.clone(); date < moment(beginDate).add(duration, 'days'); date.add(1, 'day')) {
       if (App.Helpers.isWeekend(date.toDate())) {
         duration++;
         continue;
       }
-      selector = '#'+userID+'-'+date.format('YY-MM-DD');
+      selector = '#'+vacation.user_id+'-'+date.format('YY-MM-DD');
       $(selector).addClass(vacation.kind);
       $(selector).addClass(vacation.status);
     }

@@ -29,11 +29,6 @@ class VacationRequestsController < ApplicationController
     end
   end
 
-  def requested
-    requests = VacationRequest.where(user_id: params[:user_id]).requested
-    render json: requests
-  end
-
 private
 
   def set_vacation_request
