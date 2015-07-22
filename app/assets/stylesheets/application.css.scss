@@ -1,21 +1,16 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
- * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
- *
- *= require_tree .
- *= require bootstrap-table
- *= require_self
- */
+// = require_tree .
+// = require bootstrap-table
+// = require_self
+
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
+
+
+// Colors
+$planned-vacation: #0a0;
+$unpaid-vacation: #4b0082;
+$sickness-vacation: #f00;
+$silver: #c0c0c0;
 
 .footer {
   margin: 0 auto;
@@ -33,6 +28,13 @@
   }
 
   .months {
+    td {
+      border-color: $gray-light;
+      text-align: center;
+    }
+  }
+
+  .weeks {
     td {
       border-color: $gray-light;
       text-align: center;
@@ -72,4 +74,64 @@
     border-width: 1px;
     text-align: right;
   }
+}
+
+.time-table-by-week {
+  border-collapse: collapse;
+
+  .head {
+    td {
+      border: 1px solid;
+      text-align: center;
+    }
+  }
+
+  td {
+    border-bottom: solid;
+    border-left-color: $silver;
+    border-left-style: solid;
+    border-top: solid;
+    border-width: 1px;
+    height: 21px;
+    width: 20px;
+  }
+
+  .left-cell {
+    border-left-style: solid;
+    border-width: 1px;
+  }
+
+  .right-cell {
+    border-right-style: solid;
+    border-width: 1px;
+  }
+}
+
+.requested {
+  background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      $gray-lighter 25%,
+      transparent 50%
+    );
+}
+
+.accepted,
+.inprogress {
+  background-image: repeating-linear-gradient(
+      transparent,
+      $gray-lighter 210%
+    );
+}
+
+.planned {
+  background-color: $planned-vacation;
+}
+
+.unpaid {
+  background-color: $unpaid-vacation;
+}
+
+.sickness {
+  background-color: $sickness-vacation;
 }

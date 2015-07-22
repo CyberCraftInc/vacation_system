@@ -1,10 +1,6 @@
-App.Views.TimeTable = Backbone.View.extend({
+App.Views.TimeTables = Backbone.View.extend({
   el: '#time-table-content',
-  template: JST['templates/time_table'],
-
-  events: {
-    // 'change select[name=teams]':          'onTeams',
-  },
+  template: JST['templates/time_tables'],
 
   initialize: function( options ) {
     this.members = new App.Collections.TeamMembers(options.team_id);
@@ -19,7 +15,7 @@ App.Views.TimeTable = Backbone.View.extend({
   render: function() {
     this.renderTemplate();
     this.renderTeamMembersList();
-    this.renderTimeTableByDay();
+    this.renderTimeTableByWeek();
     return this;
   },
 
@@ -29,7 +25,6 @@ App.Views.TimeTable = Backbone.View.extend({
     this.updateTeamMembersList(teamID);
     this.attributes.team_id = teamID;
     this.renderTemplate();
-    console.log('TimeTable:update ' + this.members.length);
     return this;
   },
 
@@ -51,17 +46,16 @@ App.Views.TimeTable = Backbone.View.extend({
     return result;
   },
 
+  // *************************************************************************
   renderTeamMembersList: function() {
     var $list = $('.members tbody');
     $list.append('<tr><td>&nbsp;</td></tr>');
     $list.append('<tr><td>&nbsp;</td></tr>');
     this.members.each(function(model) {
-      // TODO: crete dedicated model with a view
       $list.append('<tr><td class="member">'+ this.composeFullName(model) +'</td></tr>');
     }, this);
   },
 
-  // *************************************************************************
   updateTimeTableDateRange: function() {
     // code here
     var now = new Date();
@@ -71,10 +65,6 @@ App.Views.TimeTable = Backbone.View.extend({
     this.timeTableDateRange.end   = new Date(now.getFullYear(),
                                              now.getMonth() + 6,
                                              now.getDate());
-  },
-
-  isVacation: function(date, userID) {
-    // code here
   },
 
   calculateTableWidth: function(cellWidth) {
@@ -241,6 +231,12 @@ App.Views.TimeTable = Backbone.View.extend({
         that.drawTable(data);
       });
   },
+
+  renderTimeTableByWeek: function() {
+    var that = this;
+    this.$table = $('#time-table tbody');
+    this.timeTableByWeek = new App.Views.TimeTableByWeek({team_id: this.attributes.team_id});
+  },
   // *************************************************************************
 
   updateTeamMembersList: function( teamID ) {
@@ -251,7 +247,4 @@ App.Views.TimeTable = Backbone.View.extend({
     this.members.fetch();
   },
 
-  logger: function( e ) {
-    console.log(e);
-  }
 });

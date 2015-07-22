@@ -1,14 +1,8 @@
-.input-group
+//.input-group
   %label.input-group-addon{for:'view-type'} View by:
   %select.form-control{name:'view-type'}
     %option{value:'day'} day
     %option{value:'week'} week
     %option{value:'month'} month
 
-.col-md-2
-  %table.members
-    %tbody
-
-.scroll-x
-  %table#time-table
-    %tbody
+.time-table
