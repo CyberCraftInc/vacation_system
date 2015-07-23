@@ -11,7 +11,7 @@ App.Collections.ApprovalRequests = Backbone.Collection.extend({
   updateURL: function( options ) {
     if (!_.isUndefined(options.user_id)) {
       this.url = function() {
-        return '/requested_vacations/' + options.user_id.toString();
+        return '/users/' + options.user_id.toString() + '/requested_vacations/';
       };
     }
   }

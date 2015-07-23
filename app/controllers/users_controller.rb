@@ -8,6 +8,11 @@ class UsersController < ApplicationController
     }
   end
 
+  def requested_vacations
+    requests = VacationRequest.where(user_id: params[:id]).requested
+    render json: requests
+  end
+
 private
 
   def fetch_current_user_details

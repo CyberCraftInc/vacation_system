@@ -1,27 +1,24 @@
 Rails.application.routes.draw do
   root to: 'home#index'
 
-  get '/requested_vacations/:user_id',
-      to: 'vacation_requests#requested',
-      defaults: { format: :json }
-
-  get '/team_members/:id',
-      to: 'teams#members',
-      defaults: { format: :json }
-
-  get '/team_vacations/:id',
-      to: 'teams#vacations',
-      defaults: { format: :json }
-
   devise_for :users
 
   resources :users,
             only: [:index],
-            defaults: { format: :json }
+            defaults: { format: :json } do
+    member do
+      get 'requested_vacations'
+    end
+  end
 
   resources :teams,
             only: [:index, :create, :update, :destroy],
-            defaults: { format: :json }
+            defaults: { format: :json } do
+    member do
+      get 'members'
+      get 'vacations'
+    end
+  end
 
   resources :available_vacations,
             only: [:index],
