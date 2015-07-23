@@ -25,7 +25,7 @@ requests. So that the following information is provided:
 The application that serves the page should be divided into the following parts:
   1. `App.Views.Dashboard`, main application, the master one.
   2. `App.Views.ApprovalRequests`, application for serving both, *personal vacation requests* and *team members' vacation requests*, as a slave.
-  4. `App.Views.TimeTable`, application for serving *vacations time table*, as a slave.
+  4. `App.Views.TimeTables`, application for serving *vacations time table*, as a slave.
 
 Each application has its own view, template, and collection of data models.
 
@@ -52,7 +52,7 @@ The following should be implemented within Backbone application:
   - use `App.Views.ApprovalRequests` to render user's approval requests
   - use `App.Views.ApprovalRequests` to render all team members' approval requests
     that should be accepted or rejected by current user as a manager
-  - use `App.Views.TimeTable` to render time table.
+  - use `App.Views.TimeTables` to render time table.
 
 The following should be implemented within Rails application:
 
@@ -73,5 +73,5 @@ The following table represents approximations on time needed for implementation:
 | `App.Models.CurrentUser`      | 8             |  1            | **done**    |
 | `App.Models.CurrentUserRoles` | 8             |  1            | **done**    |
 | `App.Views.ApprovalRequests`  | 8             |  6            | *in progress* |
-| `App.Views.TimeTable`         | 32            |               |             |
+| `App.Views.TimeTables`        | 32            |  40           | *in progress* |
 | `UsersController`             | 4             |  2            | **done**    |

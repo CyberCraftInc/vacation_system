@@ -1,11 +1,11 @@
 #   Time Table
 
 This document provides general description and implementation details for
-the `App.Views.TimeTable` application.
+the `App.Views.TimeTables` application.
 
 
 ##  Description
-The `App.Views.TimeTable` application should provide information regarding
+The `App.Views.TimeTables` application should provide information regarding
 team vacation requests. This information should be presented
 as a time table of vacations.
 
@@ -29,53 +29,50 @@ The following view types should be supported:
 
 
 ##  Implementation
-The application should be implemented as `App.Views.TimeTable`,
-a view to represent a *time table of vacations*
+The application should be implemented as `App.Views.TimeTables`,
+a view to represent *time tables of vacations*
 provided by following views:
-  - `App.Views.TimeTableByDay`
-  - `App.Views.TimeTableByWeek`
-  - `App.Views.TimeTableByMonth`
+  - `App.Views.TimeTableByDay`,
+  - `App.Views.TimeTableByWeek`.
 
 The application should render appropriate view from the list above
 depending on selected view type.
+The application should be used by its master view, the `App.Views.Dashboard`.
+The master view should pass a list of team ids.
+The application should render appropriate time table view for each team separately,
+and all at once, to let the user to see vacations for all selected teams.
 
-The application should be used by `App.Views.Dashboard`.
+View type selection should be provided with an HTML select control with
+the following options:
+  - view by day,
+  - view by week.
+
+The application should set the default date range to control number of visible
+data on time tables. To change default values, user should be able to specify date range.
+The application should provide two HTML date picker controls to get date range
+from user.
+Date range should be one for all time tables.
+
 
 ### Prerequisites
 The view requires template to represent the following:
-  - HTML controls to provide ability to select a *team* [**to be decided**] and a *view type*
-  - Placeholder for appropriate *time table* view
+  - HTML controls to provide ability to select the following:
+    - *view type*
+    - *begin date*
+    - *end date*
+  - Placeholder for appropriate *time table* views.
 
 The view requires the following information:
-  - *team ID*, to fill template with vacation requests data [**to be decided**]
-  - *list of team users*, to fill template with list of users
-  - *list of vacation requests per team member*, to generate time table
+  - *team IDs*, to create time table for each team represented by ID
 
 
 ### Implementation Proposal
 The following should be implemented within Backbone application:
-  - Add `App.Views.TimeTable`
+  - Add `App.Views.TimeTables`
   - Add `App.Views.TimeTableByDay`, to present time table by day
   - Add `App.Views.TimeTableByWeek`, to present time table by week
-  - Add `App.Views.TimeTableByMonth`, to present time table by month
-  - Add `App.Collections.TeamMembers`, to provide a list of team members
-
-The following should be implemented within Rails application:
-  - Add `TeamsController#members` to provide list of team members
-  - Update routes to dispatch `team_members/:team_id`.
-  - Add `TeamsController#vacations` to provide list of vacations of team members
-  - Update routes to dispatch `team_vacations/:team_id`.
 
 ##  Questions
 The following should be discussed:
-  - How to render time table for each type of view?
-  - Which period of time to be displayed?
-
-##  Estimations
-The following table represents approximations on time needed for implementation:
-
-| Feature                       | Planned hours | Actual hours  | Status      |
-| :---------------------------- | :-----------: | :-----------: | :---------- |
-| `App.Views.TimeTable`         | 3             | 3             | *in progress* |
-| `TeamsController#members`     | 2             | 1             | *done* |
-| `TeamsController#vacations`   | 1             | 3             | *done* |
+  - Which period of time to be displayed by default?
+    What about two months?
