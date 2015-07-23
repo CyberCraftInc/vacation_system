@@ -10,6 +10,7 @@
 $planned-vacation: #0a0;
 $unpaid-vacation: #4b0082;
 $sickness-vacation: #f00;
+$weekend: #ddd;
 $silver: #c0c0c0;
 
 .footer {
@@ -76,6 +77,7 @@ $silver: #c0c0c0;
   }
 }
 
+.time-table-by-day,
 .time-table-by-week {
   border-collapse: collapse;
 
@@ -134,4 +136,28 @@ $silver: #c0c0c0;
 
 .sickness {
   background-color: $sickness-vacation;
+}
+
+.weekend {
+  background-color: $weekend;
+}
+
+.time-table-by-day {
+  .inprogress {
+    background-image: repeating-linear-gradient(
+        transparent,
+        $gray-lighter 25%,
+        transparent 50%
+      );
+  }
+}
+
+.time-table-content {
+  form {
+    margin-bottom: 10px;
+  }
+
+  .input-group {
+    padding-left: 5px;
+  }
 }

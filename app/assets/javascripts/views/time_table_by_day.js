@@ -1,5 +1,5 @@
-App.Views.TimeTableByWeek = Backbone.View.extend({
-  template: JST['templates/time_table_by_week'],
+App.Views.TimeTableByDay = Backbone.View.extend({
+  template: JST['templates/time_table_by_day'],
 
   initialize: function(options) {
     var that = this;
@@ -7,18 +7,17 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     this.el = options.el;
     this.teamID = options.team_id;
 
-    this.members = new App.Collections.TeamMembers(options.team_id);
-    this.vacations = new App.Collections.TeamVacations({team_id: options.team_id});
+    this.members    = new App.Collections.TeamMembers(this.teamID);
+    this.vacations  = new App.Collections.TeamVacations({team_id: this.teamID});
 
     this.cellWidth  = 20;
-    this.colSpan    = 5;
     this.dateRange = {
       begin:  options.from,
       end:    options.to,
     };
 
     this.render();
-    this.$table = this.$('.time-table-by-week');
+    this.$table = this.$('.time-table-by-day');
 
     this.listenTo(this.members,   'sync', this.renderMembersTable);
     this.listenTo(this.vacations, 'sync', this.renderVacationsTable);
@@ -53,7 +52,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
   renderVacationsTable: function() {
     this.drawMonths();
-    this.drawWeeks();
+    this.drawDays();
     this.drawEmptyTable();
     this.markVacations();
     return this;
@@ -64,7 +63,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         date = null,
         cellCounter = 0,
         monthFormat = "MMM (YYYY)",
-        cols = this.getNumberOfWeeks(),
+        cols = this.getNumberOfDays(),
         month = moment(this.dateRange.begin).format(monthFormat);
 
     this.$table.css('width', this.calculateTableWidth());
@@ -73,10 +72,10 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     $tr.addClass('head');
 
     for (var col = 0; col < cols; col++) {
-      date = moment(this.dateRange.begin).add(col,'weeks');
+      date = moment(this.dateRange.begin).add(col,'days');
       if (date.format(monthFormat) !== month) {
         $td = $('<td>').appendTo($tr);
-        $td.attr('colspan', this.colSpan*cellCounter);
+        $td.attr('colspan', cellCounter);
         $td.text(month);
         month = date.format(monthFormat);
         cellCounter = 0;
@@ -86,23 +85,22 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
     if (cellCounter > 0) {
         $td = $('<td>').appendTo($tr);
-        $td.attr('colspan', this.colSpan*cellCounter);
+        $td.attr('colspan', cellCounter);
         $td.text(month);
     }
   },
 
-  drawWeeks: function() {
-    var $tr = null,
-        $td = null,
-        cols = this.getNumberOfWeeks(),
+  drawDays: function() {
+    var $td = null,
+        cols = this.getNumberOfDays(),
         beginDate = this.dateRange.begin;
 
-    $tr = $('<tr>').appendTo(this.$table);
+    var $tr = $('<tr>').appendTo(this.$table);
     $tr.addClass('head');
 
     for (var col = 0; col < cols; col++) {
-      $td = $('<td>').appendTo($tr).attr('colspan', this.colSpan);
-      $td.text(moment(beginDate).add(col,'weeks').format('W'));
+      $td = $('<td>').appendTo($tr)
+        .text(moment(beginDate).add(col,'days').format('D'));
     }
   },
 
@@ -110,27 +108,18 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     var $tr = null,
         $td = null,
         date = null,
-        cols = this.getNumberOfWeeks(),
-        weekStart = moment(this.dateRange.begin).startOf('isoweek'),
-        cellID = '';
+        cols = this.getNumberOfDays();
 
     this.members.each( function(user) {
       $tr = $('<tr>').appendTo(this.$table);
       for (var col = 0; col < cols; col++) {
-        date = moment(weekStart).add(col,'weeks');
-        // Mark first day of week
+        date = moment(this.dateRange.begin).add(col,'days');
         $td = $('<td>').appendTo($tr)
-          .attr('id', this.composeCellID(this.teamID, user.id, date))
-          .addClass('left-cell');
-        // Three days
-        for (var i = 0; i < 3; i++) {
-          $td = $('<td>').appendTo($tr)
-            .attr('id', this.composeCellID(this.teamID, user.id, date.add(1,'day')));
+          .attr('id', this.composeCellID(this.teamID, user.id, date));
+
+        if (App.Helpers.isWeekend(date.toDate())) {
+          $td.addClass('weekend');
         }
-        // Mark last day of week
-        $td = $('<td>').appendTo($tr)
-          .attr('id', this.composeCellID(this.teamID, user.id, date.add(1,'day')))
-          .addClass('right-cell');
       }
     }, this);
   },
@@ -163,14 +152,14 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
   // ***************************** Helpers *************************************
   calculateTableWidth: function() {
-    return this.getNumberOfWeeks() * this.cellWidth * this.colSpan;
+    return this.getNumberOfDays() * this.cellWidth;
   },
 
-  getNumberOfWeeks: function() {
+  getNumberOfDays: function() {
     var range = moment.range(this.dateRange.begin,
                              this.dateRange.end);
 
-    return range.diff('weeks');
+    return range.diff('days') + 1;
   },
 
   composeCellID: function(teamID, userID, date) {

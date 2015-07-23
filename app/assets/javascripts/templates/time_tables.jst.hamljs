@@ -1,8 +1,22 @@
-//.input-group
-  %label.input-group-addon{for:'view-type'} View by:
-  %select.form-control{name:'view-type'}
-    %option{value:'day'} day
-    %option{value:'week'} week
-    %option{value:'month'} month
+%form.form-inline.clearfix
+  .pull-right
+    .input-group
+      %label.input-group-addon{for:'from'} From:
+      %input.form-control{name:'from', type:'date', value:from}
 
-.time-table
+    .input-group
+      %label.input-group-addon{for:'to'} To:
+      %input.form-control{name:'to', type:'date', value:to}
+
+    .input-group
+      %label.input-group-addon{for:'view-type'} View by:
+      %select.form-control{name:'view-type'}
+        :if viewType === 'day'
+          %option{value:'day', selected:true} day
+          %option{value:'week'} week
+        :if viewType === 'week'
+          %option{value:'day'} day
+          %option{value:'week', selected:true} week
+
+
+.time-tables

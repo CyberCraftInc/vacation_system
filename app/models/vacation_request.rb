@@ -8,6 +8,12 @@ class VacationRequest < ActiveRecord::Base
                    VacationRequest.statuses[:inprogress]])
   }
 
+  scope :team_vacations, lambda { |team|
+    joins(user: :team_roles)
+      .where(team_roles: { team_id: team.id })
+      .select(:id, :user_id, :start, :duration, :kind, :status)
+  }
+
   enum status: [
     :requested,
     :accepted,
