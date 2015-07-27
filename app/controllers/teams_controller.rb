@@ -1,60 +1,46 @@
 class TeamsController < ApplicationController
-  respond_to :json
+  before_action :authenticate_user!
   before_action :set_team, only: [:update, :destroy, :members, :vacations]
 
-  def index
-    @teams = Team.all
+  rescue_from ActiveRecord::RecordNotFound do
+    head status: :not_found
+  end
 
-    respond_to do |format|
-      format.html
-      format.json { render json: @teams }
-    end
+  def index
+    render json: Team.all
   end
 
   def create
-    @team = Team.new team_params
-    if @team.save
-      respond_with @team
+    team = Team.new team_params
+    if team.save
+      render json: team
     else
-      respond_with @team
+      render json: { errors: team.errors }, status: :unprocessable_entity
     end
   end
 
   def update
     if @team.update(team_params)
-      render nothing: true, status: :no_content
+      head status: :no_content
     else
-      render nothing: true, status: :not_found
+      render json: { errors: @team.errors }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @team
-      @team.destroy
-      render nothing: true, status: :no_content
-    else
-      render nothing: true, status: :not_found
-    end
+    @team.destroy
+    head status: :no_content
   end
 
   def members
-    if @team
-      members = @team.users
-      render json: members
-    else
-      head  status: :not_found
-    end
+    render json: @team.users
   end
 
   def vacations
-    if @team
-      vacations = VacationRequest
-                  .team_vacations(@team)
-                  .requested_accepted_inprogress
-      render json: vacations
-    else
-      head  status: :not_found
-    end
+    vacations = VacationRequest
+                .team_vacations(@team)
+                .requested_accepted_inprogress
+    render json: vacations
   end
 
 private
@@ -64,6 +50,6 @@ private
   end
 
   def set_team
-    @team = Team.find params[:id]
+    @team = Team.find_by!(id: params[:id])
   end
 end

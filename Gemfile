@@ -9,12 +9,19 @@ gem 'devise_invitable'
 group :development, :test do
   gem 'spring'
   gem 'jasmine'
+  gem 'rspec-rails',  '~> 3.0'
+  gem 'factory_girl_rails', '~> 4.5'
 end
 
 group :development do
   gem 'brice',          require: false
   gem 'hirb',           require: false
   gem 'awesome_print',  require: false
+end
+
+group :test do
+  gem 'shoulda-matchers', require: false
+  gem 'ffaker',           require: false
 end
 
 # Assets
