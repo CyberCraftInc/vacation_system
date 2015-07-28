@@ -14,4 +14,4 @@
 
 .panel.panel-primary
   .panel-heading Vacations Time Table
-  .panel-body#time-table-content
+  .panel-body.time-table-content

@@ -26,15 +26,15 @@ App.Views.Dashboard = Backbone.View.extend({
 
     this.$el.html(this.template(this.attributes));
     this.$('select[name=teams]').trigger('change');
-    // this.updateUsersRequestsVisibility();
-    // this.renderPersonalRequests();
+    this.updateUsersRequestsVisibility();
+    this.renderPersonalRequests();
     return this;
   },
 
   onTeams: function( e ) {
     this.teamID = parseInt(e.target.value);
     this.attributes.role = App.currentUserRoles.roleFromTeamID(this.teamID);
-    // this.updateUsersRequestsVisibility();
+    this.updateUsersRequestsVisibility();
     this.renderTimeTable();
   },
 
@@ -86,11 +86,14 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderTimeTable: function() {
-    var options = {team_id: this.teamID};
+    var options = {team_ids: [1,2,3]};
+        options.from  = moment();
+        options.to    = moment().add(2,'months');
+
     if (_.isUndefined(this.timeTables)) {
       this.timeTables = new App.Views.TimeTables(options);
     } else {
-      this.timeTables.update(options.team_id);
+      this.timeTables.update(options.teams);
     }
   },
 
