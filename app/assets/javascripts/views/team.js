@@ -5,19 +5,19 @@ App.Views.Team = Backbone.View.extend({
 
   events: {
     'click .remove':  'onRemove',
-    'dblclick':       'edit',
+    'dblclick .view': 'edit',
     'keypress .edit': 'updateOnEnter',
   },
 
   render: function() {
     var html = this.template(this.model.attributes);
-    this.listenTo( this.model, 'change:name', this.updateName );
+    this.listenTo(this.model, 'change:name', this.updateName);
     this.$el.html(html);
     return this;
   },
 
-  updateName: function( model, value, options) {
-    this.$el.html( this.template(this.model.attributes) );
+  updateName: function(model, value, options) {
+    this.$el.html(this.template(this.model.attributes));
   },
 
   edit: function() {
@@ -25,20 +25,22 @@ App.Views.Team = Backbone.View.extend({
   },
 
   // If you hit `enter`, we're through editing the item.
-  updateOnEnter: function( e ) {
-    if ( e.which === ENTER_KEY ) {
+  updateOnEnter: function(event) {
+    if (event.which === ENTER_KEY) {
       this.close();
     }
   },
 
   // Close the `"editing"` mode, saving changes.
   close: function() {
-    var value = this.$('input.edit').val().trim();
+    var input = this.$('input.edit');
+    var value = input.val().trim();
+    var errors = this.model.preValidate('name', value);
 
-    if ( value ) {
-      this.model.save({ name: value });
-    } else {
-      this.model.destroy();
+    if (errors) {
+      input.val(this.model.get('name'));
+    } else if (value !== this.model.get('name')) {
+      this.model.save('name', value);
     }
 
     this.$el.removeClass('editing');

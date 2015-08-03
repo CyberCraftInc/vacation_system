@@ -3,18 +3,17 @@ App.Views.Teams = Backbone.View.extend({
   template: JST['templates/teams'],
 
   events: {
-    'click #create':  'onCreate',
+    'click button[name=add]':  'onAddTeam',
   },
 
-  initialize: function() {
-    this.collection = new App.Collections.Teams();
-    this.$el.html( this.template() );
-    this.collection.fetch({reset: true});
-    this.listenTo( this.collection, 'add',    this.addTeam );
-    this.listenTo( this.collection, 'reset',  this.render );
+  initialize: function(options) {
+    this.$el.html(this.template());
+    this.collection = options.collection;
+    this.listenTo(this.collection, 'add',  this.addTeam);
+    this.listenTo(this.collection, 'sync', this.render);
   },
 
-  addTeam: function( model, collection, options ) {
+  addTeam: function(model, collection, options) {
     var newItem = new App.Views.Team({'model': model});
     this.$('ul.teams-list').append( newItem.render().$el );
   },
@@ -30,13 +29,20 @@ App.Views.Teams = Backbone.View.extend({
     return this;
   },
 
-  onCreate: function() {
-    var $name = this.$('#team-name');
+  onAddTeam: function(event) {
+    event.preventDefault();
+    var input   = this.$('input[name=team-name]'),
+        model   = new App.Models.Team(),
+        value   = input.val(),
+        errors  = model.preValidate('name', value);
 
-    if ($name.val()) {
-      this.collection.create({ 'name': $name.val() });
+    if ( errors ) {
+      console.log(errors);
+    } else {
+      this.collection.create({'name': value});
 
-      $name.val('');
+      console.log('Valid team name is added to the collection.');
+      input.val('');
     }
   },
 });

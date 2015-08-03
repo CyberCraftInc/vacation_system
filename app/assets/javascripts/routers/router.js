@@ -23,7 +23,9 @@ App.Router = Backbone.Router.extend({
 
   teams: function() {
     $('.content').html("You should see the list for Teams... that's all I can tell you, dude O_O");
-    App.teams = new App.Views.Teams();
+    var collection = new App.Collections.Teams();
+    App.teams = new App.Views.Teams({'collection':collection});
+    collection.fetch();
   },
 
   new_vacation_request: function() {
