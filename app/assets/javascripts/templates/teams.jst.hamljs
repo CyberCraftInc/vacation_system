@@ -2,9 +2,10 @@
   .panel-heading Teams
   .panel-body
     #teams
-      %form.team-create{role:'form'}
-        .input-group
-          %input.form-control{name:'team-name', type:'text', placeholder:'Team name...', autofocus:true}
-          %span.input-group-btn
-            %button.btn.btn-default{name:'add'} Add
+      :if highestPrivilege === 'manager'
+        %form.team-create{role:'form'}
+          .input-group
+            %input.form-control{name:'team-name', type:'text', placeholder:'Team name...', autofocus:true}
+            %span.input-group-btn
+              %button.btn.btn-default{name:'add'} Add
       %ul.teams-list.list-group

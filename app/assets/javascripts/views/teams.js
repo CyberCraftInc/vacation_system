@@ -7,7 +7,10 @@ App.Views.Teams = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    this.$el.html(this.template());
+    this.attributes = {
+      highestPrivilege: App.currentUserRoles.highestPrivilege()
+    };
+    this.$el.html(this.template(this.attributes));
     this.collection = options.collection;
     this.listenTo(this.collection, 'add',  this.addTeam);
     this.listenTo(this.collection, 'sync', this.render);
@@ -37,11 +40,11 @@ App.Views.Teams = Backbone.View.extend({
         errors  = model.preValidate('name', value);
 
     if ( errors ) {
-      console.log(errors);
+      // TODO: inform user about errors
     } else {
+      // TODO: inform user about success
       this.collection.create({'name': value});
 
-      console.log('Valid team name is added to the collection.');
       input.val('');
     }
   },

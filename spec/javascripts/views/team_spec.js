@@ -1,31 +1,17 @@
 describe('Team view', function() {
-
-  describe('as a brand new object', function() {
-    beforeEach(function() {
-      this.view = new App.Views.Team();
-    });
-
-    afterEach(function() {
-      this.view.remove();
-    });
-
-    it('has its .model attribute undefined', function() {
-      expect(this.view.model).toBeUndefined();
-    });
-
-    it('has its .className properly set', function() {
-      expect(this.view.el.className).toBe('list-group-item');
-    });
-
-    it('has its .outerHTML properly set', function() {
-      expect(this.view.el.outerHTML).toBe('<li class="list-group-item"></li>');
-    });
+  beforeEach(function() {
+    // Stub User roles
+    App.currentUserRoles = new App.Collections.CurrentUserRoles([
+      {'id':1, 'team_id':1, 'role':'manager'}
+    ]);
   });
 
   describe('as a real object', function() {
     beforeEach(function() {
-      this.model = new App.Models.Team();
-      this.model.set('name', 'Angrybirds');
+      this.model = new App.Models.Team({
+        'id':   1,
+        'name': 'Angrybirds'
+      });
       this.view = new App.Views.Team({'model': this.model});
 
       setFixtures('<ul class="teams-list"></ul>');
@@ -80,7 +66,7 @@ describe('Team view', function() {
 
       it('click .remove', function() {
         this.deleteButton = this.container.find('li .remove');
-        spyOn(this.view, 'onRemove').and.callThrough();
+        spyOn(this.view, 'onRemove');
         this.view.delegateEvents();
 
         this.deleteButton.trigger('click');

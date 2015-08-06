@@ -7,6 +7,11 @@ describe('Teams view', function() {
       {'name':'Angrybirds'}
     ]);
 
+    // Stub User roles
+    App.currentUserRoles = new App.Collections.CurrentUserRoles([
+      {'id':1, 'role':'manager'}
+    ]);
+
     this.view = new App.Views.Teams({'collection':collection});
     this.view.render();
     this.container = $('#teams');
