@@ -55,8 +55,8 @@ RSpec.describe VacationRequest do
     let(:user) { FactoryGirl.create :user, :with_vacations_of_all_statuses }
 
     it 'provides accordingly filtered list of vacation requests' do
-      expect(user.vacation_requests.count).to be(6)
-      expect(VacationRequest.requested_accepted_inprogress.count).to be(3)
+      expect(user.vacation_requests.count).to eq(6)
+      expect(VacationRequest.requested_accepted_inprogress.count).to eq(3)
     end
   end
 
@@ -72,7 +72,7 @@ RSpec.describe VacationRequest do
     end
 
     it 'provides list of vacation requests for users of specified team' do
-      expect(VacationRequest.team_vacations(team).length).to be(7)
+      expect(VacationRequest.team_vacations(team).length).to eq(7)
     end
   end
 
