@@ -25,6 +25,8 @@
 //= require underscore.js
 //= require backbone.js
 //
+//= require backbone-validation
+//
 //= require       main.js
 //= require_tree ./helpers
 //= require_tree ./templates

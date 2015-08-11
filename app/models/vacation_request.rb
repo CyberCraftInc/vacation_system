@@ -2,6 +2,16 @@ class VacationRequest < ActiveRecord::Base
   belongs_to  :user
   has_many    :approval_requests
 
+  validates :duration, :kind, :start, :status, :user,
+            presence: true
+  validates :duration,
+            numericality: { only_integer: true,
+                            greater_than: 0 }
+  validates :end,
+            presence: true,
+            inclusion: { in: Date.new(2015, 01, 01)..Date.new(2115, 01, 01) },
+            if: "status == 'used'"
+
   scope :requested_accepted_inprogress, lambda {
     where(status: [VacationRequest.statuses[:requested],
                    VacationRequest.statuses[:accepted],
