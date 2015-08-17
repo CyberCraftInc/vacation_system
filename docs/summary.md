@@ -50,3 +50,6 @@ The following described features are not implemented:
     It is considered to implement some functionality on Dashboard, in the tables.
 
   - Holidays
+  - Flash messages handling
+  - Form validation error messages handling
+  - Devise login pages style
