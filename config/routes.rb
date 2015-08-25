@@ -20,6 +20,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :holidays,
+            only: [:index, :create, :update, :destroy],
+            defaults: { format: :json }
+
   resources :available_vacations,
             only: [:index],
             defaults: { format: :json }

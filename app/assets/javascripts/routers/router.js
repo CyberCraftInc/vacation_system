@@ -8,6 +8,7 @@ App.Router = Backbone.Router.extend({
     'new_vacation_request':   'new_vacation_request',
     'vacation_requests_list': 'vacation_requests_list',
     'vacation_request/:id':   'vacation_request_details',
+    'holidays':               'holidays',
     'calendar':               'calendar',
   },
 
@@ -24,8 +25,15 @@ App.Router = Backbone.Router.extend({
   },
 
   new_vacation_request: function() {
-    $('.content').html("You should see the <strong>Request</strong> form... that's all I can tell you, dude O_O");
-    App.new_vacation_request = new App.Views.VacationRequestForm();
+    var holidays = new App.Collections.Holidays(),
+        availableVacations = new App.Collections.AvailableVacations();
+
+    $('.content').html("You should see the <strong>New Vacation Request</strong> form...");
+
+    App.newVacationRequest = new App.Views.VacationRequestForm({
+      'holidays': holidays,
+      'availableVacations': availableVacations
+    });
   },
 
   vacation_requests_list: function() {
@@ -36,6 +44,13 @@ App.Router = Backbone.Router.extend({
   vacation_request_details: function( id ) {
     $('.content').html("You should see the <strong>Vacation Request Details</strong>... that's all I can tell you, dude O_O");
     App.vacation_request_details = new App.Views.VacationRequestDetails({modelID:id});
+  },
+
+  holidays: function() {
+    $('.container section').html("Holidays must be here...");
+    var collection = new App.Collections.Holidays();
+    App.holidays = new App.Views.Holidays({'collection':collection});
+    collection.fetch();
   },
 
   calendar: function() {

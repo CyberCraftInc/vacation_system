@@ -1,24 +1,25 @@
 require 'rails_helper'
 
-RSpec.describe DayOff do
+RSpec.describe Holiday do
   it 'has a valid factory' do
-    day_off = FactoryGirl.build(:day_off)
+    holiday = FactoryGirl.build(:holiday)
 
-    expect(day_off).to be_valid
+    expect(holiday).to be_valid
   end
 
   context 'as a brand new object' do
-    let(:day_off) { DayOff.new }
+    let(:holiday) { Holiday.new }
 
-    it { expect(day_off).to have_attributes description: nil }
-    it { expect(day_off).to have_attributes duration: nil }
-    it { expect(day_off).to have_attributes start: nil }
+    it { expect(holiday).to have_attributes description: nil }
+    it { expect(holiday).to have_attributes duration: nil }
+    it { expect(holiday).to have_attributes start: nil }
 
-    it { expect(day_off).not_to be_valid }
+    it { expect(holiday).not_to be_valid }
   end
 
   context 'validations' do
     it { should validate_presence_of(:description) }
+    it { should validate_uniqueness_of(:description).case_insensitive }
     it do
       should validate_length_of(:description)
         .is_at_least(7)

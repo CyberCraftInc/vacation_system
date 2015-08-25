@@ -7,13 +7,20 @@ class VacationRequestsController < ApplicationController
   end
 
   def create
-    @vacation_request = VacationRequest.new vacation_request_params
-    @vacation_request.user_id = current_user.id
+    @vacation_request = current_user
+                        .vacation_requests.new vacation_request_params
 
-    if @vacation_request.save
+    authorize @vacation_request
+    managers_ids = current_user.list_of_assigned_managers_ids
+
+    set_allowed_values!
+    change_status!(managers_ids)
+
+    if @vacation_request.save && create_approval_request(managers_ids)
       head status: :created
     else
-      head status: 500
+      render  json: { errors: @vacation_request.errors },
+              status: :unprocessable_entity
     end
   end
 
@@ -31,29 +38,30 @@ class VacationRequestsController < ApplicationController
 
 private
 
+  def create_approval_request(managers_ids)
+    return true if @vacation_request.status == 'accepted'
+
+    records = managers_ids.map do |id|
+      { manager_id: id, vacation_request_id: @vacation_request.id }
+    end
+    ApprovalRequest.create records
+  end
+
+  def change_status!(managers_ids)
+    @vacation_request.status = 'accepted' if managers_ids.empty?
+  end
+
+  def set_allowed_values!
+    @vacation_request.end = ''
+    @vacation_request.status = 'requested'
+  end
+
   def set_vacation_request
     @vacation_request = VacationRequest.find params[:id]
   end
 
   def vacation_request_params
-    prepare_date_params
     params.require(:vacation_request)
       .permit(:kind, :start, :end, :duration, :status)
-  end
-
-  def vacation_params(val)
-    params[:vacation_request][val]
-  end
-
-  def prepare_date_params
-    date_from_ms(:start)
-    date_from_ms(:end)
-  end
-
-  # Convert JS Date/Time in miliseconds to Ruby Date format
-  def date_from_ms(val)
-    return unless vacation_params(val)
-
-    params[:vacation_request][val] = Time.zone.at(vacation_params(val) / 1000)
   end
 end

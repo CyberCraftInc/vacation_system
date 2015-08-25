@@ -1,8 +1,9 @@
-class DayOff < ActiveRecord::Base
+class Holiday < ActiveRecord::Base
   validates :description, :duration, :start,
             presence: true
   validates :description,
             allow_blank: false,
+            uniqueness: { case_sensitive: false },
             length: { minimum: 7, maximum: 25 }
   validates :duration,
             numericality: { only_integer: true,

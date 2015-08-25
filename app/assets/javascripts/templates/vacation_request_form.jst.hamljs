@@ -1,22 +1,22 @@
 .panel.panel-primary
   .panel-heading Request New Vacation
   .panel-body
-    %form
-      .input-group
-        %label{for:'vacation_type'} Select type:&nbsp;
-        %select{name:'vacation_type'}
-          %option{value:-1}
-          %option{value:'planned'}  planned
-          %option{value:'unpaid'}   unpaid
-          %option{value:'sickness'} sickness
-      .input-group
-        %label Available days:&nbsp;
-        %label#available_days
-
-      .input-group
-        %label Select days:&nbsp;
-        %input.form-control{type:'date', name:'start', placeholder:'yyyy-mm-dd'}
-        &nbsp;
-        %input.form-control{type:'date', name:'end', placeholder:'yyyy-mm-dd'}
-      %button.btn.btn-sm.btn-default.ok      Ok
-      %button.btn.btn-sm.btn-default.cancel  Cancel
+    .new-vacation-request
+      .form.form-inline{role:'form'}
+        .col-md-5
+          .btn-group{data-toggle:'buttons'}
+            :each item in availableVacations
+              .btn.btn-default
+                %input{type:'radio', name:'vacation-type', value:item.attributes.kind}
+                #{item.attributes.kind} &nbsp;
+                .badge{class:item.attributes.kind}= item.attributes.available_days
+        .col-md-4
+          .input-group.input-daterange
+            %input.form-control{type:'text', name:'from', title:'Date of the holiday start'}
+            .input-group-addon to
+            %input.form-control{type:'text', name:'to',   title:'Date of the holiday end'}
+        .col-md-3
+          .pull-right
+            .btn-group
+              %button.btn.btn-default{name:'clear'}   Clear form
+              %button.btn.btn-default{name:'request'} Request

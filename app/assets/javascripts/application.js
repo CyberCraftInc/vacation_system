@@ -21,6 +21,7 @@
 //
 //= require bootstrap
 //= require bootstrap-table
+//= require bootstrap-datepicker
 //
 //= require underscore.js
 //= require backbone.js

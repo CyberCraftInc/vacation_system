@@ -41,6 +41,7 @@ App.Helpers.dateToISO_8601 = function(date) {
 App.Helpers.isWeekend = function(date) {
   var result = false;
 
+  date = moment(date).toDate();
   if (_.isDate(date)) {
     var isSaturday  = date.getDay() === 6;
     var isSunday    = date.getDay() === 0;

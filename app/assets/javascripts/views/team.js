@@ -3,7 +3,24 @@ App.Views.Team = Backbone.View.extend({
   className: 'list-group-item',
   template: JST['templates/team'],
 
-  events: {
+  events: function() {
+    var role = App.currentUserRoles.highestPrivilege(),
+        result = {};
+
+    switch (role) {
+      case 'manager':
+        result = {
+          'click .remove': 'onRemove',
+          'dblclick .view': 'edit',
+          'keypress .edit': 'updateOnEnter'
+        };
+        break;
+
+      default:
+        result = {};
+    }
+
+    return result;
   },
 
   initialize: function(options) {
@@ -11,7 +28,6 @@ App.Views.Team = Backbone.View.extend({
     this.attributes = {
       role: App.currentUserRoles.highestPrivilege()
     };
-    this.addAuthorizedEvents();
   },
 
   render: function() {
@@ -21,24 +37,6 @@ App.Views.Team = Backbone.View.extend({
     this.listenTo(this.model, 'change:name', this.updateName);
     this.$el.html(this.template(attributes));
 
-    return this;
-  },
-
-  addAuthorizedEvents: function() {
-    var role = this.attributes.role;
-    switch (role) {
-      case 'manager':
-        this.addEventsForManager();
-        break;
-    }
-
-    return this;
-  },
-
-  addEventsForManager: function() {
-    this.events['click .remove']  = 'onRemove';
-    this.events['dblclick .view'] = 'edit';
-    this.events['keypress .edit'] = 'updateOnEnter';
     return this;
   },
 

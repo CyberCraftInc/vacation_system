@@ -16,4 +16,16 @@ class User < ActiveRecord::Base
   def manager?
     team_roles.managers.exists?
   end
+
+  def member?
+    team_roles.members.exists?
+  end
+
+  # List of managers' IDs the user is assigned to, from all the teams.
+  # If user is manager, then remove the user from the list.
+  def list_of_assigned_managers_ids
+    managers_ids = TeamRole.where(team_id: teams.ids).managers.pluck(:user_id)
+    managers_ids.delete(id) if manager?
+    managers_ids
+  end
 end

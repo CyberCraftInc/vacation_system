@@ -14,6 +14,10 @@ FactoryGirl.define do
       kind 'sickness'
     end
 
+    trait :invalid do
+      start  '2015-02'
+    end
+
     trait :accepted do
       status 'accepted'
     end
