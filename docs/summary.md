@@ -1,5 +1,5 @@
 #   Summary
-This document describes state of the application development as of 2015-08-14.
+This document describes state of the application development as of 2015-09-01.
 
 
 ##  Partially Implemented
@@ -43,13 +43,12 @@ Fix bugs.
 
 ##  Not Implemented
 The following described features are not implemented:
-  - JS date picker HTML control
+  - JS date picker HTML control [`integrated in Holidays`]
   - BB redirection to sign in page, if user is not authenticated
   - Approval Requests, CRUD
 
     It is considered to implement some functionality on Dashboard, in the tables.
 
-  - Holidays
   - Flash messages handling
   - Form validation error messages handling
   - Devise login pages style
