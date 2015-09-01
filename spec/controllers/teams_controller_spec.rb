@@ -31,10 +31,12 @@ RSpec.describe TeamsController do
 
   ################################################################# POST #create
   describe 'POST #create' do
-    let(:params)  { Hash[format: :json, team: Hash[:name, team.name]] }
-    let(:send_request) { post :create, params }
+    let(:another_team)  { FactoryGirl.create(:team, :with_users) }
+    let(:params)        { Hash[format: :json, team: Hash[:name, team.name]] }
+    let(:send_request)  { post :create, params }
 
-    context 'from authenticated user' do
+    context 'from authenticated user with manager role' do
+      let(:user) { another_team.team_roles.managers.first.user }
       before { sign_in user }
 
       context 'with correct data' do
@@ -91,9 +93,10 @@ RSpec.describe TeamsController do
 
   ################################################################## PUT #update
   describe 'PUT #update' do
-    let(:team) { FactoryGirl.create(:team) }
+    let(:team) { FactoryGirl.create(:team, :with_users) }
 
-    context 'from authenticated user' do
+    context 'from authenticated user with manager' do
+      let(:user) { team.team_roles.managers.first.user }
       before { sign_in user }
 
       context 'with correct data' do
@@ -172,9 +175,10 @@ RSpec.describe TeamsController do
 
   ################################################################ PATCH #update
   describe 'PATCH #update' do
-    let(:team) { FactoryGirl.create(:team) }
+    let(:team) { FactoryGirl.create(:team, :with_users) }
 
-    context 'from authenticated user' do
+    context 'from authenticated user with manager role' do
+      let(:user) { team.team_roles.managers.first.user }
       before { sign_in user }
 
       context 'with correct data' do
@@ -253,12 +257,15 @@ RSpec.describe TeamsController do
 
   ############################################################## DELETE #destroy
   describe 'DELETE #destroy' do
+    let(:team)          { FactoryGirl.create(:team, :with_users) }
     let(:params)        { Hash[format: :json, id: teams.first.id] }
     let(:send_request)  { delete :destroy, params }
 
     before { teams }
 
-    context 'from authenticated user' do
+    context 'from authenticated user with manager' do
+      let(:user) { team.team_roles.managers.first.user }
+
       before { sign_in user }
 
       it 'should respond with status code :no_content (204)' do

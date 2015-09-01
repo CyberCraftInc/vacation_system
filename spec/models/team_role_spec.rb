@@ -35,6 +35,33 @@ RSpec.describe TeamRole do
       .to raise_exception(ActiveRecord::RecordInvalid)
   end
 
+  describe '.managers' do
+    let(:team) { FactoryGirl.create(:team, :with_users, number_of_managers: 1) }
+
+    it 'provides list of users with "manager" role' do
+      expect(TeamRole).to respond_to(:managers)
+      expect(team.team_roles.managers.count).to eq(1)
+    end
+  end
+
+  describe '.members' do
+    let(:team) { FactoryGirl.create(:team, :with_users, number_of_members: 1) }
+
+    it 'provides list of users with "member" role' do
+      expect(TeamRole).to respond_to(:members)
+      expect(team.team_roles.members.count).to eq(1)
+    end
+  end
+
+  describe '.guests' do
+    let(:team) { FactoryGirl.create(:team, :with_users, number_of_guests: 1) }
+
+    it 'provides list of users with "guest" role' do
+      expect(TeamRole).to respond_to(:guests)
+      expect(team.team_roles.guests.count).to eq(1)
+    end
+  end
+
   context 'validations' do
     it { should define_enum_for(:role) }
 

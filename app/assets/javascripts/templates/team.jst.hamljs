@@ -1,5 +1,6 @@
 .view
   = name
-  %input.pull-right.btn.btn-xs.btn-danger.remove{type:'button', value:'Delete'}
+  :if role === 'manager'
+    %input.pull-right.btn.btn-xs.btn-danger.remove{type:'button', value:'Delete'}
 
 %input.edit{type:'text', value:"#{name}"}

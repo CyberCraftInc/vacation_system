@@ -6,6 +6,14 @@
   <title>CyberVacations</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
+  <% unless current_user.nil? %>
+  <script type="text/javascript">
+    window.App.currentUser = new App.Models.CurrentUser(
+      <%=raw(current_user.to_json(only: [:id,:first_name,:last_name])) %>
+    );
+    window.App.currentUserRoles = new App.Collections.CurrentUserRoles(<%=raw(current_user.team_roles.to_json(only: [:id,:role,:team_id])) %>);
+  </script>
+  <% end %>
   <%= csrf_meta_tags %>
 </head>
 <body>

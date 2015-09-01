@@ -12,6 +12,7 @@ class TeamsController < ApplicationController
 
   def create
     team = Team.new team_params
+    authorize team
     if team.save
       render json: team
     else
@@ -20,6 +21,7 @@ class TeamsController < ApplicationController
   end
 
   def update
+    authorize @team
     if @team.update(team_params)
       head status: :no_content
     else
@@ -28,6 +30,7 @@ class TeamsController < ApplicationController
   end
 
   def destroy
+    authorize @team
     @team.destroy
     head status: :no_content
   end

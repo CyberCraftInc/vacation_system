@@ -1,7 +1,5 @@
 App.Collections.CurrentUserRoles = Backbone.Collection.extend({
-  url: 'users',
-
-  roleFromTeamID: function( teamID ) {
+  roleFromTeamID: function(teamID) {
     var result = null;
 
       result = this.find(function(model) {
@@ -17,5 +15,31 @@ App.Collections.CurrentUserRoles = Backbone.Collection.extend({
     });
 
     return result;
+  },
+
+  highestPrivilege: function() {
+    var result = 'guest';
+    result = this.max(function(model) {
+      return this.getRoleAsNumber(model.get('role'));
+    }, this).get('role');
+
+    return result;
+  },
+
+  getRoleAsNumber: function(role) {
+    var number = 0;
+
+    switch (role) {
+      case 'member':
+        number = 1;
+        break;
+      case 'manager':
+        number = 2;
+        break;
+      default:
+        number = 0;
+    }
+
+    return number;
   }
 });

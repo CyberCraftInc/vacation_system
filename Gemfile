@@ -5,6 +5,7 @@ gem 'mysql2'
 gem 'jbuilder', '~> 2.0'
 gem 'devise'
 gem 'devise_invitable'
+gem 'pundit'
 
 group :development, :test do
   gem 'spring'
@@ -20,6 +21,9 @@ group :development do
 end
 
 group :test do
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'poltergeist'
   gem 'shoulda-matchers', require: false
   gem 'ffaker',           require: false
 end
