@@ -3,15 +3,16 @@ App.Views.Dashboard = Backbone.View.extend({
   template: JST['templates/dashboard'],
 
   events: {
-    'change select[name=teams]':          'onTeams',
+    'change select[name=teams]': 'onTeams',
   },
 
-  initialize: function( options ) {
+  initialize: function(options) {
+    this.holidays = options.holidays;
     this.teams = new App.Collections.Teams();
     this.teamID = 0;
     this.attributes = {role:''};
 
-    this.listenTo(this.teams,  'sync',  this.render);
+    this.listenTo(this.teams, 'sync', this.render);
 
     this.teams.fetch();
   },
@@ -31,8 +32,8 @@ App.Views.Dashboard = Backbone.View.extend({
     return this;
   },
 
-  onTeams: function( e ) {
-    this.teamID = parseInt(e.target.value);
+  onTeams: function(event) {
+    this.teamID = parseInt(event.target.value);
     this.attributes.role = App.currentUserRoles.roleFromTeamID(this.teamID);
     this.updateUsersRequestsVisibility();
     this.renderTimeTable();
@@ -44,12 +45,12 @@ App.Views.Dashboard = Backbone.View.extend({
       user_id:userID,
       el:'.personal-requests .panel-body',
       columns: [{
-          field: 'start',
+          field: 'start_date',
           title: 'Start date',
           sortable: true
       }, {
-          field: 'duration',
-          title: 'Duration',
+          field: 'actual_end_date',
+          title: 'End date',
           sortable: true
       }, {
           field: 'kind',
@@ -64,19 +65,19 @@ App.Views.Dashboard = Backbone.View.extend({
     var options = {
       el:'.pending-requests .panel-body',
       columns: [{
-          field: 'start',
+          field: 'start_date',
           title: 'Start date',
           sortable: true
       }, {
-          field: 'duration',
-          title: 'Duration',
+          field: 'actual_end_date',
+          title: 'End date',
           sortable: true
       }, {
           field: 'kind',
           title: 'Type',
           sortable: true
       }, {
-          field: 'id',
+          field: 'user_id',
           title: 'User ID',
           sortable: true
 
@@ -86,7 +87,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderTimeTable: function() {
-    var options = {team_ids: [1,2,3]};
+    var options = {team_ids: [1,2,3], 'holidays':this.holidays};
         options.from  = moment();
         options.to    = moment().add(2,'months');
 

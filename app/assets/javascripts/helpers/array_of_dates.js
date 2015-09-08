@@ -1,21 +1,19 @@
-// This method should be used as a detatched mathod, as follows:
-//-----------------------------------------------------------------------------
-// var model = new Backbone.Model({
-//               'duration': 3,
-//               'start':    '2015-09-01'
-//             });
-// App.Helpers.arrayOfDates.call(model);
-//-----------------------------------------------------------------------------
-// The helper expects object to be instance of Backbone.Model
-// with 'duration' and 'start' attributes.
-//
-// Returns array of ISO 8601 dates, that is, formatted as 'YYYY-MM-DD'.
-App.Helpers.arrayOfDates = function() {
-  var count = 0,
+// Returns array of date strings formatted as 'YYYY-MM-DD'.
+App.Helpers.arrayOfDates = function(start, duration) {
+  var count;
+  var date = '',
+      dateRegExMatcher = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/,
+      isValidDate = false,
       result = [];
 
-  for (count = 0; count < this.get('duration'); count++) {
-    result.push(moment(this.get('start')).add(count,'days').format('YYYY-MM-DD'));
+  isValidDate = (typeof start === 'string') && dateRegExMatcher.test(start);
+  if (!isValidDate) {
+    return result;
+  }
+
+  for (count = 0; count < duration; count++) {
+    date = moment(start, 'YYYY-MM-DD').add(count,'days').format('YYYY-MM-DD');
+    result.push(date);
   }
 
   return result;

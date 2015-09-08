@@ -1,10 +1,6 @@
 App.Views.ApprovalRequests = Backbone.View.extend({
   template: JST['templates/approval_requests'],
 
-  events: {
-    // 'change select[name=teams]':          'onTeams',
-  },
-
   initialize: function( options ) {
     this.options = options;
     this.el = options.el;
@@ -33,9 +29,8 @@ App.Views.ApprovalRequests = Backbone.View.extend({
   },
 
   renderMessage: function() {
-    console.log('Empty!');
-    var message = 'No pending requests.';
-    var html = '<p>' + message + '</p>';
+    var message = 'No pending requests.',
+        html = '<p>' + message + '</p>';
 
     this.$el.html(html);
   }

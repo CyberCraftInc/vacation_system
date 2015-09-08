@@ -5,15 +5,15 @@ App.Views.TimeTables = Backbone.View.extend({
   events: {
     'change input[name=from]':  'onFrom',
     'change input[name=to]':    'onTo',
-
     'change select[name=view-type]':    'onViewType'
   },
 
   initialize: function(options) {
     this.attributes = {};
+    this.holidays = options.holidays;
     this.timeTableDateRange = {};
 
-    this.teamIDs = options.team_ids;
+    this.teamIDs = options.team_ids || [1];
     this.timeTableViews = [];
 
     this.setDefaultViewType();
@@ -55,10 +55,11 @@ App.Views.TimeTables = Backbone.View.extend({
       $timeTableContainer = $('<div>').appendTo('.time-tables')
         .attr('id', selector);
       this.timeTableViews.push( new timeTable({
-                                  team_id: id,
-                                  el:   '#'+selector,
-                                  from: this.timeTableDateRange.begin,
-                                  to:   this.timeTableDateRange.end
+                                  'team_id': id,
+                                  'el': '#'+selector,
+                                  'from': this.timeTableDateRange.begin,
+                                  'to': this.timeTableDateRange.end,
+                                  'holidays': this.holidays
                                 }));
     }, this);
   },

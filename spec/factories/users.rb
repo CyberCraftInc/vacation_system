@@ -6,11 +6,13 @@ FactoryGirl.define do
     password    'myPrecious'
 
     trait :with_vacations_of_all_statuses do
+      start_date = Time.zone.today
       after :create do |user|
         VacationRequest.statuses.each_value do |status|
+          start_date += 2.days
           FactoryGirl.create  :vacation_request,
                               status: status,
-                              end: Time.zone.today,
+                              start_date: start_date,
                               user: user
         end
       end

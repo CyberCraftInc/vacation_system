@@ -13,8 +13,14 @@ App.Router = Backbone.Router.extend({
   },
 
   dashboard: function() {
+    var holidays = new App.Collections.Holidays();
     $('.content').html("Dashboard =)");
-    App.dashboard = new App.Views.Dashboard();
+
+    holidays.fetch().then(function() {
+      App.dashboard = new App.Views.Dashboard({
+        'holidays': holidays
+      });
+    });
   },
 
   teams: function() {
@@ -33,6 +39,10 @@ App.Router = Backbone.Router.extend({
     App.newVacationRequest = new App.Views.VacationRequestForm({
       'holidays': holidays,
       'availableVacations': availableVacations
+    });
+    // Ensure that all requests are complete
+    availableVacations.fetch().then(function() {
+      holidays.fetch();
     });
   },
 

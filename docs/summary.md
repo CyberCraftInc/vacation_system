@@ -1,5 +1,5 @@
 #   Summary
-This document describes state of the application development as of 2015-09-01.
+This document describes state of the application development as of 2015-09-14.
 
 
 ##  Partially Implemented
@@ -25,11 +25,6 @@ Decide how to improve table.
 
 #### Pending Approval Requests
 Decide how to improve table.
-
-
-### Request New Vacation
-Improve HTML layout.
-Improve logic: consider weekends and holidays.
 
 
 ### List of Vacations

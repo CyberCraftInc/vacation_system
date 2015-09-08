@@ -2,12 +2,9 @@ class VacationRequest < ActiveRecord::Base
   belongs_to  :user
   has_many    :approval_requests
 
-  validates :duration, :kind, :start, :status, :user,
+  validates :kind, :planned_end_date, :start_date, :status, :user,
             presence: true
-  validates :duration,
-            numericality: { only_integer: true,
-                            greater_than: 0 }
-  validates :end,
+  validates :actual_end_date,
             presence: true,
             inclusion: { in: Date.new(2015, 01, 01)..Date.new(2115, 01, 01) },
             if: "status == 'used'"
@@ -21,7 +18,8 @@ class VacationRequest < ActiveRecord::Base
   scope :team_vacations, lambda { |team|
     joins(user: :team_roles)
       .where(team_roles: { team_id: team.id })
-      .select(:id, :user_id, :start, :duration, :kind, :status)
+      .select(:id, :user_id, :kind, :status, :actual_end_date,
+              :planned_end_date, :start_date)
   }
 
   enum status: [
