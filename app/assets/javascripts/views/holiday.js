@@ -68,7 +68,7 @@ App.Views.Holiday = Backbone.View.extend({
     var _description = this.$('input[name=description]').val().trim(),
         _from = this.$('input[name=from]').val().trim(),
         _to   = this.$('input[name=to]').val().trim(),
-        duration = moment.duration(moment(_to).diff(moment(_from))).days()+1,
+        duration = App.Helpers.dateRangeDuration(_from, _to),
 
         result = {
           description: _description,

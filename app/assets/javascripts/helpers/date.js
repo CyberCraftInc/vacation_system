@@ -65,3 +65,8 @@ App.Helpers.getWeekRange = function(date) {
   return moment.range(date.clone().startOf('isoweek'),
                       date.clone().endOf('isoweek'));
 };
+
+// Calculate duration in days
+App.Helpers.dateRangeDuration = function(fromDate, toDate) {
+  return moment(toDate, 'YYYY-MM-DD').diff(moment(fromDate, 'YYYY-MM-DD'), 'days') + 1;
+};
