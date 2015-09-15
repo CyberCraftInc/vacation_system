@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :vacation_request do
     kind    'planned'
-    start_date        '2015-02-28'
+    start_date        { Time.zone.now }
     planned_end_date  { (Date.parse(start_date.to_s) + 2.days).to_s }
     actual_end_date   { planned_end_date }
     status  'requested'

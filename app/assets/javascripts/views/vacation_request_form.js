@@ -15,7 +15,8 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     this.availableVacations = options.availableVacations;
     this.model = new App.Models.VacationRequest();
 
-    this.listenTo(this.holidays, 'sync',  this.render);
+    this.listenTo(this.holidays,  'sync',   this.render);
+    this.listenTo(this.model,     'error',  this.onError);
   },
 
   render: function() {
@@ -29,6 +30,11 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   onClear: function(event) {
     this.$('input[name=from]').val('').trigger('change').datepicker('update');
     this.$('input[name=to]').val('').trigger('change').datepicker('update');
+  },
+
+  onError: function(model, response, options) {
+    // TODO: show error messages to user
+    // console.log(response.responseJSON.errors.base);
   },
 
   onFromChange: function(event) {
