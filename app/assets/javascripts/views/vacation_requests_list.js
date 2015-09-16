@@ -1,5 +1,5 @@
 App.Views.VacationRequestsList = Backbone.View.extend({
-  el: 'section',
+  el: '.vacation-requests-list',
   template: JST['templates/vacation_requests_list'],
 
   events: {
@@ -8,25 +8,31 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     'change input[name=to]':                'onDateTo',
   },
 
-  initialize: function() {
-    this.$el.html(this.template());
-    this.collection = new App.Collections.VacationRequests();
-    // Prepare handy access for the controls
-    this.$table     = this.$('table.vacation-requests');
-    this.$tableRows = this.$('table.vacation-requests tbody');
-    this.$select    = this.$('select[name=vacation-status]');
-    this.$from      = this.$('input[name=from]');
-    this.$to        = this.$('input[name=to]');
+  initialize: function(options) {
+    this.collection = options.vacationRequests;
 
-    this.listenTo(this.collection,  'sync',  this.render);
+    this.listenTo(this.collection, 'sync',  this.renderTable);
 
-    this.collection.fetch();
     this.statusFilter = null;
     this.dateFrom = null;
     this.dateTo   = null;
   },
 
   render: function() {
+    this.$el.html(this.template());
+
+    this.$table     = this.$('table.vacation-requests');
+    this.$tableRows = this.$('table.vacation-requests tbody');
+    this.$select    = this.$('select[name=vacation-status]');
+    this.$from      = this.$('input[name=from]');
+    this.$to        = this.$('input[name=to]');
+
+    this.renderTable();
+
+    return this;
+  },
+
+  renderTable: function() {
     var numberOfVisibleVacations = 0;
     this.$tableRows.empty();
     // Hide empty table
@@ -43,27 +49,27 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     if (numberOfVisibleVacations > 0) {
       this.$table.show();
     }
-
-    return this;
   },
 
-  onStatusChange: function( e ) {
+  onStatusChange: function(event) {
     this.statusFilter = this.$select.val();
-    this.render();
+    this.renderTable();
   },
 
-  onDateFrom: function( e ) {
+  onDateFrom: function(event) {
     this.dateFrom = this.$from.val();
     this.render();
   },
 
-  onDateTo: function( e ) {
+  onDateTo: function(event) {
     this.dateTo = this.$to.val();
     this.render();
   },
 
   // Convert date's string into it's miliseconds representation
-  dateToMS: function( date ) {
+  // TODO: refactor the following code to use just Date objects
+  // as they are comparable by default.
+  dateToMS: function(date) {
     var dateInMS = (new Date(date)).getTime();
 
     var result = date ? dateInMS : 0;
@@ -71,12 +77,12 @@ App.Views.VacationRequestsList = Backbone.View.extend({
   },
 
   // Check if given model should be visible
-  isVacationVisible: function( model ) {
+  isVacationVisible: function(model) {
     var isVisible = false;
     // Calculate date in miliseconds to compare later
     var dateFrom  = this.dateToMS(this.dateFrom);
     var dateTo    = this.dateToMS(this.dateTo);
-    var modelFrom = this.dateToMS(model.get('start'));
+    var modelFrom = this.dateToMS(model.get('start_date'));
 
     var hasProperStatus = _.include(this.statusFilter, model.get('status'));
     var hasProperDateRange = (modelFrom >= dateFrom) && ((modelFrom <= dateTo) || (dateTo === 0));

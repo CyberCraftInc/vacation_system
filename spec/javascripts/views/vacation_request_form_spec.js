@@ -16,8 +16,8 @@ describe('VacationRequestForm view', function() {
       {'id':3,'kind':'unpaid','available_days':5.0,'user_id':1}
     ]);
 
-    setFixtures('<section></section>');
-    this.container = $('section');
+    setFixtures('<div class="new-vacation-request-form"></div>');
+    this.container = $('.new-vacation-request-form');
 
     this.view = new App.Views.VacationRequestForm({
       'holidays': this.holidays,
@@ -44,9 +44,9 @@ describe('VacationRequestForm view', function() {
 
   describe('.updateAvailableDaysInBadges()', function() {
     beforeEach(function() {
-      this.badgePlanned = this.container.find('.badge.planned');
-      this.badgeSickness = this.container.find('.badge.sickness');
-      this.badgeUnpaid = this.container.find('.badge.unpaid');
+      this.badgePlanned   = this.view.$('.badge.planned');
+      this.badgeSickness  = this.view.$('.badge.sickness');
+      this.badgeUnpaid    = this.view.$('.badge.unpaid');
 
       this.badgePlanned.text('');
       this.badgeSickness.text('');
@@ -55,7 +55,8 @@ describe('VacationRequestForm view', function() {
 
     it('sets all the radio button group badges with up-to-date information', function() {
       var newText = '';
-      expect(this.container.find('.badge').length).toEqual(3);
+      console.log(this.view);
+      expect(this.view.$('.badge').length).toEqual(3);
 
       expect(this.badgePlanned).toHaveText('');
       expect(this.badgeSickness).toHaveText('');
@@ -74,7 +75,7 @@ describe('VacationRequestForm view', function() {
 
   describe('.updateRequestButtonState()', function() {
     beforeEach(function() {
-      this.button = this.container.find('button[name=request]');
+      this.button = this.view.$('button[name=request]');
     });
 
     describe('with vacation duration greater than available days in selected vacation type', function() {
@@ -122,9 +123,9 @@ describe('VacationRequestForm view', function() {
 
   describe('responds to jQuery event', function() {
     it('click button[name=clear]', function() {
-      var htmlElement = this.container.find('button[name=clear]'),
-          inputFrom = this.container.find('input[name=from]'),
-          inputTo = this.container.find('input[name=to]');
+      var htmlElement = this.view.$('button[name=clear]'),
+          inputFrom = this.view.$('input[name=from]'),
+          inputTo = this.view.$('input[name=to]');
 
       inputFrom.val('2015-01-01');
       inputTo.val('2015-01-05');
@@ -141,7 +142,7 @@ describe('VacationRequestForm view', function() {
     });
 
     it('change input[name=from]', function() {
-      var htmlElement = this.container.find('input[name=from]'),
+      var htmlElement = this.view.$('input[name=from]'),
           oldValue = this.view.model.get('start_date'),
           newValue = '2015-01-01';
 
@@ -157,7 +158,7 @@ describe('VacationRequestForm view', function() {
     });
 
     it('click button[name=request]', function() {
-      var htmlElement = this.container.find('button[name=request]');
+      var htmlElement = this.view.$('button[name=request]');
       spyOn(this.view, 'onRequest');
       this.view.delegateEvents();
 
@@ -166,7 +167,7 @@ describe('VacationRequestForm view', function() {
     });
 
     it('change input[name=to]', function() {
-      var htmlElement = this.container.find('input[name=to]'),
+      var htmlElement = this.view.$('input[name=to]'),
           oldValue = this.view.model.get('planned_end_date'),
           newValue = '2015-01-01';
 
@@ -180,7 +181,7 @@ describe('VacationRequestForm view', function() {
     });
 
     it('change input:radio[name=vacation-type]', function() {
-      var htmlElement = this.container.find('input:radio[name=vacation-type]'),
+      var htmlElement = this.view.$('input:radio[name=vacation-type]'),
           oldValue = this.view.model.get('kind'),
           newValue = 'unpaid';
 
@@ -199,18 +200,13 @@ describe('VacationRequestForm view', function() {
 
   describe('produces correct HTML', function() {
     beforeEach(function() {
-      this.formContainer = this.container.find('.new-vacation-request');
-      this.datePickerContainer = this.container.find('.input-daterange');
-      this.toggleButtonWrapper = this.container.find('.btn.btn-default');
+      this.datePickerContainer = this.view.$('.input-daterange');
+      this.toggleButtonWrapper = this.view.$('.btn.btn-default');
       this.toggleButtonPlanned = this.toggleButtonWrapper.find('input:radio[name=vacation-type][value="planned"]');
     });
 
-    it('.new-vacation-request', function() {
-      expect(this.container).toContainElement(this.formContainer);
-    });
-
     it('.btn.btn-default', function() {
-      expect(this.formContainer).toContainElement(this.toggleButtonWrapper);
+      expect(this.view.el).toContainElement(this.toggleButtonWrapper);
       expect('.btn.btn-default > input').toHaveLength(3);
       expect('.btn.btn-default > .badge').toHaveLength(3);
     });
@@ -221,7 +217,6 @@ describe('VacationRequestForm view', function() {
       var days = this.availableVacations.models[0].attributes.available_days;
       expect(this.toggleButtonWrapper.selector+' .badge.planned').toHaveText('1|'+days.toString());
       expect(this.toggleButtonWrapper[0]).toContainText('planned');
-      // this.availableVacations
     });
 
     it('input:radio[name=vacation-type][value="sickness"]', function() {
@@ -248,10 +243,10 @@ describe('VacationRequestForm view', function() {
     });
 
     it('button[name=clear]', function() {
-      expect(this.formContainer).toContainElement('button[name=clear]');
+      expect(this.view.el).toContainElement('button[name=clear]');
     });
     it('button[name=request]', function() {
-      expect(this.formContainer).toContainElement('button[name=request]');
+      expect(this.view.el).toContainElement('button[name=request]');
     });
   });
 });
