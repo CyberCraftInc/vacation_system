@@ -13,7 +13,7 @@ App.Views.TimeTables = Backbone.View.extend({
     this.holidays = options.holidays;
     this.timeTableDateRange = {};
 
-    this.teamIDs = options.team_ids || [1];
+    this.teams = options.teams;
     this.timeTableViews = [];
 
     this.setDefaultViewType();
@@ -29,10 +29,8 @@ App.Views.TimeTables = Backbone.View.extend({
     return this;
   },
 
-  update: function(teamIDs) {
-    delete this.members;
-    this.teamIDs = teamIDs;
-    // this.renderTemplate();
+  update: function(teams) {
+    this.teams = teams || this.teams;
     this.renderTimeTables();
     return this;
   },
@@ -50,12 +48,12 @@ App.Views.TimeTables = Backbone.View.extend({
     this.$('.time-tables').empty();
     this.destroyTimeTables();
 
-    this.teamIDs.forEach(function(id) {
-      selector = 'team'+id;
+    this.teams.forEach(function(team) {
+      selector = 'team'+team.id;
       $timeTableContainer = $('<div>').appendTo('.time-tables')
         .attr('id', selector);
       this.timeTableViews.push( new timeTable({
-                                  'team_id': id,
+                                  'team_id': team.id,
                                   'el': '#'+selector,
                                   'from': this.timeTableDateRange.begin,
                                   'to': this.timeTableDateRange.end,
@@ -81,21 +79,21 @@ App.Views.TimeTables = Backbone.View.extend({
   },
 
   // *************************************************************************
-  onFrom: function(e) {
-    this.timeTableDateRange.begin = moment(e.target.value);
+  onFrom: function(event) {
+    this.timeTableDateRange.begin = moment(event.target.value);
     this.updateTimeTables();
   },
 
-  onTo: function(e) {
-    this.timeTableDateRange.end   = moment(e.target.value);
+  onTo: function(event) {
+    this.timeTableDateRange.end   = moment(event.target.value);
     this.updateTimeTables();
   },
 
-  onViewType: function(e) {
-    this.viewType = e.target.value;
+  onViewType: function(event) {
+    this.viewType = event.target.value;
     this.attributes.viewType = this.viewType;
 
-    this.update(this.teamIDs);
+    this.update();
   },
   // *************************************************************************
 
