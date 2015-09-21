@@ -4,6 +4,8 @@ class VacationRequestsController < ApplicationController
 
   def index
     render json: current_user.vacation_requests
+      .select(:id, :kind, :status, :start_date, :actual_end_date,
+              :planned_end_date, :user_id)
   end
 
   def create
@@ -52,7 +54,6 @@ private
   end
 
   def set_allowed_values!
-    @vacation_request.end = ''
     @vacation_request.status = 'requested'
   end
 
@@ -62,6 +63,6 @@ private
 
   def vacation_request_params
     params.require(:vacation_request)
-      .permit(:kind, :start, :end, :duration, :status)
+      .permit(:kind, :status, :start_date, :actual_end_date, :planned_end_date)
   end
 end

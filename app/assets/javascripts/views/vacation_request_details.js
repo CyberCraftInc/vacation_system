@@ -107,9 +107,5 @@ App.Views.VacationRequestDetails = Backbone.View.extend({
       result = (new Date(dateString)).getTime();
     }
     return result;
-  },
-
-  logger: function( e ) {
-    console.log(e);
   }
 });

@@ -1,9 +1,10 @@
 FactoryGirl.define do
   factory :vacation_request do
     kind    'planned'
+    start_date        '2015-02-28'
+    planned_end_date  { (Date.parse(start_date.to_s) + 2.days).to_s }
+    actual_end_date   { planned_end_date }
     status  'requested'
-    start   '2015-02-28'
-    duration  5
     user
 
     trait :unpaid do
@@ -15,7 +16,9 @@ FactoryGirl.define do
     end
 
     trait :invalid do
-      start  '2015-02'
+      start_date        '2015-02'
+      planned_end_date  '20015-02-28'
+      actual_end_date   '2015'
     end
 
     trait :accepted do

@@ -73,13 +73,11 @@ App.Views.Team = Backbone.View.extend({
   onRemove: function() {
     this.model.destroy({
       wait: true,
-      // TODO: assign something here
       success: function( model, response ) {
-        console.log('OK: ' + response);
+      // TODO: inform user about success if needed
       },
-      // TODO: assign something here
       error: function( model, response ) {
-        console.log('FAIL: ' + response);
+      // TODO: inform user about fail if needed
       }
     });
 

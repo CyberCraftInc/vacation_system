@@ -7,6 +7,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     this.el = options.el;
     this.teamID = options.team_id;
 
+    this.holidays   = options.holidays;
     this.members = new App.Collections.TeamMembers(options.team_id);
     this.vacations = new App.Collections.TeamVacations({team_id: options.team_id});
 
@@ -137,7 +138,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
   markVacations: function() {
     this.vacations.each(function(vacation) {
-      this.markVacation(vacation.attributes);
+      this.markVacation(vacation);
     }, this);
   },
 
@@ -147,17 +148,19 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         weekRange = null,
         weekendCounter = 0,
         vacationRange = null,
-        duration = vacation.duration,
-        beginDate = moment(vacation.start);
+        duration = 0,
+        beginDate = moment(vacation.get('start_date'));
+
+    duration = new App.Models.VacationRequest(vacation.attributes).calculateDuration(this.holidays);
 
     for (date = beginDate.clone(); date < moment(beginDate).add(duration, 'days'); date.add(1, 'day')) {
       if (App.Helpers.isWeekend(date.toDate())) {
         duration++;
         continue;
       }
-      selector = '#'+ this.composeCellID(this.teamID, vacation.user_id, date);
-      $(selector).addClass(vacation.kind);
-      $(selector).addClass(vacation.status);
+      selector = '#'+ this.composeCellID(this.teamID, vacation.get('user_id'), date);
+      $(selector).addClass(vacation.get('kind'));
+      $(selector).addClass(vacation.get('status'));
     }
   },
 

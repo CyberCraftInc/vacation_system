@@ -7,7 +7,7 @@ App.Collections.Holidays = Backbone.Collection.extend({
     var result = [];
 
     this.each(function(model) {
-      result.push(App.Helpers.arrayOfDates.call(model));
+      result.push(App.Helpers.arrayOfDates(model.get('start'), model.get('duration')));
     });
 
     return _.flatten(result);

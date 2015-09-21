@@ -10,49 +10,49 @@ RSpec.describe VacationRequest do
   context 'as a brand new object' do
     let(:vacation_request) { VacationRequest.new }
 
-    it { expect(vacation_request).to have_attributes duration: nil }
-    it { expect(vacation_request).to have_attributes end: nil }
     it { expect(vacation_request).to have_attributes kind: 'planned' }
     it { expect(vacation_request).to have_attributes status: 'requested' }
-    it { expect(vacation_request).to have_attributes start: nil }
+    it { expect(vacation_request).to have_attributes actual_end_date: nil }
+    it { expect(vacation_request).to have_attributes planned_end_date: nil }
+    it { expect(vacation_request).to have_attributes start_date: nil }
     it { expect(vacation_request).to have_attributes user_id: nil }
 
     it { expect(vacation_request).not_to be_valid }
   end
 
   it 'allows to pass date in ISO 8601 format, that is, YYYY-MM-DD' do
-    vacation_request = FactoryGirl.build(:vacation_request, start: '2017-05-01')
+    vacation_request = build(:vacation_request, start_date: '2017-05-01')
 
     expect(vacation_request).to be_valid
   end
 
   it 'allows to pass date as a Ruby Date object' do
-    vacation_request = FactoryGirl.build(:vacation_request,
-                                         start: Time.zone.today)
+    vacation_request = build(:vacation_request)
+    record = YAML.load(vacation_request.to_json)
 
-    expect(vacation_request).to be_valid
+    expect { VacationRequest.create(record) }.not_to raise_exception
   end
 
-  it 'does not allow to pass "duration" equal to 0' do
-    vacation_request = FactoryGirl.build(:vacation_request, duration: 0)
+  describe 'with "status=used"' do
+    it 'does not allow to pass "actual_end_date" as incorrect date string' do
+      vacation_request = build(:vacation_request, :invalid, status: 'used')
 
-    expect(vacation_request).not_to be_valid
+      expect(vacation_request).not_to be_valid
+    end
   end
 
-  it 'does not allow to pass "duration" as a float, like 0.5' do
-    vacation_request = FactoryGirl.build(:vacation_request, duration: 5.5)
-
-    expect(vacation_request).not_to be_valid
-  end
-
-  it 'does not allow to pass "end" as incorrect date when "status=used"' do
-    vacation_request = FactoryGirl.build(:vacation_request, status: 'used')
-
-    expect(vacation_request).not_to be_valid
+  describe '.duration' do
+    pending 'To be implemented'
+    # let(:user) { create :user, :with_vacations_of_all_statuses }
+    #
+    # it 'provides accordingly filtered list of vacation requests' do
+    #   expect(user.vacation_requests.count).to eq(6)
+    #   expect(VacationRequest.requested_accepted_inprogress.count).to eq(3)
+    # end
   end
 
   describe '.requested_accepted_inprogress' do
-    let(:user) { FactoryGirl.create :user, :with_vacations_of_all_statuses }
+    let(:user) { create :user, :with_vacations_of_all_statuses }
 
     it 'provides accordingly filtered list of vacation requests' do
       expect(user.vacation_requests.count).to eq(6)
@@ -61,14 +61,14 @@ RSpec.describe VacationRequest do
   end
 
   describe '.team_vacations' do
-    let(:boy)   { FactoryGirl.create :user, :with_vacations_of_all_statuses }
-    let(:girl)  { FactoryGirl.create :user, email: 'lady_in_red@i.ua' }
-    let(:team)  { FactoryGirl.create :team }
+    let(:boy)   { create :user, :with_vacations_of_all_statuses }
+    let(:girl)  { create :user, email: 'lady_in_red@i.ua' }
+    let(:team)  { create :team }
 
     before do
-      FactoryGirl.create :vacation_request, user: girl
-      FactoryGirl.create :team_role, team: team, user: boy
-      FactoryGirl.create :team_role, team: team, user: girl
+      create :vacation_request, user: girl
+      create :team_role, team: team, user: boy
+      create :team_role, team: team, user: girl
     end
 
     it 'provides list of vacation requests for users of specified team' do
@@ -80,9 +80,8 @@ RSpec.describe VacationRequest do
     it { should define_enum_for(:kind) }
     it { should define_enum_for(:status) }
 
-    it { should validate_presence_of(:duration) }
     it { should validate_presence_of(:kind) }
-    it { should validate_presence_of(:start) }
+    it { should validate_presence_of(:start_date) }
     it { should validate_presence_of(:status) }
     it { should validate_presence_of(:user) }
   end

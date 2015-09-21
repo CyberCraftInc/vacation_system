@@ -28,7 +28,7 @@ RSpec.describe VacationRequestsController do
           it 'should add correct vacation request record to DB' do
             expect { send_request }.to change(VacationRequest, :count).by(+1)
 
-            selectors = { start: vacation_request.start }
+            selectors = { start_date: vacation_request.start_date }
             new_vacation_request = VacationRequest.find_by(selectors)
             expect(new_vacation_request.status).not_to be_nil
             expect(new_vacation_request.status).to eq('accepted')
@@ -75,18 +75,18 @@ RSpec.describe VacationRequestsController do
           it 'should add correct vacation request record to DB' do
             expect { send_request }.to change(VacationRequest, :count).by(+1)
 
-            selectors = { start: vacation_request.start }
+            selectors = { start_date: vacation_request.start_date }
             expect(VacationRequest.find_by(selectors)).not_to be_nil
           end
 
           it 'should add correct approval request record to DB' do
             expect { send_request }.to change(ApprovalRequest, :count).by(+1)
 
-            selectors = { start: vacation_request.start }
+            selectors = { start_date: vacation_request.start_date }
             new_vacation_request = VacationRequest.find_by(selectors)
             expect(new_vacation_request.status).not_to be_nil
             expect(new_vacation_request.status).to eq('requested')
-            expect(new_vacation_request.end).to be_nil
+            expect(new_vacation_request.planned_end_date).not_to be_nil
 
             selectors = { vacation_request_id: new_vacation_request.id }
             expect(ApprovalRequest.find_by(selectors)).not_to be_nil
