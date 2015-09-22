@@ -128,11 +128,26 @@ RSpec.describe VacationRequest do
         end
       end
 
-      describe 'with inner intersections' do
+      describe 'with inner intersection' do
         before do
           create(:vacation_request,
                  user: user,
                  start_date: '2015-09-05', planned_end_date: '2015-09-15')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+
+      describe 'with outer intersection' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -203,7 +218,7 @@ RSpec.describe VacationRequest do
         end
       end
 
-      describe 'with inner intersections' do
+      describe 'with inner intersection' do
         before do
           create(:vacation_request,
                  user: another_user,
@@ -211,6 +226,21 @@ RSpec.describe VacationRequest do
         end
 
         it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with outer intersection' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
           expect(vacation_request.errors).to be_empty
           expect(vacation_request).to be_valid
         end

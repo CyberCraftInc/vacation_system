@@ -39,7 +39,6 @@ class VacationRequest < ActiveRecord::Base
 
   def cannot_intersect_with_other_vacations
     number_of_records  = number_of_intersected_records
-    number_of_records += number_of_records_that_include_vacation
 
     errors.add(:base, 'cannot inresect with other vacations')\
       if number_of_records > 0
@@ -47,28 +46,26 @@ class VacationRequest < ActiveRecord::Base
 
 private
 
-  # Number of records that somehow intersect with the vacation
+  # Number of records that somehow intersect with the vacation.
   # For example, the vacation '2015-09-01'..'2015-09-10'
   # intersects with the following vacations:
+  #   - '2015-09-01'..'2015-09-20', the vacation contains subject vacation
   #   - '2015-09-05'..'2015-09-15', by '2015-09-05'
   #   - '2015-08-25'..'2015-09-10', by '2015-09-10'
-  #   - '2015-09-05'..'2015-09-09', by both
-  # The last vacation is actually included by the vacation in subject.
+  #   - '2015-09-05'..'2015-09-09', subject vacation contains the vacation
+  # NOTE: As of RoR 4 there is no way to compose SQL conditions
+  #       with 'OR' operator, by using ActiveRecord.
+  #       DHH promises to release this feature in RoR 5.
+  #       But it is possible to solve the problem with Arel.
+  #       https://github.com/rails/arel
   def number_of_intersected_records
-    VacationRequest.where(
-      VacationRequest.where(start_date: start_date..actual_end_date)
-        .where(actual_end_date: start_date..actual_end_date)
-        .where_values
-        .reduce(:or)
-    ).where(user_id: user_id).count
-  end
+    table = VacationRequest.arel_table
 
-  # Number of records that includes the vacation
-  # For example, the vacation '2015-09-01'..'2015-09-20'
-  # includes the subject vacation '2015-09-05'..'2015-09-15'
-  def number_of_records_that_include_vacation
-    VacationRequest.where('start_date <= ?', start_date)
-      .where('actual_end_date >= ?', actual_end_date)
-      .where(user_id: user_id).count
+    VacationRequest.where(
+      table[:start_date].between(start_date..actual_end_date)
+      .or(table[:actual_end_date].between(start_date..actual_end_date))
+      .or(table[:start_date].lteq(start_date)
+        .and(table[:actual_end_date].gteq(actual_end_date)))
+    ).where(user_id: user_id).count
   end
 end
