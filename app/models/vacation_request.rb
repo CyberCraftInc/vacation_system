@@ -40,7 +40,7 @@ class VacationRequest < ActiveRecord::Base
   def cannot_intersect_with_other_vacations
     number_of_records  = number_of_intersected_records
 
-    errors.add(:base, 'cannot inresect with other vacations')\
+    errors.add(:base, 'cannot intersect with other vacations')\
       if number_of_records > 0
   end
 
