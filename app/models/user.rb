@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
     team_roles.managers.where(team: team).exists?
   end
 
+  def manager_of_user?(user)
+    user.list_of_assigned_managers_ids.include? id
+  end
+
   def manager?
     team_roles.managers.exists?
   end

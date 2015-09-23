@@ -34,5 +34,10 @@ Rails.application.routes.draw do
 
   resources :approval_requests,
             only: [:index],
-            defaults: { format: :json }
+            defaults: { format: :json } do
+    member do
+      get 'accept'
+      get 'decline'
+    end
+  end
 end

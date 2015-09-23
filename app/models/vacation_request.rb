@@ -66,6 +66,6 @@ private
       .or(table[:actual_end_date].between(start_date..actual_end_date))
       .or(table[:start_date].lteq(start_date)
         .and(table[:actual_end_date].gteq(actual_end_date)))
-    ).where(user_id: user_id).count
+    ).where(user_id: user_id).where.not(id: id).count
   end
 end
