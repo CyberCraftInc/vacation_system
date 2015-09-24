@@ -1,5 +1,5 @@
 App.Views.VacationRequestForm = Backbone.View.extend({
-  el: 'section',
+  el: '.new-vacation-request-form',
   template: JST['templates/vacation_request_form'],
 
   events: {
@@ -12,17 +12,18 @@ App.Views.VacationRequestForm = Backbone.View.extend({
 
   initialize: function(options) {
     this.holidays = options.holidays;
+    this.vacationRequests = options.vacationRequests;
     this.availableVacations = options.availableVacations;
     this.model = new App.Models.VacationRequest();
 
-    this.listenTo(this.holidays,  'sync',   this.render);
-    this.listenTo(this.model,     'error',  this.onError);
+    this.listenTo(this.model, 'sync', this.onSuccess);
+    this.listenTo(this.model, 'error', this.onError);
   },
 
   render: function() {
     this.$el.html(this.template({'availableVacations':this.availableVacations.models}));
     App.Helpers.assignDatePicker($('.input-daterange'));
-    this.$('input[value='+this.model.get('kind')+']').trigger('click');
+    this.$('input:radio[value='+this.model.get('kind')+']').trigger('click');
 
     return this;
   },
@@ -30,11 +31,6 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   onClear: function(event) {
     this.$('input[name=from]').val('').trigger('change').datepicker('update');
     this.$('input[name=to]').val('').trigger('change').datepicker('update');
-  },
-
-  onError: function(model, response, options) {
-    // TODO: show error messages to user
-    // console.log(response.responseJSON.errors.base);
   },
 
   onFromChange: function(event) {
@@ -85,4 +81,15 @@ App.Views.VacationRequestForm = Backbone.View.extend({
       $button.addClass('btn-default');
     }
   },
+
+  onError: function(model, response, options) {
+    // TODO: show error messages to user
+    // console.log(response.responseJSON.errors.base);
+  },
+
+  onSuccess: function(model, response, options) {
+    // Trigger 'sync' on the collection to inform it's view,
+    // VacationRequestsList, about changes.
+    this.vacationRequests.fetch();
+  }
 });

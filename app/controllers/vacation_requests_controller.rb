@@ -19,10 +19,11 @@ class VacationRequestsController < ApplicationController
     change_status!(managers_ids)
 
     if @vacation_request.save && create_approval_request(managers_ids)
-      head status: :created
+      render  status: :created,
+              json: @vacation_request
     else
-      render  json: { errors: @vacation_request.errors },
-              status: :unprocessable_entity
+      render  status: :unprocessable_entity,
+              json: { errors: @vacation_request.errors }
     end
   end
 
