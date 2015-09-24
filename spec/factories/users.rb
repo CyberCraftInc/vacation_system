@@ -18,5 +18,16 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :with_available_vacations do
+      after :create do |user|
+        AvailableVacation.kinds.each_value do |kind|
+          FactoryGirl.create  :available_vacation,
+                              available_days: 15,
+                              kind: kind,
+                              user: user
+        end
+      end
+    end
   end
 end

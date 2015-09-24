@@ -1,6 +1,6 @@
 class VacationRequest < ActiveRecord::Base
   belongs_to  :user
-  has_many    :approval_requests
+  has_many    :approval_requests, dependent: :destroy
 
   validate :cannot_intersect_with_other_vacations
   validates :actual_end_date, :kind, :planned_end_date,

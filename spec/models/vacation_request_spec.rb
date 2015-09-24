@@ -33,6 +33,28 @@ RSpec.describe VacationRequest do
     expect { VacationRequest.create(record) }.not_to raise_exception
   end
 
+  it 'destroys all the records of dependant models' do
+    expect(VacationRequest.count).to eq(0)
+    expect(ApprovalRequest.count).to eq(0)
+
+    team = create(:team, :with_users, number_of_members: 1)
+    member = team.team_roles.members.first.user
+    manager = team.team_roles.managers.first.user
+    vacation_request = build(:vacation_request)
+    attrs = vacation_request.attributes.except('id')
+    vacation_request = member.vacation_requests.create(attrs)
+    vacation_request.approval_requests.create(manager_id: manager.id)
+
+    expect(VacationRequest.count).to eq(1)
+    expect(ApprovalRequest.count).to eq(1)
+    expect(vacation_request.approval_requests.count).to eq(1)
+
+    expect { vacation_request.destroy }.not_to raise_exception
+
+    expect(VacationRequest.count).to eq(0)
+    expect(ApprovalRequest.count).to eq(0)
+  end
+
   describe 'with "status=used"' do
     it 'does not allow to pass "planned_end_date" as incorrect date string' do
       vacation_request = build(:vacation_request, :invalid, status: 'used')
