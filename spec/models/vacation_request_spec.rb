@@ -12,7 +12,7 @@ RSpec.describe VacationRequest do
 
     it { expect(vacation_request).to have_attributes kind: 'planned' }
     it { expect(vacation_request).to have_attributes status: 'requested' }
-    it { expect(vacation_request).to have_attributes actual_end_date: nil }
+    it { expect(vacation_request).to have_attributes planned_end_date: nil }
     it { expect(vacation_request).to have_attributes planned_end_date: nil }
     it { expect(vacation_request).to have_attributes start_date: nil }
     it { expect(vacation_request).to have_attributes user_id: nil }
@@ -34,21 +34,218 @@ RSpec.describe VacationRequest do
   end
 
   describe 'with "status=used"' do
-    it 'does not allow to pass "actual_end_date" as incorrect date string' do
+    it 'does not allow to pass "planned_end_date" as incorrect date string' do
       vacation_request = build(:vacation_request, :invalid, status: 'used')
 
       expect(vacation_request).not_to be_valid
     end
   end
 
-  describe '.duration' do
-    pending 'To be implemented'
-    # let(:user) { create :user, :with_vacations_of_all_statuses }
-    #
-    # it 'provides accordingly filtered list of vacation requests' do
-    #   expect(user.vacation_requests.count).to eq(6)
-    #   expect(VacationRequest.requested_accepted_inprogress.count).to eq(3)
-    # end
+  describe '.cannot_intersect_with_other_vacations' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:vacation_request) { FactoryGirl.build(:vacation_request) }
+
+    before do
+      vacation_request.start_date        = '2015-09-01'
+      vacation_request.planned_end_date  = '2015-09-21'
+      vacation_request.actual_end_date   = vacation_request.planned_end_date
+      vacation_request.user = user
+      vacation_request.validate
+    end
+
+    describe 'for the very first vacation request' do
+      it 'does not set any errors' do
+        expect(vacation_request.errors).to be_empty
+        expect(vacation_request).to be_valid
+      end
+    end
+
+    context 'when user has other vacation requests' do
+      describe 'without intersections' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-08-22', planned_end_date: '2015-08-30')
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-09-22', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with intersections on start bound' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+
+      describe 'with intersections on end bound' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+
+      describe 'with intersections on both bounds' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+
+      describe 'with inner intersection' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-09-05', planned_end_date: '2015-09-15')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+
+      describe 'with outer intersection' do
+        before do
+          create(:vacation_request,
+                 user: user,
+                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).not_to be_empty
+          expect(vacation_request).not_to be_valid
+        end
+      end
+    end
+
+    context 'when another user has vacation requests' do
+      describe 'without intersections' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-08-22', planned_end_date: '2015-08-30')
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-09-22', planned_end_date: '2015-09-25')
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with intersections on start bound' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with intersections on end bound' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with intersections on both bounds' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with inner intersection' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-09-05', planned_end_date: '2015-09-15')
+        end
+
+        it 'does not set any errors' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+
+      describe 'with outer intersection' do
+        before do
+          create(:vacation_request,
+                 user: another_user,
+                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
+
+          vacation_request.validate
+        end
+
+        it 'sets error' do
+          expect(vacation_request.errors).to be_empty
+          expect(vacation_request).to be_valid
+        end
+      end
+    end
   end
 
   describe '.requested_accepted_inprogress' do
@@ -80,10 +277,29 @@ RSpec.describe VacationRequest do
     it { should define_enum_for(:kind) }
     it { should define_enum_for(:status) }
 
+    it { should validate_presence_of(:actual_end_date) }
     it { should validate_presence_of(:kind) }
-    it { should validate_presence_of(:start_date) }
+    it { should validate_presence_of(:planned_end_date) }
     it { should validate_presence_of(:status) }
+    it { should validate_presence_of(:start_date) }
     it { should validate_presence_of(:user) }
+
+    it 'should ensure inclusion of actual_end_date in proper range' do
+      vacation_request = build(:vacation_request)
+      vacation_request.actual_end_date = '2014-12-31'
+      expect(vacation_request).to be_invalid
+
+      vacation_request.actual_end_date = '2115-12-31'
+      expect(vacation_request).to be_invalid
+
+      vacation_request.actual_end_date = '2055-12-31'
+      expect(vacation_request).to be_valid
+    end
+
+    it do
+      should validate_inclusion_of(:planned_end_date)
+        .in_range(Date.new(2015, 01, 01)..Date.new(2115, 01, 01))
+    end
   end
 
   context 'associations' do

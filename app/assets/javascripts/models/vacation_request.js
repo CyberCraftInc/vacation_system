@@ -6,7 +6,6 @@ App.Models.VacationRequest = Backbone.Model.extend({
     'start_date':'',
     'planned_end_date':'',
     'actual_end_date':'',
-    'user_id': 0
   },
 
   get: function(attribute) {
@@ -22,9 +21,9 @@ App.Models.VacationRequest = Backbone.Model.extend({
         expected_keys = _.keys(this.defaults),
         forbidden_keys = [];
 
-    // The ID is not expected by backend in case of a new record,
-    // but it is Ok to initialize the attribute as well, if needed.
-    expected_keys.push('id');
+    // Attributes that are not expected by backend in case of a new record,
+    // but it is Ok to initialize a model with these attributes.
+    expected_keys.push('id', 'user_id');
 
     if (_.isObject(arguments[0])) {
       options = _.extend(options, arguments[1]);

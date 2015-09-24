@@ -9,10 +9,11 @@ FactoryGirl.define do
       start_date = Time.zone.today
       after :create do |user|
         VacationRequest.statuses.each_value do |status|
-          start_date += 2.days
+          start_date += 3.days
           FactoryGirl.create  :vacation_request,
                               status: status,
                               start_date: start_date,
+                              planned_end_date: start_date + 2.days,
                               user: user
         end
       end
