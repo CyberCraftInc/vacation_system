@@ -3,40 +3,31 @@ App.Views.Dashboard = Backbone.View.extend({
   template: JST['templates/dashboard'],
 
   events: {
-    'change select[name=teams]': 'onTeams',
+    'change input[name=teams]': 'onTeamToggle',
   },
 
   initialize: function(options) {
     this.holidays = options.holidays;
-    this.teams = new App.Collections.Teams();
+    this.teams = options.teams;
     this.teamID = 0;
-    this.attributes = {role:''};
+    this.data = {role:'', teams:[]};
+    this.data.role = App.currentUserRoles.highestPrivilege();
 
     this.listenTo(this.teams, 'sync', this.render);
-
-    this.teams.fetch();
   },
 
   render: function() {
-    var userTeams = App.currentUserRoles.teams();
-    var filteredTeams = this.teams.filter(function(item) {
-      return _.contains(userTeams, item.id);
-    });
+    var userTeamIDs = App.currentUserRoles.teams();
 
-    this.attributes.teams = filteredTeams;
+    this.data.teams = this.teams.getTeamsByIDs(userTeamIDs);
 
-    this.$el.html(this.template(this.attributes));
-    this.$('select[name=teams]').trigger('change');
-    this.updateUsersRequestsVisibility();
+    this.$el.html(this.template(this.data));
+
     this.renderPersonalRequests();
-    return this;
-  },
-
-  onTeams: function(event) {
-    this.teamID = parseInt(event.target.value);
-    this.attributes.role = App.currentUserRoles.roleFromTeamID(this.teamID);
     this.updateUsersRequestsVisibility();
     this.renderTimeTable();
+
+    return this;
   },
 
   renderPersonalRequests: function() {
@@ -87,7 +78,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderTimeTable: function() {
-    var options = {team_ids: [1,2,3], 'holidays':this.holidays};
+    var options = {'teams': this.data.teams, 'holidays': this.holidays};
         options.from  = moment();
         options.to    = moment().add(2,'months');
 
@@ -98,8 +89,25 @@ App.Views.Dashboard = Backbone.View.extend({
     }
   },
 
+  onTeamToggle: function(event) {
+    var teamIDs = [],
+        toBeAdded = false;
+
+    this.$('input[name=teams]').each(function(index, input) {
+      toBeAdded = $(input).prop('checked');
+      if (toBeAdded) {
+        teamIDs.push(parseInt($(input).prop('value')));
+      }
+    });
+
+    this.data.teams = this.teams.getTeamsByIDs(teamIDs);
+
+    this.updateUsersRequestsVisibility();
+    this.renderTimeTable();
+  },
+
   updateUsersRequestsVisibility: function() {
-    if (this.attributes.role === 'manager') {
+    if (this.data.role === 'manager') {
       this.$('.pending-requests').show();
       this.renderPendingRequests();
     } else {

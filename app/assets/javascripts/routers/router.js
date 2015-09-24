@@ -8,14 +8,18 @@ App.Router = Backbone.Router.extend({
   },
 
   dashboard: function() {
-    var holidays = new App.Collections.Holidays();
-    $('.content').html("Dashboard =)");
+    var holidays = new App.Collections.Holidays(),
+        teams = new App.Collections.Teams();
 
-    holidays.fetch().then(function() {
-      App.dashboard = new App.Views.Dashboard({
-        'holidays': holidays
-      });
+    App.dashboard = new App.Views.Dashboard({
+      'holidays': holidays,
+      'teams': teams
     });
+
+    holidays.fetch()
+      .then(function() {
+        teams.fetch();
+      });
   },
 
   teams: function() {
