@@ -1,5 +1,23 @@
 require 'rails_helper'
 
+RSpec.shared_examples 'request with conflict' do
+  it 'should respond with status code :conflict (409)' do
+    send_request
+    expect(response).to have_http_status(:conflict)
+  end
+
+  it 'should not remove approval request from DB' do
+    expect { send_request }.not_to change(ApprovalRequest, :count)
+  end
+
+  it 'should not change vacation request status' do
+    id = approval_request.vacation_request_id
+
+    expect { send_request }
+      .not_to change { VacationRequest.find_by(id: id).status }
+  end
+end
+
 RSpec.describe ApprovalRequestsController do
   let(:team) { create :team, :with_users, number_of_members: 1 }
   let(:manager) { team.team_roles.managers.first.user }
@@ -12,24 +30,6 @@ RSpec.describe ApprovalRequestsController do
   end
 
   before { create_vacation_request }
-
-  RSpec.shared_examples 'request with conflict' do
-    it 'should respond with status code :conflict (409)' do
-      send_request
-      expect(response).to have_http_status(:conflict)
-    end
-
-    it 'should not remove approval request from DB' do
-      expect { send_request }.not_to change(ApprovalRequest, :count)
-    end
-
-    it 'should not change vacation request status' do
-      id = approval_request.vacation_request_id
-
-      expect { send_request }
-        .not_to change { VacationRequest.find_by(id: id).status }
-    end
-  end
 
   ################################################################## GET #accept
   describe 'GET #accept' do
@@ -178,8 +178,18 @@ RSpec.describe ApprovalRequestsController do
       end
     end
 
-    context 'from unauthenticated user' do
+    context 'from authenticated unauthorized user' do
+      before { sign_in member }
+
       it_should_behave_like 'unauthorized request'
+
+      it 'should not delete approval request from DB' do
+        expect { send_request }.not_to change(ApprovalRequest, :count)
+      end
+    end
+
+    context 'from unauthenticated user' do
+      it_should_behave_like 'unauthenticated request'
 
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
@@ -335,8 +345,18 @@ RSpec.describe ApprovalRequestsController do
       end
     end
 
-    context 'from unauthenticated user' do
+    context 'from authenticated unauthorized user' do
+      before { sign_in member }
+
       it_should_behave_like 'unauthorized request'
+
+      it 'should not delete approval request from DB' do
+        expect { send_request }.not_to change(ApprovalRequest, :count)
+      end
+    end
+
+    context 'from unauthenticated user' do
+      it_should_behave_like 'unauthenticated request'
 
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)

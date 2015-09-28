@@ -13,6 +13,8 @@ class ApprovalRequestsController < ApplicationController
   before_action :set_approval_request, only: [:accept, :decline]
   before_action :check_vacation_request_status, only: [:accept, :decline]
 
+  after_action :verify_authorized, except: :index
+
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
   end
@@ -37,7 +39,7 @@ class ApprovalRequestsController < ApplicationController
   end
 
   def decline
-    # authorize @approval_request
+    authorize @approval_request
     status = VacationRequest.statuses[:declined]
     change_vacation_request_status(status)
     @approval_request.vacation_request.approval_requests.destroy_all
@@ -53,8 +55,7 @@ private
   def change_vacation_request_status(status)
     vacation_request = @approval_request.vacation_request
     vacation_request.status = status
-    vacation_request.save
-    vacation_request.errors
+    vacation_request.save!
   end
 
   def check_vacation_request_status
