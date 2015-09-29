@@ -155,7 +155,7 @@ RSpec.describe VacationRequestsController do
 
     context 'from unauthenticated user' do
       context 'with correct data' do
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not add any record to DB' do
           expect { send_request }.not_to change(VacationRequest, :count)
