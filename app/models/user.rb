@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   has_many  :available_vacations, dependent: :destroy
   has_many  :approval_requests, foreign_key: :manager_id, dependent: :destroy
 
+  def owns_vacation_request?(vacation_request)
+    vacation_requests.ids.include? vacation_request.id
+  end
+
   def manager_of?(team)
     team_roles.managers.where(team: team).exists?
   end
