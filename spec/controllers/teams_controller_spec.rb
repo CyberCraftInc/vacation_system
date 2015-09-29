@@ -25,7 +25,7 @@ RSpec.describe TeamsController do
     context 'from unauthenticated user' do
       before { send_request }
 
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe TeamsController do
       context 'with correct data' do
         let(:team) { FactoryGirl.build(:team, name: 'Superheros') }
 
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not add any record to DB' do
           expect { send_request }.not_to change(Team, :count)
@@ -164,7 +164,7 @@ RSpec.describe TeamsController do
 
         before { send_request }
 
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not update specified record in DB' do
           expect(Team.find_by(id: team.id).name).to eq(team.name)
@@ -246,7 +246,7 @@ RSpec.describe TeamsController do
 
         before { send_request }
 
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not update specified record in DB' do
           expect(Team.find_by(id: team.id).name).to eq(team.name)
@@ -293,7 +293,7 @@ RSpec.describe TeamsController do
         delete :destroy, params
       end
 
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
 
       it 'should not delete specified record' do
         expect(Team.find_by(id: teams.first.id)).not_to be_nil
@@ -337,7 +337,7 @@ RSpec.describe TeamsController do
     end
 
     context 'from unauthenticated user' do
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
     end
   end
 
@@ -374,7 +374,7 @@ RSpec.describe TeamsController do
     end
 
     context 'from unauthenticated user' do
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
     end
   end
 end

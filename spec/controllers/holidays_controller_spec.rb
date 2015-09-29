@@ -26,7 +26,7 @@ RSpec.describe HolidaysController do
     context 'from unauthenticated user' do
       before { send_request }
 
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
     end
   end
 
@@ -80,7 +80,7 @@ RSpec.describe HolidaysController do
 
     context 'from unauthenticated user' do
       context 'with correct data' do
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not add any record to DB' do
           expect { send_request }.not_to change(Holiday, :count)
@@ -150,7 +150,7 @@ RSpec.describe HolidaysController do
       context 'with correct data' do
         before { send_request }
 
-        it_should_behave_like 'unauthorized request'
+        it_should_behave_like 'unauthenticated request'
 
         it 'should not update specified record in DB' do
           expect(Holiday.find_by(id: holiday.id).description)
@@ -197,7 +197,7 @@ RSpec.describe HolidaysController do
         send_request
       end
 
-      it_should_behave_like 'unauthorized request'
+      it_should_behave_like 'unauthenticated request'
 
       it 'should not delete specified record' do
         expect(Holiday.find_by(id: holiday.id)).not_to be_nil
