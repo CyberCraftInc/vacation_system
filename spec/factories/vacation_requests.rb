@@ -40,5 +40,15 @@ FactoryGirl.define do
     trait :used do
       status 'used'
     end
+
+    trait :with_approval_requests do
+      after :create do |vacation_request|
+        user = User.find_by id: vacation_request.user_id
+        user.list_of_assigned_managers_ids.each do |manager_id|
+          ApprovalRequest.create(vacation_request_id: vacation_request.id,
+                                 manager_id: manager_id)
+        end
+      end
+    end
   end
 end
