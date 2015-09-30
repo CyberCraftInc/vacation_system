@@ -24,10 +24,10 @@ class ApprovalRequestsController < ApplicationController
   end
 
   def index
-    vacation_requests_ids = current_user.approval_requests
-                            .pluck(:vacation_request_id).uniq
-    requests = VacationRequest.find vacation_requests_ids
-    render json: requests
+    approvals = current_user.approval_requests
+      .select(:id, :vacation_request_id, :manager_id)
+
+    render json: approvals
   end
 
   def accept
@@ -35,7 +35,7 @@ class ApprovalRequestsController < ApplicationController
     status = VacationRequest.statuses[:accepted]
     change_vacation_request_status(status) if approval_request_count == 1
     @approval_request.destroy
-    head status: :ok
+    render status: :ok, json: {}
   end
 
   def decline
@@ -43,7 +43,7 @@ class ApprovalRequestsController < ApplicationController
     status = VacationRequest.statuses[:declined]
     change_vacation_request_status(status)
     @approval_request.vacation_request.approval_requests.destroy_all
-    head status: :ok
+    render status: :ok, json: {}
   end
 
 private

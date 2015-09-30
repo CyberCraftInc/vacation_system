@@ -21,7 +21,7 @@ class VacationRequestsController < ApplicationController
 
   def create
     @vacation_request = current_user
-                        .vacation_requests.new vacation_request_params
+      .vacation_requests.new vacation_request_params
 
     authorize @vacation_request
     managers_ids = current_user.list_of_assigned_managers_ids

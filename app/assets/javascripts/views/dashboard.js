@@ -36,33 +36,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderPendingRequests: function() {
-    var options = {
-      el:'.pending-requests .panel-body',
-      columns: [{
-          field: 'start_date',
-          title: 'Start date',
-          valign: 'middle',
-          sortable: true
-      }, {
-          field: 'actual_end_date',
-          title: 'End date',
-          valign: 'middle',
-          sortable: true
-      }, {
-          field: 'kind',
-          title: 'Type',
-          align: 'center',
-          valign: 'middle',
-          sortable: true
-      }, {
-          field: 'user_id',
-          title: 'User ID',
-          align: 'center',
-          valign: 'middle',
-          sortable: true
-      }],
-    };
-    this.pendingRequests = new App.Views.ApprovalRequests(options);
+    this.pendingRequests = new App.Views.ApprovalRequests(this.options);
   },
 
   renderTimeTable: function() {
@@ -105,5 +79,5 @@ App.Views.Dashboard = Backbone.View.extend({
         delete this.pendingRequests.remove;
       }
     }
-  },
+  }
 });

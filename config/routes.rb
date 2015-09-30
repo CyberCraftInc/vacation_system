@@ -7,6 +7,7 @@ Rails.application.routes.draw do
             only: [:index],
             defaults: { format: :json } do
     member do
+      get 'approval_requests'
       get 'requested_vacations'
     end
   end
