@@ -30,7 +30,11 @@ Rails.application.routes.draw do
 
   resources :vacation_requests,
             only: [:index, :show, :create, :update],
-            defaults: { format: :json }
+            defaults: { format: :json } do
+    member do
+      get 'cancel'
+    end
+  end
 
   resources :approval_requests,
             only: [:index],

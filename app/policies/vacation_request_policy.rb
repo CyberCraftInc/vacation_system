@@ -11,7 +11,7 @@ class VacationRequestPolicy < ApplicationPolicy
     user.manager? || user.member?
   end
 
-  def destroy?
-    user.manager? || user.member?
+  def cancel?
+    (user.manager? || user.member?) && user.owns_vacation_request?(record)
   end
 end

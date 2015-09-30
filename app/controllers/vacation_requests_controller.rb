@@ -1,6 +1,17 @@
+require 'errors/conflict_error'
+
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_vacation_request, only: [:show, :update]
+  before_action :set_vacation_request, only: [:show, :update, :cancel]
+  before_action :check_vacation_request_status, only: [:cancel]
+
+  rescue_from ActiveRecord::RecordNotFound do
+    head status: :not_found
+  end
+
+  rescue_from Errors::ConflictError do
+    head status: :conflict
+  end
 
   def index
     render json: current_user.vacation_requests
@@ -27,6 +38,8 @@ class VacationRequestsController < ApplicationController
     end
   end
 
+  # TODO: check if the action method below is needed
+  # it seems that is was implemented rather by convection, not by need.
   def show
     render json: @vacation_request
   end
@@ -37,6 +50,14 @@ class VacationRequestsController < ApplicationController
     else
       head  status: :not_found
     end
+  end
+
+  def cancel
+    authorize @vacation_request
+    @vacation_request.update!(status: VacationRequest.statuses[:cancelled])
+    @vacation_request.approval_requests.destroy_all
+
+    render json: @vacation_request
   end
 
 private
@@ -54,12 +75,18 @@ private
     @vacation_request.status = 'accepted' if managers_ids.empty?
   end
 
+  def check_vacation_request_status
+    status = @vacation_request.status
+    allowed_status = (status == 'requested' || status == 'accepted')
+    fail Errors::ConflictError unless allowed_status
+  end
+
   def set_allowed_values!
     @vacation_request.status = 'requested'
   end
 
   def set_vacation_request
-    @vacation_request = VacationRequest.find params[:id]
+    @vacation_request = VacationRequest.find_by!(id: params[:id])
   end
 
   def vacation_request_params
