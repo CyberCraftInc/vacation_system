@@ -7,6 +7,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   initialize: function(options) {
+    this.options = options;
     this.holidays = options.holidays;
     this.teams = options.teams;
     this.teamID = 0;
@@ -31,25 +32,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderPersonalRequests: function() {
-    var userID = App.currentUser.get('id');
-    var options = {
-      user_id:userID,
-      el:'.personal-requests .panel-body',
-      columns: [{
-          field: 'start_date',
-          title: 'Start date',
-          sortable: true
-      }, {
-          field: 'actual_end_date',
-          title: 'End date',
-          sortable: true
-      }, {
-          field: 'kind',
-          title: 'Type',
-          sortable: true
-      }],
-    };
-    this.personalRequests = new App.Views.ApprovalRequests(options);
+    this.personalRequests = new App.Views.PersonalVacationRequests(this.options);
   },
 
   renderPendingRequests: function() {
@@ -58,20 +41,25 @@ App.Views.Dashboard = Backbone.View.extend({
       columns: [{
           field: 'start_date',
           title: 'Start date',
+          valign: 'middle',
           sortable: true
       }, {
           field: 'actual_end_date',
           title: 'End date',
+          valign: 'middle',
           sortable: true
       }, {
           field: 'kind',
           title: 'Type',
+          align: 'center',
+          valign: 'middle',
           sortable: true
       }, {
           field: 'user_id',
           title: 'User ID',
+          align: 'center',
+          valign: 'middle',
           sortable: true
-
       }],
     };
     this.pendingRequests = new App.Views.ApprovalRequests(options);
