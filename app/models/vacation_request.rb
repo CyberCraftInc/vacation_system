@@ -38,7 +38,7 @@ class VacationRequest < ActiveRecord::Base
   ]
 
   def cannot_intersect_with_other_vacations
-    number_of_records  = number_of_intersected_records
+    number_of_records = number_of_intersected_records
 
     errors.add(:base, 'cannot intersect with other vacations')\
       if number_of_records > 0
@@ -66,6 +66,12 @@ private
       .or(table[:actual_end_date].between(start_date..actual_end_date))
       .or(table[:start_date].lteq(start_date)
         .and(table[:actual_end_date].gteq(actual_end_date)))
-    ).where(user_id: user_id).where.not(id: id).count
+    )
+      .where(user_id: user_id)
+      .where.not(id: id,
+                 status: [
+                   VacationRequest.statuses[:cancelled],
+                   VacationRequest.statuses[:declined]]
+                ).count
   end
 end
