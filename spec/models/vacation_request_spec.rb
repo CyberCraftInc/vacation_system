@@ -179,6 +179,38 @@ RSpec.describe VacationRequest do
           expect(vacation_request).not_to be_valid
         end
       end
+
+      context 'with any kind of intersections' do
+        describe 'with status="cancelled"' do
+          before do
+            create(:vacation_request,
+                   user: user,
+                   start_date: '2015-08-30', planned_end_date: '2015-09-25',
+                   status: VacationRequest.statuses[:cancelled])
+            vacation_request.validate
+          end
+
+          it 'does not set any errors' do
+            expect(vacation_request.errors).to be_empty
+            expect(vacation_request).to be_valid
+          end
+        end
+
+        describe 'with status="declined"' do
+          before do
+            create(:vacation_request,
+                   user: user,
+                   start_date: '2015-08-30', planned_end_date: '2015-09-25',
+                   status: VacationRequest.statuses[:declined])
+            vacation_request.validate
+          end
+
+          it 'does not set any errors' do
+            expect(vacation_request.errors).to be_empty
+            expect(vacation_request).to be_valid
+          end
+        end
+      end
     end
 
     context 'when another user has vacation requests' do
