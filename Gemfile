@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.1'
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.20'
 gem 'jbuilder', '~> 2.0'
-gem 'devise'
+gem 'devise', '3.5.2'
 gem 'devise_invitable'
 gem 'pundit'
 
@@ -24,7 +24,7 @@ group :test do
   gem 'database_cleaner'
   gem 'capybara'
   gem 'poltergeist'
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers', '< 3.0', require: false
   gem 'ffaker',           require: false
 end
 
