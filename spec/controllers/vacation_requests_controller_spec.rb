@@ -1,30 +1,5 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'request with conflict' do
-  it 'should respond with status code :conflict (409)' do
-    send_request
-    expect(response).to have_http_status(:conflict)
-  end
-
-  it 'should not change vacation request status' do
-    expect { send_request }
-      .not_to change { VacationRequest.find_by(id: vacation_request.id).status }
-  end
-end
-
-RSpec.shared_examples 'pretty request' do
-  it 'should respond with status code :ok (200)' do
-    send_request
-    expect(response).to have_http_status(:ok)
-  end
-
-  it 'should set vacation request status to "cancelled"' do
-    expect { send_request }
-      .to change { VacationRequest.find_by(id: vacation_request.id).status }
-      .to('cancelled')
-  end
-end
-
 RSpec.describe VacationRequestsController do
   let(:team) { create :team, :with_users, number_of_members: 1 }
   let(:manager) { team.team_roles.managers.first.user }
@@ -32,6 +7,32 @@ RSpec.describe VacationRequestsController do
   let(:guest)   { team.team_roles.guests.first.user }
   let(:user)    { manager }
   let(:vacation_request) { create(:vacation_request, user: user) }
+
+  shared_examples 'request with conflict' do
+    it 'should respond with status code :conflict (409)' do
+      send_request
+      expect(response).to have_http_status(:conflict)
+    end
+
+    it 'should not change vacation request status' do
+      vr = vacation_request
+      expect { send_request }
+        .not_to change { VacationRequest.find_by(id: vr.id).status }
+    end
+  end
+
+  shared_examples 'pretty request' do
+    it 'should respond with status code :ok (200)' do
+      send_request
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should set vacation request status to "cancelled"' do
+      expect { send_request }
+        .to change { VacationRequest.find_by(id: vacation_request.id).status }
+        .to('cancelled')
+    end
+  end
 
   ################################################################# POST #create
   describe 'POST #create' do
@@ -97,11 +98,8 @@ RSpec.describe VacationRequestsController do
             expect(response).to have_http_status(:created)
           end
 
-          it 'should add correct vacation request record to DB' do
+          it 'should add vacation request record to DB' do
             expect { send_request }.to change(VacationRequest, :count).by(+1)
-
-            selectors = { start_date: vacation_request.start_date }
-            expect(VacationRequest.find_by(selectors)).not_to be_nil
           end
 
           it 'should add correct approval request record to DB' do

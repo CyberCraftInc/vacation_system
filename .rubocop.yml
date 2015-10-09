@@ -1,5 +1,5 @@
 Documentation:
-    Enabled: false
+  Enabled: false
 
 SingleSpaceBeforeFirstArg:
   Enabled: false
@@ -9,3 +9,7 @@ Style/AccessModifierIndentation:
 
 Style/FileName:
   Enabled: false
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+# https://github.com/bbatsov/rubocop/blob/master/config/default.yml

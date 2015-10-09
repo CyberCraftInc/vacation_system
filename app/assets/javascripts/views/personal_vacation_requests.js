@@ -3,7 +3,6 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
   template: JST['templates/vacation_requests_table'],
 
   operationsEvents: function() {
-    console.log(this);
     return {
       'click button[name=cancel]': this.onCancel
     };

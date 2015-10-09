@@ -1,18 +1,7 @@
 App.Collections.ApprovalRequests = Backbone.Collection.extend({
-  url: '/approval_requests/',
-  model: App.Models.ApprovalRequest,
-
-  initialize: function( options ) {
-    if (!_.isUndefined(options)) {
-      this.updateURL(options);
-    }
+  url: function () {
+    var userID = App.currentUser.get('id').toString();
+    return 'users/'+userID+'/approval_requests';
   },
-
-  updateURL: function( options ) {
-    if (!_.isUndefined(options.user_id)) {
-      this.url = function() {
-        return '/users/' + options.user_id.toString() + '/requested_vacations/';
-      };
-    }
-  }
+  model: App.Models.ApprovalRequest
 });
