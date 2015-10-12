@@ -18,6 +18,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
 
     this.listenTo(this.model, 'sync', this.onSuccess);
     this.listenTo(this.model, 'error', this.onError);
+    this.listenTo(this.model, 'invalid', this.onInvalid);
   },
 
   render: function() {
@@ -28,9 +29,9 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     return this;
   },
 
-  onClear: function(event) {
-    this.$('input[name=from]').val('').trigger('change').datepicker('update');
-    this.$('input[name=to]').val('').trigger('change').datepicker('update');
+  onClear: function() {
+    this.clearModel();
+    this.clearForm();
   },
 
   onFromChange: function(event) {
@@ -51,6 +52,49 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   onTypeChange: function(event) {
     this.model.set('kind', event.currentTarget.value);
     this.updateFormState();
+  },
+
+  onError: function(model, response, options) {
+    // TODO: show error messages to user
+    // console.log(response.responseJSON.errors.base);
+    console.error(response.responseJSON.errors);
+  },
+
+  onInvalid: function(model, response, options) {
+    // TODO: show error messages to user
+    console.error(model.validationError);
+  },
+
+  onSuccess: function(model, response, options) {
+    // Trigger 'sync' on the collection to initiate it's view,
+    // VacationRequestsList, about changes.
+    this.vacationRequests.fetch();
+    // TODO: add some tests
+    // Clear model to set it as a new one,
+    // and initialize it with form data.
+    // Otherwise, the model is initialized with response data and a next save()
+    // will emit PUT request (update) instead of POST (create)
+    this.clearModel();
+    this.fetchFormData();
+  },
+
+  fetchFormData: function () {
+    this.model.set('kind',              this.$('input:radio[name=vacation-type]:checked').val());
+    this.model.set('start_date',        this.$('input[name=from]').val());
+    this.model.set('planned_end_date',  this.$('input[name=to]').val());
+  },
+
+  clearForm: function () {
+    this.$('input[name=from]').val('').trigger('change').datepicker('update');
+    this.$('input[name=to]').val('').trigger('change').datepicker('update');
+    this.$('input:radio[value='+this.model.get('kind')+']').trigger('click');
+  },
+
+  clearModel: function () {
+    // TODO: add some feature tests
+    // this.model = new App.Models.VacationRequest();
+    this.model.clear();
+    this.model.set(this.model.defaults);
   },
 
   updateAvailableDaysInBadges: function() {
@@ -80,16 +124,5 @@ App.Views.VacationRequestForm = Backbone.View.extend({
       $button.removeClass('btn-danger');
       $button.addClass('btn-default');
     }
-  },
-
-  onError: function(model, response, options) {
-    // TODO: show error messages to user
-    // console.log(response.responseJSON.errors.base);
-  },
-
-  onSuccess: function(model, response, options) {
-    // Trigger 'sync' on the collection to inform it's view,
-    // VacationRequestsList, about changes.
-    this.vacationRequests.fetch();
   }
 });
