@@ -18,6 +18,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
 
     this.listenTo(this.model, 'sync', this.onSuccess);
     this.listenTo(this.model, 'error', this.onError);
+    this.listenTo(this.model, 'invalid', this.onInvalid);
   },
 
   render: function() {
@@ -56,6 +57,12 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   onError: function(model, response, options) {
     // TODO: show error messages to user
     // console.log(response.responseJSON.errors.base);
+    console.error(response.responseJSON.errors);
+  },
+
+  onInvalid: function(model, response, options) {
+    // TODO: show error messages to user
+    console.error(model.validationError);
   },
 
   onSuccess: function(model, response, options) {
