@@ -2,8 +2,7 @@ require 'errors/conflict_error'
 
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_vacation_request, only: [:show, :update, :cancel]
-  before_action :check_vacation_request_status, only: [:cancel]
+  before_action :set_vacation_request, only: [:show, :update, :cancel, :start]
 
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
@@ -54,8 +53,17 @@ class VacationRequestsController < ApplicationController
 
   def cancel
     authorize @vacation_request
+    check_status_for_cancel
     @vacation_request.update!(status: VacationRequest.statuses[:cancelled])
     @vacation_request.approval_requests.destroy_all
+
+    render json: @vacation_request
+  end
+
+  def start
+    authorize @vacation_request
+    check_status_for_start
+    @vacation_request.update!(status: VacationRequest.statuses[:inprogress])
 
     render json: @vacation_request
   end
@@ -75,10 +83,14 @@ private
     @vacation_request.status = 'accepted' if managers_ids.empty?
   end
 
-  def check_vacation_request_status
+  def check_status_for_cancel
     status = @vacation_request.status
     allowed_status = (status == 'requested' || status == 'accepted')
     fail Errors::ConflictError unless allowed_status
+  end
+
+  def check_status_for_start
+    fail Errors::ConflictError unless @vacation_request.status == 'accepted'
   end
 
   def set_allowed_values!

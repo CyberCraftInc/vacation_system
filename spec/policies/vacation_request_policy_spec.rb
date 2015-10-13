@@ -29,7 +29,7 @@ describe VacationRequestPolicy do
     end
   end
 
-  permissions :cancel? do
+  permissions :cancel?, :start? do
     context 'for user with manager role' do
       let(:user) { manager }
 
