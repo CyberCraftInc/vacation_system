@@ -81,7 +81,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
   },
 
   ownerOperationsFormatter: function(value, row, index) {
-    if (row.status === 'cancelled') {
+    if (row.status === App.Vacation.statuses.cancelled) {
       return '';
     }
 
