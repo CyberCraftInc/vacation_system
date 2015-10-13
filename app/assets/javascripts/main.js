@@ -7,4 +7,14 @@ window.App = {
   Router: {},
   Models: {},
   Views: {},
+  Vacation: {
+    statuses: {
+      requested: 'requested',
+      accepted: 'accepted',
+      declined: 'declined',
+      cancelled: 'cancelled',
+      inprogress: 'inprogress',
+      used: 'used'
+    }
+  }
 };
