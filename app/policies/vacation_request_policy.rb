@@ -15,6 +15,10 @@ class VacationRequestPolicy < ApplicationPolicy
     manager_or_member_who_owns_vacation?
   end
 
+  def finish?
+    manager_or_member_who_owns_vacation?
+  end
+
   def start?
     manager_or_member_who_owns_vacation?
   end

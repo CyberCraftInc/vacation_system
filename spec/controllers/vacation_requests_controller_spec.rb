@@ -34,6 +34,19 @@ RSpec.describe VacationRequestsController do
     end
   end
 
+  shared_examples 'pretty finish request' do
+    it 'should respond with status code :ok (200)' do
+      send_request
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should set vacation request status to "used"' do
+      expect { send_request }
+        .to change { VacationRequest.find_by(id: vacation_request.id).status }
+        .to('used')
+    end
+  end
+
   shared_examples 'pretty start request' do
     it 'should respond with status code :ok (200)' do
       send_request
@@ -350,6 +363,159 @@ RSpec.describe VacationRequestsController do
       context 'when vacation request status is set to "inprogress"' do
         let(:vacation_request) do
           create(:vacation_request, user: user, status: 'inprogress')
+        end
+
+        it_should_behave_like 'request with conflict'
+      end
+
+      context 'when vacation request status is set to "used"' do
+        let(:vacation_request) do
+          create(:vacation_request, user: user, status: 'used')
+        end
+
+        it_should_behave_like 'request with conflict'
+      end
+    end
+
+    context 'from unauthenticated user' do
+      it_should_behave_like 'unauthenticated request'
+
+      it 'should not change vacation request status' do
+        id = vacation_request.id
+        expect { send_request }
+          .not_to change { VacationRequest.find_by(id: id).status }
+      end
+    end
+  end
+
+  ################################################################## GET #finish
+  describe 'GET #finish', focus: true do
+    let(:team) do
+      create :team, :with_users, number_of_managers: 2, number_of_members: 1
+    end
+    let(:send_request) { get :finish, params }
+    let(:params) { Hash[format: :json, id: vacation_request.id] }
+
+    context 'from authenticated user' do
+      before { sign_in user }
+
+      context 'with ID of not existing vacation request' do
+        let(:params) { Hash[format: :json, id: (vacation_request.id - 1)] }
+
+        it 'should respond with status code :not_found (404)' do
+          send_request
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context 'with manager role' do
+        context 'who owns the vacation request' do
+          let(:vacation_request) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          context 'when vacation request status is set to "inprogress"' do
+            let(:vacation_request) do
+              create(:vacation_request, user: user, status: 'inprogress')
+            end
+
+            it_should_behave_like 'pretty finish request'
+          end
+        end
+
+        context 'who does not own the vacation request' do
+          let(:vacation_request) do
+            create(:vacation_request, :with_approval_requests, user: member)
+          end
+
+          it 'should not change vacation request status' do
+            id = vacation_request.id
+
+            expect { send_request }
+              .not_to change { VacationRequest.find_by(id: id).status }
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+
+      context 'with member role' do
+        let(:user) { member }
+        context 'who owns the vacation request' do
+          let(:vacation_request) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          context 'when vacation request status is set to "inprogress"' do
+            let(:vacation_request) do
+              create(:vacation_request, user: user, status: 'inprogress')
+            end
+
+            it_should_behave_like 'pretty finish request'
+          end
+        end
+
+        context 'who does not own the vacation request' do
+          let(:vacation_request) do
+            create(:vacation_request, :with_approval_requests, user: manager)
+          end
+
+          it 'should not change vacation request status' do
+            id = vacation_request.id
+
+            expect { send_request }
+              .not_to change { VacationRequest.find_by(id: id).status }
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+
+      context 'with guest role' do
+        let(:user) { guest }
+        context 'who owns the vacation request' do
+          let(:vacation_request) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          it 'should not change vacation request status' do
+            id = vacation_request.id
+
+            expect { send_request }
+              .not_to change { VacationRequest.find_by(id: id).status }
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+
+      context 'when vacation request status is set to "requested"' do
+        let(:vacation_request) do
+          create(:vacation_request, user: user, status: 'requested')
+        end
+
+        it_should_behave_like 'request with conflict'
+      end
+
+      context 'when vacation request status is set to "accepted"' do
+        let(:vacation_request) do
+          create(:vacation_request, user: user, status: 'accepted')
+        end
+
+        it_should_behave_like 'request with conflict'
+      end
+
+      context 'when vacation request status is set to "declined"' do
+        let(:vacation_request) do
+          create(:vacation_request, user: user, status: 'declined')
+        end
+
+        it_should_behave_like 'request with conflict'
+      end
+
+      context 'when vacation request status is set to "cancelled"' do
+        let(:vacation_request) do
+          create(:vacation_request, user: user, status: 'cancelled')
         end
 
         it_should_behave_like 'request with conflict'
