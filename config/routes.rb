@@ -34,6 +34,7 @@ Rails.application.routes.draw do
             defaults: { format: :json } do
     member do
       get 'cancel'
+      get 'start'
     end
   end
 

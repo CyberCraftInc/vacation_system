@@ -4,14 +4,28 @@ class VacationRequestPolicy < ApplicationPolicy
   end
 
   def create?
-    user.manager? || user.member?
+    manager_or_member?
   end
 
   def update?
-    user.manager? || user.member?
+    manager_or_member?
   end
 
   def cancel?
+    manager_or_member_who_owns_vacation?
+  end
+
+  def start?
+    manager_or_member_who_owns_vacation?
+  end
+
+private
+
+  def manager_or_member?
+    (user.manager? || user.member?)
+  end
+
+  def manager_or_member_who_owns_vacation?
     (user.manager? || user.member?) && user.owns_vacation_request?(record)
   end
 end

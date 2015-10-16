@@ -4,7 +4,8 @@ App.Views.VacationRequestsList = Backbone.View.extend({
 
   operationsEvents: function() {
     return {
-      'click button[name=cancel]': this.onCancel
+      'click button[name=cancel]':  this.onCancel,
+      'click button[name=start]':   this.onStart
     };
   },
 
@@ -14,6 +15,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.listenTo(this.collection, 'sync',  this.renderTable);
 
     this.onCancel = _.bind(this.onCancel, this);
+    this.onStart  = _.bind(this.onStart, this);
   },
 
   render: function() {
@@ -80,11 +82,39 @@ App.Views.VacationRequestsList = Backbone.View.extend({
       });
   },
 
+  onStart: function(event, value, row, index) {
+    var that = this;
+
+    $.get('vacation_requests/'+row.id.toString()+'/start')
+      .done(function() {
+        // TODO: implement notification, if needed
+        // Trigger table update
+        console.log('DONE');
+        that.collection.fetch();
+      })
+      .fail(function(response) {
+        // TODO: implement notification
+        console.error('FAIL');
+        console.error(response.responseText);
+      });
+  },
+
   ownerOperationsFormatter: function(value, row, index) {
-    if (row.status === App.Vacation.statuses.cancelled) {
-      return '';
+    var buttons = [],
+        canBeCancelled = false,
+        canBeSetToInprogress = false;
+
+    canBeCancelled = (row.status !== App.Vacation.statuses.cancelled && row.status !== App.Vacation.statuses.inprogress);
+    canBeSetToInprogress = (row.status === App.Vacation.statuses.accepted);
+
+    if (canBeSetToInprogress) {
+      buttons.push(JST['templates/vacation_operations/inprogress']());
     }
 
-    return JST['templates/approval_request_owner_operations']();
+    if (canBeCancelled) {
+      buttons.push(JST['templates/vacation_operations/cancelled']());
+    }
+
+    return buttons.join('&nbsp;');
   }
 });
