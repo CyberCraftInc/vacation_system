@@ -1,5 +1,7 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+# This file should contain all the record creation needed to seed the database
+# with its default values.
+# The data can then be loaded with the rake db:seed (or created alongside
+# the db with db:setup).
 #
 # Examples:
 #
@@ -22,16 +24,17 @@ begin
   report 'Populating DB with users...'
 
   leaders = [
-    { email: 'iron@i.ua',     first_name: 'J.A.R.V.I.S' },
-    { email: 'prime@i.ua',    first_name: 'Optimus',  last_name: 'Prime' },
-    { email: 'megatron@i.ua', first_name: 'Megatron' },
-    { email: 'ironman@i.ua',  first_name: 'Tony',  last_name: 'Stark' }
+    { email: 'iron@i.ua',       first_name: 'J.A.R.V.I.S' },
+    { email: 'prime@i.ua',      first_name: 'Optimus', last_name: 'Prime' },
+    { email: 'megatron@i.ua',   first_name: 'Megatron' },
+    { email: 'ironman@i.ua',    first_name: 'Tony', last_name: 'Stark' },
+    { email: 'ironmaiden@i.ua', first_name: 'Pepper', last_name: 'Potts' }
   ]
 
   # Add some members for JARVIS's team
   @avengers_members = []
   5.times do |n|
-    @avengers_members << { email: "suit#{n}@i.ua",    first_name: "Suit#{n}" }
+    @avengers_members << { email: "suit#{n}@i.ua", first_name: "Suit#{n}" }
   end
 
   # Add some members for Optimus's team
@@ -101,6 +104,25 @@ begin
   TeamRole.create do |r|
     r.role    = 'manager'
     r.user_id = User.find_by(first_name: 'Megatron').id
+    r.team_id = @decepticons.id
+  end
+
+  # Let Pepper to manage all the teams. True Iron Maiden :D
+  TeamRole.create do |r|
+    r.role    = 'manager'
+    r.user_id = User.find_by(first_name: 'Pepper').id
+    r.team_id = @avengers.id
+  end
+
+  TeamRole.create do |r|
+    r.role    = 'manager'
+    r.user_id = User.find_by(first_name: 'Pepper').id
+    r.team_id = @autobots.id
+  end
+
+  TeamRole.create do |r|
+    r.role    = 'manager'
+    r.user_id = User.find_by(first_name: 'Pepper').id
     r.team_id = @decepticons.id
   end
 
