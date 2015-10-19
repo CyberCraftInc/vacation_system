@@ -1,10 +1,15 @@
+require 'available_vacations/calculus'
 require 'errors/conflict_error'
+
+include AvailableVacations
 
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_vacation_request,
                 only: [:show, :update, :cancel, :finish, :start]
 
+  after_action  :update_available_vacations!,
+                only: [:index, :finish]
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
   end
@@ -112,6 +117,17 @@ private
 
   def set_vacation_request
     @vacation_request = VacationRequest.find_by!(id: params[:id])
+  end
+
+  def update_available_vacations!
+    return unless @vacation_request
+
+    kind = @vacation_request.kind
+    used = current_user.used_days(kind)
+    accumulated = current_user.accumulated_days(kind)
+
+    current_user.available_vacations.find_by!(kind: kind)
+      .update_attribute(:available_days, accumulated - used)
   end
 
   def vacation_request_params

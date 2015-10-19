@@ -1,6 +1,6 @@
 #   Vacation Management System for CyberCraft Inc.
 
-##  Install
+##  Installation
 The project is powered by **Ruby**, **Node.js**, **Ruby on Rails**, **Backbone**, and **MySQL**.
 
 
@@ -87,3 +87,6 @@ For details on how to install **Node.js** see https://nodejs.org.
     bundle exec rake db:migrate
     bundle exec rake db:seed
     ```
+
+##  Deployment
+The application server is to be hosted on Heroku.

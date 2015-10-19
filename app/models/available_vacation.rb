@@ -1,3 +1,7 @@
+require 'available_vacations/calculus'
+
+include AvailableVacations
+
 class AvailableVacation < ActiveRecord::Base
   belongs_to :user
 
@@ -17,4 +21,19 @@ class AvailableVacation < ActiveRecord::Base
     :unpaid,
     :sickness
   ]
+
+  def accumulate_more_days
+    diff_in_days = days_since_last_update
+    to_be_upadted = (diff_in_days > 0 && kind != 'unpaid')
+    if to_be_upadted
+      days = diff_in_days * AvailableVacations::RATES[kind.to_sym]
+      update_attribute(:available_days, available_days + days)
+    end
+  end
+
+private
+
+  def days_since_last_update
+    Time.zone.today - updated_at.to_date
+  end
 end

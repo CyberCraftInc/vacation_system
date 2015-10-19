@@ -102,7 +102,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
 
     this.availableVacations.each(function(model) {
       $badge = this.$('.badge.'+model.attributes.kind);
-      $badge.text(this.model.calculateDuration(this.holidays)+'|'+model.attributes.available_days);
+      $badge.text(this.model.calculateDuration(this.holidays)+'|'+Math.floor(model.attributes.available_days));
     }, this);
   },
 

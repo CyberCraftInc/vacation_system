@@ -12,4 +12,7 @@ Style/FileName:
 
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
+
+Style/GuardClause:
+  Enabled: false
 # https://github.com/bbatsov/rubocop/blob/master/config/default.yml

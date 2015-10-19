@@ -302,6 +302,186 @@ RSpec.describe VacationRequest do
     end
   end
 
+  describe '.duration', focus: true do
+    let(:result) { vacation.duration(Holiday.dates) }
+    let(:vacation) do
+      build(:vacation_request,
+            start_date: '2015-10-01', planned_end_date: '2015-10-10')
+    end
+    let(:duration) { 10 }
+    let(:weekends) { 3 }
+    let(:holidays) { 0 }
+    let(:expectation) { duration - weekends - holidays }
+
+    shared_examples 'a good boy' do
+      it 'and returns correct result' do
+        expect(result).to eq(expectation)
+      end
+    end
+
+    context 'when there is no holidays, and no weekends' do
+      let(:duration) { 5 }
+      let(:weekends) { 0 }
+      let(:vacation) do
+        build(:vacation_request,
+              start_date: '2015-10-05', planned_end_date: '2015-10-09')
+      end
+
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends' do
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekday holiday for a day,' do
+      let(:holidays) { 1 }
+      before do
+        create(:holiday, start: vacation.start_date + 5.days)
+      end
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekday holiday for two days,' do
+      let(:holidays) { 2 }
+      before do
+        create(:holiday, start: vacation.start_date + 5.days, duration: 2)
+      end
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekday holiday for three days,' do
+      let(:holidays) { 3 }
+      before do
+        create(:holiday, start: vacation.start_date + 5.days, duration: 3)
+      end
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekend holiday for a day,' do
+      let(:holidays) { 0 }
+      before do
+        create(:holiday, start: vacation.start_date + 2.days)
+      end
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekend holiday for two days,' do
+      let(:holidays) { 0 }
+      before do
+        create(:holiday, start: vacation.start_date + 2.days, duration: 2)
+      end
+      it_behaves_like 'a good boy'
+    end
+
+    context 'when there are weekends, and a weekend holiday for three days,' do
+      let(:holidays) { 1 }
+      before do
+        create(:holiday, start: vacation.start_date + 2.days, duration: 3)
+      end
+      it_behaves_like 'a good boy'
+    end
+  end
+
+  describe '.overlaps?' do
+    let(:vacation) do
+      FactoryGirl.build(:vacation_request,
+                        start_date: '2015-09-05',
+                        planned_end_date: '2015-09-15')
+    end
+
+    context 'when vacation is surrounded' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-01',
+                          planned_end_date: '2015-09-20')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when another vacation is surrounded' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-06',
+                          planned_end_date: '2015-09-10')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when vacation overlaps only by start date' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-01',
+                          planned_end_date: '2015-09-10')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when vacation overlaps only by end date' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-10',
+                          planned_end_date: '2015-09-20')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when vacation and another vacation overlap by start-end dates' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-01',
+                          planned_end_date: '2015-09-05')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when vacation and another vacation overlap by end-start dates' do
+      let(:another) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-15',
+                          planned_end_date: '2015-09-20')
+      end
+
+      it 'returns :true' do
+        expect(vacation.overlaps?(another)).to be_truthy
+      end
+    end
+
+    context 'when vacations do not overlap' do
+      let(:earlier) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-01',
+                          planned_end_date: '2015-09-04')
+      end
+
+      let(:later) do
+        FactoryGirl.build(:vacation_request,
+                          start_date: '2015-09-16',
+                          planned_end_date: '2015-09-23')
+      end
+
+      it 'returns :false' do
+        expect(vacation.overlaps?(earlier)).to  be_falsy
+        expect(vacation.overlaps?(later)).to    be_falsy
+      end
+    end
+  end
+
   describe '.requested_accepted_inprogress' do
     let(:user) { create :user, :with_vacations_of_all_statuses }
 
