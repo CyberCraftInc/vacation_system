@@ -2,7 +2,8 @@ require 'errors/conflict_error'
 
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_vacation_request, only: [:show, :update, :cancel, :start]
+  before_action :set_vacation_request,
+                only: [:show, :update, :cancel, :finish, :start]
 
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
@@ -60,6 +61,14 @@ class VacationRequestsController < ApplicationController
     render json: @vacation_request
   end
 
+  def finish
+    authorize @vacation_request
+    check_status_for_finish
+    @vacation_request.update!(status: VacationRequest.statuses[:used])
+
+    render json: @vacation_request
+  end
+
   def start
     authorize @vacation_request
     check_status_for_start
@@ -87,6 +96,10 @@ private
     status = @vacation_request.status
     allowed_status = (status == 'requested' || status == 'accepted')
     fail Errors::ConflictError unless allowed_status
+  end
+
+  def check_status_for_finish
+    fail Errors::ConflictError unless @vacation_request.status == 'inprogress'
   end
 
   def check_status_for_start

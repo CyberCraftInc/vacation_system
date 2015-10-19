@@ -5,6 +5,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
   operationsEvents: function() {
     return {
       'click button[name=cancel]':  this.onCancel,
+      'click button[name=finish]':  this.onFinish,
       'click button[name=start]':   this.onStart
     };
   },
@@ -15,6 +16,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.listenTo(this.collection, 'sync',  this.renderTable);
 
     this.onCancel = _.bind(this.onCancel, this);
+    this.onFinish = _.bind(this.onFinish, this);
     this.onStart  = _.bind(this.onStart, this);
   },
 
@@ -82,6 +84,23 @@ App.Views.VacationRequestsList = Backbone.View.extend({
       });
   },
 
+  onFinish: function(event, value, row, index) {
+    var that = this;
+
+    $.get('vacation_requests/'+row.id.toString()+'/finish')
+      .done(function() {
+        // TODO: implement notification, if needed
+        // Trigger table update
+        console.log('DONE');
+        that.collection.fetch();
+      })
+      .fail(function(response) {
+        // TODO: implement notification
+        console.error('FAIL');
+        console.error(response.responseText);
+      });
+  },
+
   onStart: function(event, value, row, index) {
     var that = this;
 
@@ -101,18 +120,24 @@ App.Views.VacationRequestsList = Backbone.View.extend({
 
   ownerOperationsFormatter: function(value, row, index) {
     var buttons = [],
-        canBeCancelled = false,
-        canBeSetToInprogress = false;
+        canBeSetToCancelled = false,
+        canBeSetToInprogress = false,
+        canBeSetToUsed = false;
 
-    canBeCancelled = (row.status !== App.Vacation.statuses.cancelled && row.status !== App.Vacation.statuses.inprogress);
-    canBeSetToInprogress = (row.status === App.Vacation.statuses.accepted);
+    canBeSetToCancelled   = (row.status === App.Vacation.statuses.requested && row.status === App.Vacation.statuses.accepted);
+    canBeSetToInprogress  = (row.status === App.Vacation.statuses.accepted);
+    canBeSetToUsed        = (row.status === App.Vacation.statuses.inprogress);
+
+    if (canBeSetToCancelled) {
+      buttons.push(JST['templates/vacation_operations/cancelled']());
+    }
 
     if (canBeSetToInprogress) {
       buttons.push(JST['templates/vacation_operations/inprogress']());
     }
 
-    if (canBeCancelled) {
-      buttons.push(JST['templates/vacation_operations/cancelled']());
+    if (canBeSetToUsed) {
+      buttons.push(JST['templates/vacation_operations/used']());
     }
 
     return buttons.join('&nbsp;');
