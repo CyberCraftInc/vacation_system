@@ -49,7 +49,7 @@ RSpec.describe VacationRequestsController do
     it 'should properly update available vacations of the user' do
       av_id = user.available_vacations.planned.first.id
       expect { send_request }
-        .to change { AvailableVacation.find_by(id: av_id).available_days }
+        .to change { AvailableVacation.find_by(id: av_id).available_days.to_i }
         .by(-vacation.duration(Holiday.dates))
     end
   end
