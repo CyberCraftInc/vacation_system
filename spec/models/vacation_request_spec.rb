@@ -12,8 +12,7 @@ RSpec.describe VacationRequest do
 
     it { expect(vacation_request).to have_attributes kind: 'planned' }
     it { expect(vacation_request).to have_attributes status: 'requested' }
-    it { expect(vacation_request).to have_attributes planned_end_date: nil }
-    it { expect(vacation_request).to have_attributes planned_end_date: nil }
+    it { expect(vacation_request).to have_attributes end_date: nil }
     it { expect(vacation_request).to have_attributes start_date: nil }
     it { expect(vacation_request).to have_attributes user_id: nil }
 
@@ -56,7 +55,7 @@ RSpec.describe VacationRequest do
   end
 
   describe 'with "status=used"' do
-    it 'does not allow to pass "planned_end_date" as incorrect date string' do
+    it 'does not allow to pass "end_date" as incorrect date string' do
       vacation_request = build(:vacation_request, :invalid, status: 'used')
 
       expect(vacation_request).not_to be_valid
@@ -69,9 +68,8 @@ RSpec.describe VacationRequest do
     let(:vacation_request) { FactoryGirl.build(:vacation_request) }
 
     before do
-      vacation_request.start_date        = '2015-09-01'
-      vacation_request.planned_end_date  = '2015-09-21'
-      vacation_request.actual_end_date   = vacation_request.planned_end_date
+      vacation_request.start_date = '2015-09-01'
+      vacation_request.end_date   = '2015-09-21'
       vacation_request.user = user
       vacation_request.validate
     end
@@ -88,10 +86,10 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-08-22', planned_end_date: '2015-08-30')
+                 start_date: '2015-08-22', end_date: '2015-08-30')
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-09-22', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-22', end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -106,7 +104,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+                 start_date: '2015-08-22', end_date: '2015-09-01')
 
           vacation_request.validate
         end
@@ -121,7 +119,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-21', end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -136,10 +134,10 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+                 start_date: '2015-08-22', end_date: '2015-09-01')
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-21', end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -154,7 +152,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-09-05', planned_end_date: '2015-09-15')
+                 start_date: '2015-09-05', end_date: '2015-09-15')
 
           vacation_request.validate
         end
@@ -169,7 +167,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: user,
-                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
+                 start_date: '2015-08-30', end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -185,7 +183,7 @@ RSpec.describe VacationRequest do
           before do
             create(:vacation_request,
                    user: user,
-                   start_date: '2015-08-30', planned_end_date: '2015-09-25',
+                   start_date: '2015-08-30', end_date: '2015-09-25',
                    status: VacationRequest.statuses[:cancelled])
             vacation_request.validate
           end
@@ -200,7 +198,7 @@ RSpec.describe VacationRequest do
           before do
             create(:vacation_request,
                    user: user,
-                   start_date: '2015-08-30', planned_end_date: '2015-09-25',
+                   start_date: '2015-08-30', end_date: '2015-09-25',
                    status: VacationRequest.statuses[:declined])
             vacation_request.validate
           end
@@ -218,10 +216,10 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-08-22', planned_end_date: '2015-08-30')
+                 start_date: '2015-08-22', end_date: '2015-08-30')
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-09-22', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-22', end_date: '2015-09-25')
         end
 
         it 'does not set any errors' do
@@ -234,7 +232,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+                 start_date: '2015-08-22', end_date: '2015-09-01')
         end
 
         it 'does not set any errors' do
@@ -247,7 +245,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-21', end_date: '2015-09-25')
         end
 
         it 'does not set any errors' do
@@ -260,10 +258,10 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-08-22', planned_end_date: '2015-09-01')
+                 start_date: '2015-08-22', end_date: '2015-09-01')
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-09-21', planned_end_date: '2015-09-25')
+                 start_date: '2015-09-21', end_date: '2015-09-25')
         end
 
         it 'does not set any errors' do
@@ -276,7 +274,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-09-05', planned_end_date: '2015-09-15')
+                 start_date: '2015-09-05', end_date: '2015-09-15')
         end
 
         it 'does not set any errors' do
@@ -289,7 +287,7 @@ RSpec.describe VacationRequest do
         before do
           create(:vacation_request,
                  user: another_user,
-                 start_date: '2015-08-30', planned_end_date: '2015-09-25')
+                 start_date: '2015-08-30', end_date: '2015-09-25')
 
           vacation_request.validate
         end
@@ -306,7 +304,7 @@ RSpec.describe VacationRequest do
     let(:result) { vacation.duration(Holiday.dates) }
     let(:vacation) do
       build(:vacation_request,
-            start_date: '2015-10-01', planned_end_date: '2015-10-10')
+            start_date: '2015-10-01', end_date: '2015-10-10')
     end
     let(:duration) { 10 }
     let(:weekends) { 3 }
@@ -324,7 +322,7 @@ RSpec.describe VacationRequest do
       let(:weekends) { 0 }
       let(:vacation) do
         build(:vacation_request,
-              start_date: '2015-10-05', planned_end_date: '2015-10-09')
+              start_date: '2015-10-05', end_date: '2015-10-09')
       end
 
       it_behaves_like 'a good boy'
@@ -387,14 +385,14 @@ RSpec.describe VacationRequest do
     let(:vacation) do
       FactoryGirl.build(:vacation_request,
                         start_date: '2015-09-05',
-                        planned_end_date: '2015-09-15')
+                        end_date: '2015-09-15')
     end
 
     context 'when vacation is surrounded' do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-01',
-                          planned_end_date: '2015-09-20')
+                          end_date: '2015-09-20')
       end
 
       it 'returns :true' do
@@ -406,7 +404,7 @@ RSpec.describe VacationRequest do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-06',
-                          planned_end_date: '2015-09-10')
+                          end_date: '2015-09-10')
       end
 
       it 'returns :true' do
@@ -418,7 +416,7 @@ RSpec.describe VacationRequest do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-01',
-                          planned_end_date: '2015-09-10')
+                          end_date: '2015-09-10')
       end
 
       it 'returns :true' do
@@ -430,7 +428,7 @@ RSpec.describe VacationRequest do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-10',
-                          planned_end_date: '2015-09-20')
+                          end_date: '2015-09-20')
       end
 
       it 'returns :true' do
@@ -442,7 +440,7 @@ RSpec.describe VacationRequest do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-01',
-                          planned_end_date: '2015-09-05')
+                          end_date: '2015-09-05')
       end
 
       it 'returns :true' do
@@ -454,7 +452,7 @@ RSpec.describe VacationRequest do
       let(:another) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-15',
-                          planned_end_date: '2015-09-20')
+                          end_date: '2015-09-20')
       end
 
       it 'returns :true' do
@@ -466,13 +464,13 @@ RSpec.describe VacationRequest do
       let(:earlier) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-01',
-                          planned_end_date: '2015-09-04')
+                          end_date: '2015-09-04')
       end
 
       let(:later) do
         FactoryGirl.build(:vacation_request,
                           start_date: '2015-09-16',
-                          planned_end_date: '2015-09-23')
+                          end_date: '2015-09-23')
       end
 
       it 'returns :false' do
@@ -511,27 +509,26 @@ RSpec.describe VacationRequest do
     it { should define_enum_for(:kind) }
     it { should define_enum_for(:status) }
 
-    it { should validate_presence_of(:actual_end_date) }
     it { should validate_presence_of(:kind) }
-    it { should validate_presence_of(:planned_end_date) }
+    it { should validate_presence_of(:end_date) }
     it { should validate_presence_of(:status) }
     it { should validate_presence_of(:start_date) }
     it { should validate_presence_of(:user) }
 
-    it 'should ensure inclusion of actual_end_date in proper range' do
+    it 'should ensure inclusion of end_date in proper range' do
       vacation_request = build(:vacation_request)
-      vacation_request.actual_end_date = '2014-12-31'
+      vacation_request.end_date = '2014-12-31'
       expect(vacation_request).to be_invalid
 
-      vacation_request.actual_end_date = '2115-12-31'
+      vacation_request.end_date = '2115-12-31'
       expect(vacation_request).to be_invalid
 
-      vacation_request.actual_end_date = '2055-12-31'
+      vacation_request.end_date = '2055-12-31'
       expect(vacation_request).to be_valid
     end
 
     it do
-      should validate_inclusion_of(:planned_end_date)
+      should validate_inclusion_of(:end_date)
         .in_range(Date.new(2015, 01, 01)..Date.new(2115, 01, 01))
     end
   end

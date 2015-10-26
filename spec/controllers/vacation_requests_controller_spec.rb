@@ -142,7 +142,7 @@ RSpec.describe VacationRequestsController do
             new_vacation = VacationRequest.find_by(selectors)
             expect(new_vacation.status).not_to be_nil
             expect(new_vacation.status).to eq('requested')
-            expect(new_vacation.planned_end_date).not_to be_nil
+            expect(new_vacation.end_date).not_to be_nil
 
             selectors = { vacation_request_id: new_vacation.id }
             expect(ApprovalRequest.find_by(selectors)).not_to be_nil

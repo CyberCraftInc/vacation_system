@@ -4,8 +4,7 @@ App.Models.VacationRequest = Backbone.Model.extend({
     'kind':'planned',
     'status':'requested',
     'start_date':'',
-    'planned_end_date':'',
-    'actual_end_date':'',
+    'end_date':'',
   },
 
   get: function(attribute) {
@@ -50,19 +49,6 @@ App.Models.VacationRequest = Backbone.Model.extend({
     }
 
     return Backbone.Model.prototype.set.apply(this, arguments);
-  },
-
-  // TODO: Add helper method that looks for the properties in the object
-  //  and tells if they can be set on the model
-
-  end_date: function () {
-    var result = this.get('planned_end_date');
-
-    if (this.get('status') === 'used') {
-      result = this.get('actual_end_date');
-    }
-
-    return result;
   },
 
   // Calculate duration and return the result.

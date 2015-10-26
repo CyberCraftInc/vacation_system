@@ -10,8 +10,7 @@ describe('VacationRequest view', function() {
       'kind':'planned',
       'status':'requested',
       'start_date':'2015-08-01',
-      'planned_end_date':'2015-08-11',
-      'actual_end_date':'2015-08-11'
+      'end_date':'2015-08-11',
     });
 
     this.view = new App.Views.VacationRequest({'model': this.model});
@@ -43,16 +42,10 @@ describe('VacationRequest view', function() {
       this.container = $('tbody');
       this.container.append(this.view.render().el);
 
-      // dateRangeText = this.view.attributes.start;
-      // dateRangeText += '&nbsp;&mdash;&nbsp;';
-      // dateRangeText += this.view.attributes.finish;
-
       expect($('td')[0].innerHTML).toContain(this.view.attributes.start);
       expect($('td')[0].innerHTML).toContain(this.view.attributes.finish);
       expect($('td')[1].innerHTML).toContain(this.view.attributes.status);
       expect($('td')[2].innerHTML).toContain(this.view.attributes.ref);
-      // expect($('td')[0]).toContain(this.view.attributes.start);
-      // expect($('td')[0]).toHaveText(dateRangeText);
     });
   });
 
