@@ -55,7 +55,6 @@ App.Router = Backbone.Router.extend({
   },
 
   holidays: function() {
-    $('.container section').html("Holidays must be here...");
     var collection = new App.Collections.Holidays();
     App.holidays = new App.Views.Holidays({'collection':collection});
     collection.fetch();
