@@ -1,9 +1,10 @@
 FactoryGirl.define do
   factory :user do
-    email   { "#{first_name.downcase}.#{last_name.downcase}@i.ua" }
-    first_name  { FFaker::Name.first_name }
-    last_name   { FFaker::Name.last_name }
-    password    'myPrecious'
+    email { "#{first_name.downcase}.#{last_name.downcase}@i.ua" }
+    first_name      { FFaker::Name.first_name }
+    last_name       { FFaker::Name.last_name }
+    employment_date { Date.new(2015, 01, 01) }
+    password        'myPrecious'
 
     trait :with_vacations_of_all_statuses do
       start_date = Time.zone.today

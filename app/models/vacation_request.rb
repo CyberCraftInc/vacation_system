@@ -15,6 +15,10 @@ class VacationRequest < ActiveRecord::Base
                    VacationRequest.statuses[:inprogress]])
   }
 
+  scope :used, lambda {
+    where(status: [VacationRequest.statuses[:used]])
+  }
+
   scope :team_vacations, lambda { |team|
     joins(user: :team_roles)
       .where(team_roles: { team_id: team.id })
@@ -44,7 +48,36 @@ class VacationRequest < ActiveRecord::Base
       if number_of_records > 0
   end
 
+  # Takes result of `Holiday.dates` as a parameter.
+  # As the `Holiday.dates` hits DB, it is not good idea to use it here.
+  # This method is used in `calculus.rb` to calculate available vacations days,
+  # and `Holiday.dates` is already done there.
+  def duration(holidays)
+    vacation_range_duration - day_offs(holidays)
+  end
+
+  # TODO: apply algorithm to cannot_intersect_with_other_vacations()
+  def overlaps?(another)
+    (start_date - another.actual_end_date) * (another.start_date - actual_end_date) >= 0
+  end
+
 private
+
+  def collection_of_holidays(holidays)
+    (start_date..actual_end_date).find_all do |date|
+      holidays.include?(date)
+    end
+  end
+
+  def collection_of_weekends
+    (start_date..actual_end_date).find_all do |date|
+      date.saturday? || date.sunday?
+    end
+  end
+
+  def day_offs(holidays)
+    (collection_of_weekends + collection_of_holidays(holidays)).uniq.count
+  end
 
   # Number of records that somehow intersect with the vacation.
   # For example, the vacation '2015-09-01'..'2015-09-10'
@@ -73,5 +106,9 @@ private
                    VacationRequest.statuses[:cancelled],
                    VacationRequest.statuses[:declined]]
                 ).count
+  end
+
+  def vacation_range_duration
+    (actual_end_date - start_date).to_i + 1
   end
 end

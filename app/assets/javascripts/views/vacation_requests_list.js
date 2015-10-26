@@ -89,10 +89,13 @@ App.Views.VacationRequestsList = Backbone.View.extend({
 
     $.get('vacation_requests/'+row.id.toString()+'/finish')
       .done(function() {
+        // TODO: trigger new vacation request from to refresh available days in badges
         // TODO: implement notification, if needed
         // Trigger table update
         console.log('DONE');
         that.collection.fetch();
+        // TODO: propagate App.Collections.AvailableVacations from the form
+        // via Router
       })
       .fail(function(response) {
         // TODO: implement notification
@@ -124,7 +127,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
         canBeSetToInprogress = false,
         canBeSetToUsed = false;
 
-    canBeSetToCancelled   = (row.status === App.Vacation.statuses.requested && row.status === App.Vacation.statuses.accepted);
+    canBeSetToCancelled   = (row.status === App.Vacation.statuses.requested || row.status === App.Vacation.statuses.accepted);
     canBeSetToInprogress  = (row.status === App.Vacation.statuses.accepted);
     canBeSetToUsed        = (row.status === App.Vacation.statuses.inprogress);
 

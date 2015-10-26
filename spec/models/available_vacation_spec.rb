@@ -23,6 +23,33 @@ RSpec.describe AvailableVacation do
     expect(available_vacation).not_to be_valid
   end
 
+  describe '.accumulate_more_days' do
+    let(:available_vacation) { create(:available_vacation) }
+
+    context 'when the record is up-to-date' do
+      it 'does not update the record' do
+        av_id = available_vacation.id
+        expect { available_vacation.accumulate_more_days }
+          .not_to change { AvailableVacation.find_by!(av_id).available_days }
+      end
+    end
+
+    context 'when the record is not up-to-date' do
+      before do
+        available_vacation.updated_at = Time.zone.now - 1.day
+      end
+
+      it 'updates the record' do
+        av_id = available_vacation.id
+        days = available_vacation.available_days
+        expected = days + AvailableVacations::RATES[:planned]
+        expect { available_vacation.accumulate_more_days }
+          .to change { AvailableVacation.find_by!(av_id).available_days }
+          .to(expected.round(5))
+      end
+    end
+  end
+
   context 'as a brand new object' do
     let(:available_vacation) { AvailableVacation.new }
 

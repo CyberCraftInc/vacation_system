@@ -11,4 +11,12 @@ class Holiday < ActiveRecord::Base
                             less_than: 5 }
   validates :start,
             inclusion: { in: Date.new(2015, 01, 01)..Date.new(2115, 01, 01) }
+
+  def self.dates
+    all.map(&:dates).flatten
+  end
+
+  def dates
+    (start..(start + duration - 1)).to_a
+  end
 end
