@@ -119,6 +119,10 @@ $silver: #c0c0c0;
     );
 }
 
+.used {
+  opacity: 0.25
+}
+
 .accepted,
 .inprogress {
   background-image: repeating-linear-gradient(

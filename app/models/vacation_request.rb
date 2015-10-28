@@ -16,6 +16,11 @@ class VacationRequest < ActiveRecord::Base
                    VacationRequest.statuses[:inprogress]])
   }
 
+  scope :not_cancelled_declined, lambda {
+    where.not(status: [VacationRequest.statuses[:cancelled],
+                       VacationRequest.statuses[:declined]])
+  }
+
   scope :used, lambda {
     where(status: [VacationRequest.statuses[:used]])
   }
