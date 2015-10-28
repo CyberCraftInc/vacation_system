@@ -26,7 +26,7 @@
               %span.icon-bar
             %a.navbar-brand{:href => "/#/dashboard"} CyberCraft Vacations
           #navbar.navbar-collapse.collapse
-            %ul.nav.navbar-nav
+            %ul.nav.navbar-nav.navbar-left
               %li
                 = link_to "Home",           '/#/dashboard'
               %li
@@ -35,6 +35,7 @@
                 = link_to "Vacations",      '/#/vacation_requests'
               %li
                 = link_to "Holidays",       '/#/holidays'
+            %ul.nav.navbar-nav.navbar-right
               %li
                 - if user_signed_in?
                   = link_to "Sign out (#{current_user.email})", destroy_user_session_path, method: :delete

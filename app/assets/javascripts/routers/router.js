@@ -23,7 +23,6 @@ App.Router = Backbone.Router.extend({
   },
 
   teams: function() {
-    $('.content').html("You should see the list for Teams...");
     var collection = new App.Collections.Teams();
     App.teams = new App.Views.Teams({'collection':collection});
     collection.fetch();
@@ -50,7 +49,6 @@ App.Router = Backbone.Router.extend({
   },
 
   vacation_request_details: function( id ) {
-    $('.content').html("You should see the <strong>Vacation Request Details</strong>...");
     App.vacation_request_details = new App.Views.VacationRequestDetails({modelID:id});
   },
 
