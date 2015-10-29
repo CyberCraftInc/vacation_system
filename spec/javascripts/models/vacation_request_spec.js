@@ -37,11 +37,8 @@ describe('VacationRequest model', function() {
       it('start_date=""', function() {
         expect(this.model.get('start_date')).toEqual('');
       });
-      it('planned_end_date=""', function() {
-        expect(this.model.get('planned_end_date')).toEqual('');
-      });
-      it('actual_end_date=""', function() {
-        expect(this.model.get('actual_end_date')).toEqual('');
+      it('end_date=""', function() {
+        expect(this.model.get('end_date')).toEqual('');
       });
     });
 
@@ -55,26 +52,10 @@ describe('VacationRequest model', function() {
     expect(this.model.calculateDuration).toEqual(jasmine.any(Function));
   });
 
-  it('has .end_date() method', function() {
-    expect(this.model.end_date).toBeDefined();
-    expect(this.model.end_date).toEqual(jasmine.any(Function));
-  });
-
-  describe('with .end_date() method', function() {
-    pending();
-    beforeEach(function() {
-      this.model.set('start', '2015-08-25');
-      this.model.set('end',   '2015-09-05');
-      this.model.set('duration', 0);
-      this.numberOfWeekends = 3;
-      this.numberOfVacationDays = 12;
-    });
-  });
-
   describe('with .calculateDuration() method', function() {
     beforeEach(function() {
       this.model.set('start_date', '2015-08-25');
-      this.model.set('planned_end_date', '2015-09-05');
+      this.model.set('end_date', '2015-09-05');
       this.numberOfWeekends = 3;
       this.numberOfVacationDays = 12;
     });

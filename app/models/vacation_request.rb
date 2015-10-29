@@ -2,12 +2,13 @@ class VacationRequest < ActiveRecord::Base
   belongs_to  :user
   has_many    :approval_requests, dependent: :destroy
 
-  validate :cannot_intersect_with_other_vacations
-  validates :actual_end_date, :kind, :planned_end_date,
+  validates :end_date, :kind,
             :status, :start_date, :user,
             presence: true
-  validates :actual_end_date, :planned_end_date,
+  validates :end_date, :start_date,
             inclusion: { in: Date.new(2015, 01, 01)..Date.new(2115, 01, 01) }
+  validate :cannot_intersect_with_other_vacations,
+           unless: 'start_date.nil? || end_date.nil?'
 
   scope :requested_accepted_inprogress, lambda {
     where(status: [VacationRequest.statuses[:requested],
@@ -22,8 +23,8 @@ class VacationRequest < ActiveRecord::Base
   scope :team_vacations, lambda { |team|
     joins(user: :team_roles)
       .where(team_roles: { team_id: team.id })
-      .select(:id, :user_id, :kind, :status, :actual_end_date,
-              :planned_end_date, :start_date)
+      .select(:id, :user_id, :kind, :status,
+              :end_date, :start_date)
   }
 
   enum status: [
@@ -58,19 +59,19 @@ class VacationRequest < ActiveRecord::Base
 
   # TODO: apply algorithm to cannot_intersect_with_other_vacations()
   def overlaps?(another)
-    (start_date - another.actual_end_date) * (another.start_date - actual_end_date) >= 0
+    (start_date - another.end_date) * (another.start_date - end_date) >= 0
   end
 
 private
 
   def collection_of_holidays(holidays)
-    (start_date..actual_end_date).find_all do |date|
+    (start_date..end_date).find_all do |date|
       holidays.include?(date)
     end
   end
 
   def collection_of_weekends
-    (start_date..actual_end_date).find_all do |date|
+    (start_date..end_date).find_all do |date|
       date.saturday? || date.sunday?
     end
   end
@@ -95,10 +96,10 @@ private
     table = VacationRequest.arel_table
 
     VacationRequest.where(
-      table[:start_date].between(start_date..actual_end_date)
-      .or(table[:actual_end_date].between(start_date..actual_end_date))
+      table[:start_date].between(start_date..end_date)
+      .or(table[:end_date].between(start_date..end_date))
       .or(table[:start_date].lteq(start_date)
-        .and(table[:actual_end_date].gteq(actual_end_date)))
+        .and(table[:end_date].gteq(end_date)))
     )
       .where(user_id: user_id)
       .where.not(id: id,
@@ -109,6 +110,6 @@ private
   end
 
   def vacation_range_duration
-    (actual_end_date - start_date).to_i + 1
+    (end_date - start_date).to_i + 1
   end
 end

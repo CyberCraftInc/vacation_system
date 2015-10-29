@@ -14,7 +14,7 @@ FactoryGirl.define do
           FactoryGirl.create  :vacation_request,
                               status: status,
                               start_date: start_date,
-                              planned_end_date: start_date + 2.days,
+                              end_date: start_date + 2.days,
                               user: user
         end
       end

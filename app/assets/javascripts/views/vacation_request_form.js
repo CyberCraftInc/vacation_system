@@ -40,12 +40,12 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   onRequest: function() {
-    this.model.set('actual_end_date',this.model.get('planned_end_date'));
+    this.model.set('actual_end_date',this.model.get('end_date'));
     this.model.save();
   },
 
   onToChange: function(event) {
-    this.model.set('planned_end_date', event.currentTarget.value);
+    this.model.set('end_date', event.currentTarget.value);
     this.updateFormState();
   },
 
@@ -81,7 +81,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   fetchFormData: function () {
     this.model.set('kind',              this.$('input:radio[name=vacation-type]:checked').val());
     this.model.set('start_date',        this.$('input[name=from]').val());
-    this.model.set('planned_end_date',  this.$('input[name=to]').val());
+    this.model.set('end_date',          this.$('input[name=to]').val());
   },
 
   clearForm: function () {

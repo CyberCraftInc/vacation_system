@@ -82,7 +82,7 @@ describe('VacationRequestForm view', function() {
       beforeEach(function() {
         this.view.model.set('kind','unpaid');
         this.view.model.set('start_date','2015-01-01');
-        this.view.model.set('planned_end_date','2015-01-25');
+        this.view.model.set('end_date','2015-01-25');
       });
 
       it('changes button[name=request] color to red', function() {
@@ -101,7 +101,7 @@ describe('VacationRequestForm view', function() {
       beforeEach(function() {
         this.view.model.set('kind','unpaid');
         this.view.model.set('start_date','2015-01-01');
-        this.view.model.set('planned_end_date','2015-01-10');
+        this.view.model.set('end_date','2015-01-10');
 
         this.button.removeClass('btn-default');
         this.button.addClass('btn-danger');
@@ -168,7 +168,7 @@ describe('VacationRequestForm view', function() {
 
     it('change input[name=to]', function() {
       var htmlElement = this.view.$('input[name=to]'),
-          oldValue = this.view.model.get('planned_end_date'),
+          oldValue = this.view.model.get('end_date'),
           newValue = '2015-01-01';
 
       spyOn(this.view, 'onToChange').and.callThrough();
@@ -177,7 +177,7 @@ describe('VacationRequestForm view', function() {
       htmlElement.val(newValue);
       htmlElement.trigger('change');
       expect(this.view.onToChange).toHaveBeenCalled();
-      expect(this.view.model.get('planned_end_date')).toEqual(newValue);
+      expect(this.view.model.get('end_date')).toEqual(newValue);
     });
 
     it('change input:radio[name=vacation-type]', function() {
