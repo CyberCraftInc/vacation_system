@@ -41,8 +41,8 @@ class TeamsController < ApplicationController
 
   def vacations
     vacations = VacationRequest
-                .team_vacations(@team)
-                .requested_accepted_inprogress
+      .team_vacations(@team)
+      .not_cancelled_declined
     render json: vacations
   end
 
