@@ -361,7 +361,7 @@ RSpec.describe TeamsController do
 
       it { expect(response).to have_http_status(:ok) }
       it 'should contain correct records as JSON data in response body' do
-        vacations = member.vacation_requests.requested_accepted_inprogress
+        vacations = member.vacation_requests.not_cancelled_declined
         expect(response.body).to match_records_by_ids_with(vacations)
       end
 

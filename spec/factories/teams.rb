@@ -25,6 +25,19 @@ FactoryGirl.define do
       end
     end
 
+    trait :compact do
+      after :create do |team|
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:team_role, user: user, team: team, role: 'manager')
+
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:team_role, user: user, team: team, role: 'member')
+
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:team_role, user: user, team: team, role: 'guest')
+      end
+    end
+
     trait :with_manager_only do
       after :create do |team|
         user = FactoryGirl.create(:user)

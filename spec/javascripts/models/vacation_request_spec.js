@@ -121,17 +121,26 @@ describe('VacationRequest model', function() {
     });
   });
 
-  describe('with Backbone.Validation mixin', function() {
-    it('has .validate() method', function() {
-      expect(this.model.validate).toBeDefined();
+  describe('.set', function() {
+    it('does not allow to set not expected attributes', function() {
+      var predefined_object = {
+            'status': App.Vacation.statuses.requested,
+            'kind': App.Vacation.types.planned,
+            'alien_attribute':'',
+          },
+          that = this;
+      expect(function(){that.model.set(predefined_object);}).toThrow();
     });
 
-    it('has .isValid() method', function() {
-      expect(this.model.isValid).toBeDefined();
-    });
-
-    it('has .preValidate() method', function() {
-      expect(this.model.preValidate).toBeDefined();
+    it('sets attributes from object', function() {
+      var predefined_object = {
+            'kind': App.Vacation.types.planned,
+            'status': App.Vacation.statuses.requested,
+            'start_date':'',
+            'end_date':''
+          },
+          that = this;
+      expect(function(){that.model.set(predefined_object);}).not.toThrow();
     });
   });
 });

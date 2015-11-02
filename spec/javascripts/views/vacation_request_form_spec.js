@@ -55,7 +55,6 @@ describe('VacationRequestForm view', function() {
 
     it('sets all the radio button group badges with up-to-date information', function() {
       var newText = '';
-      console.log(this.view);
       expect(this.view.$('.badge').length).toEqual(3);
 
       expect(this.badgePlanned).toHaveText('');

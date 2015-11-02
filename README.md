@@ -69,14 +69,12 @@ For details on how to install **Node.js** see https://nodejs.org.
     ```yaml
     development:
       secret_key_base: <secret_key>
-      database:
-        username: <user>
-        password: <pass>
+      database_username: <user>
+      database_password: <pass>
     test:
       secret_key_base: <secret_key>
-      database:
-        username: <user>
-        password: <pass>
+      database_username: <user>
+      database_password: <pass>
     ```
     Replace `<user>` and `<pass>` with user name and password respectively.
     Replace `<secret_key>` with Devise related secret key.
