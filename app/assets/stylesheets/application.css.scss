@@ -119,16 +119,23 @@ $silver: #c0c0c0;
     );
 }
 
-.used {
-  opacity: 0.25
-}
-
-.accepted,
-.inprogress {
+.accepted {
   background-image: repeating-linear-gradient(
       transparent,
       $gray-lighter 210%
     );
+}
+
+.inprogress {
+  background-image: repeating-linear-gradient(
+      transparent,
+      $gray-lighter 25%,
+      transparent 50%
+    );
+}
+
+.used {
+  opacity: 0.25
 }
 
 .planned {
@@ -145,16 +152,6 @@ $silver: #c0c0c0;
 
 .weekend {
   background-color: $weekend;
-}
-
-.time-table-by-day {
-  .inprogress {
-    background-image: repeating-linear-gradient(
-        transparent,
-        $gray-lighter 25%,
-        transparent 50%
-      );
-  }
 }
 
 .time-table-content {
