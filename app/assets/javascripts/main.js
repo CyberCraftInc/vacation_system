@@ -7,6 +7,7 @@ window.App = {
   Router: {},
   Models: {},
   Views: {},
+
   Vacation: {
     statuses: {
       requested: 'requested',
@@ -15,6 +16,12 @@ window.App = {
       cancelled: 'cancelled',
       inprogress: 'inprogress',
       used: 'used'
+    },
+
+    types: {
+      planned:  'planned',
+      unpaid:   'unpaid',
+      sickness: 'sickness'
     }
   }
 };

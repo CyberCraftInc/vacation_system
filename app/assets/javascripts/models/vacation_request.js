@@ -1,8 +1,9 @@
+// The urlRoot should be 'vacation_requests', to work with pure vacation request
+// record.
 App.Models.VacationRequest = Backbone.Model.extend({
-  urlRoot: 'vacation_requests',
   defaults: {
-    'kind':'planned',
-    'status':'requested',
+    'kind': App.Vacation.types.planned,
+    'status': App.Vacation.statuses.requested,
     'start_date':'',
     'end_date':'',
   },
