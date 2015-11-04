@@ -51,6 +51,20 @@ App.Helpers.isWeekend = function(date) {
   return result;
 };
 
+// TODO
+App.Helpers.isHoliday = function(date, holidays) {
+  var result = false;
+  holidays = holidays.arrayOfDates();
+
+  date = date.toDate();
+  if (_.isDate(date)) {
+    date = moment(date).format('YYYY-MM-DD');
+    result = _.contains(holidays, date);
+  }
+
+  return result;
+};
+
 // Provide month name from JS Date object
 App.Helpers.getMonthNameFromDate = function(date) {
   var monthNames = ["January", "February", "March", "April", "May", "June",
