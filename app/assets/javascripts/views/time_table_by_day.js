@@ -143,7 +143,7 @@ App.Views.TimeTableByDay = Backbone.View.extend({
     duration = new App.Models.VacationRequest(vacation.attributes).calculateDuration(this.holidays);
 
     for (date = beginDate.clone(); date < moment(beginDate).add(duration, 'days'); date.add(1, 'day')) {
-      if (App.Helpers.isWeekend(date.toDate()) || App.Helpers.isHoliday(date, this.holidays)) {
+      if (App.Helpers.isWeekend(date.toDate()) || App.Helpers.isHoliday(date, this.holidays.arrayOfDates())) {
         duration++;
         continue;
       }

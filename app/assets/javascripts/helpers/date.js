@@ -37,7 +37,7 @@ App.Helpers.dateToISO_8601 = function(date) {
   return result;
 };
 
-// TODO
+// Verify if provided date is a weekend
 App.Helpers.isWeekend = function(date) {
   var result = false;
 
@@ -51,10 +51,9 @@ App.Helpers.isWeekend = function(date) {
   return result;
 };
 
-// TODO
+// Verify if provided date is included in provided array of holidays dates
 App.Helpers.isHoliday = function(date, holidays) {
   var result = false;
-  holidays = holidays.arrayOfDates();
 
   date = date.toDate();
   if (_.isDate(date)) {
