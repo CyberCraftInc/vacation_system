@@ -15,6 +15,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     this.vacationRequests = options.vacationRequests;
     this.availableVacations = options.availableVacations;
     this.model = new App.Models.VacationRequest();
+    this.model.urlRoot = 'vacation_requests';
 
     this.listenTo(this.model, 'sync', this.onSuccess);
     this.listenTo(this.model, 'error', this.onError);
@@ -40,7 +41,6 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   onRequest: function() {
-    this.model.set('actual_end_date',this.model.get('end_date'));
     this.model.save();
   },
 
