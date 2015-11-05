@@ -11,20 +11,19 @@ App.Views.ApprovalRequests = Backbone.View.extend({
 
   initialize: function(options) {
     this.options = options;
-    this.requests = new App.Collections.ApprovalRequests();
-    this.listenTo(this.requests, 'sync', this.render);
+    this.approvalRequests = this.options.approvalRequests;
+    this.availableVacations = this.options.availableVacations;
+    this.listenTo(this.approvalRequests, 'sync', this.render);
 
     this.onAccept   = _.bind(this.onAccept, this);
     this.onDecline  = _.bind(this.onDecline, this);
-
-    // TODO: extract into router
-    this.requests.fetch();
+    this.availableDaysFormatter  = _.bind(this.availableDaysFormatter, this);
   },
 
   render: function() {
     this.$el.html(this.template());
 
-    if (this.requests.isEmpty()) {
+    if (this.approvalRequests.isEmpty()) {
       this.renderMessage();
     } else {
       this.renderRequests();
@@ -36,7 +35,7 @@ App.Views.ApprovalRequests = Backbone.View.extend({
     this.$table = $(this.$el.selector + ' table');
 
     this.$table.bootstrapTable({
-      data: this.requests.toJSON(),
+      data: this.approvalRequests.toJSON(),
       columns: [{
           field: 'start_date',
           title: 'Start date',
@@ -52,6 +51,12 @@ App.Views.ApprovalRequests = Backbone.View.extend({
           title: 'Type',
           align: 'center',
           valign: 'middle',
+          sortable: true
+      }, {
+          title: 'Available Days',
+          align: 'center',
+          valign: 'middle',
+          formatter: this.availableDaysFormatter,
           sortable: true
       }, {
           field: 'first_name',
@@ -104,6 +109,16 @@ App.Views.ApprovalRequests = Backbone.View.extend({
       .fail(function(response) {
         // TODO: implement notification
       });
+  },
+
+  availableDaysFormatter: function (value, row, index) {
+    var result = 0;
+
+    result = this.availableVacations
+      .findWhere({'user_id':row.user_id, 'kind':row.kind})
+      .get('available_days');
+
+    return Math.floor(result);
   },
 
   fullNameFormatter: function(value, row, index) {

@@ -12,6 +12,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
 
   initialize: function(options) {
     this.collection = options.vacationRequests;
+    this.availableVacations = options.availableVacations;
 
     this.listenTo(this.collection, 'sync',  this.renderTable);
 
@@ -94,8 +95,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
         // Trigger table update
         console.log('DONE');
         that.collection.fetch();
-        // TODO: propagate App.Collections.AvailableVacations from the form
-        // via Router
+        that.availableVacations.fetch();
       })
       .fail(function(response) {
         // TODO: implement notification

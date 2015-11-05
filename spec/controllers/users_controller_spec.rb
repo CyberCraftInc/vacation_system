@@ -36,7 +36,7 @@ RSpec.describe UsersController do
 
     it 'should respond with proper JSON data structure' do
       send_request
-      expected = %w(id kind start_date end_date first_name last_name)
+      expected = %w(id kind start_date end_date first_name last_name user_id)
       expect(response.body).to have_json_attributes(expected)
     end
   end

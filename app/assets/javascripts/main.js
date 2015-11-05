@@ -10,18 +10,18 @@ window.App = {
 
   Vacation: {
     statuses: {
-      requested: 'requested',
-      accepted: 'accepted',
-      declined: 'declined',
-      cancelled: 'cancelled',
+      requested:  'requested',
+      accepted:   'accepted',
+      declined:   'declined',
+      cancelled:  'cancelled',
       inprogress: 'inprogress',
-      used: 'used'
+      used:       'used'
     },
 
     types: {
-      planned:  'planned',
-      unpaid:   'unpaid',
-      sickness: 'sickness'
+      planned:    'planned',
+      unpaid:     'unpaid',
+      sickness:   'sickness'
     }
   }
 };

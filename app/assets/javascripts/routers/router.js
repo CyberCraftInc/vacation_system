@@ -3,22 +3,31 @@ App.Router = Backbone.Router.extend({
     'dashboard':              'dashboard',
     'teams':                  'teams',
     'vacation_requests':      'vacation_requests',
-    'vacation_request/:id':   'vacation_request_details',
     'holidays':               'holidays',
   },
 
   dashboard: function() {
     var holidays = new App.Collections.Holidays(),
-        teams = new App.Collections.Teams();
+        teams = new App.Collections.Teams(),
+        approvalRequests = new App.Collections.ApprovalRequests(),
+        availableVacations = new App.Collections.AvailableVacations();
 
     App.dashboard = new App.Views.Dashboard({
       'holidays': holidays,
-      'teams': teams
+      'teams': teams,
+      'approvalRequests': approvalRequests,
+      'availableVacations': availableVacations
     });
 
     holidays.fetch()
       .then(function() {
         teams.fetch();
+      })
+      .then(function() {
+        availableVacations.fetch();
+      })
+      .then(function() {
+        approvalRequests.fetch();
       });
   },
 
@@ -33,6 +42,11 @@ App.Router = Backbone.Router.extend({
         vacationRequests = new App.Collections.VacationRequests(),
         availableVacations = new App.Collections.AvailableVacations();
 
+    availableVacations.url = function () {
+      var userID = App.currentUser.get('id').toString();
+      return 'users/'+userID+'/available_vacations';
+    };
+
     App.vacation_requests = new App.Views.VacationRequests({
       'holidays': holidays,
       'vacationRequests': vacationRequests,
@@ -46,10 +60,6 @@ App.Router = Backbone.Router.extend({
       .then(function() {
         vacationRequests.fetch();
       });
-  },
-
-  vacation_request_details: function( id ) {
-    App.vacation_request_details = new App.Views.VacationRequestDetails({modelID:id});
   },
 
   holidays: function() {
