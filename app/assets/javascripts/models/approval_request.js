@@ -2,6 +2,7 @@ App.Models.ApprovalRequest = Backbone.Model.extend({
   defaults: {
     'first_name':'',
     'last_name':'',
+    'user_id':0,
     'kind': App.Vacation.types.planned,
     'start_date':'',
     'end_date':''

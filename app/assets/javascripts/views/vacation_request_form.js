@@ -20,6 +20,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     this.listenTo(this.model, 'sync', this.onSuccess);
     this.listenTo(this.model, 'error', this.onError);
     this.listenTo(this.model, 'invalid', this.onInvalid);
+    this.listenTo(this.availableVacations, 'sync', this.render);
   },
 
   render: function() {
