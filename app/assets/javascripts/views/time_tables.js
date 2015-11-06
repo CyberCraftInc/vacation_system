@@ -24,6 +24,7 @@ App.Views.TimeTables = Backbone.View.extend({
 
   render: function() {
     this.renderTemplate(this.attributes);
+    this.renderTimeTableLegend();
     this.renderTimeTables();
 
     return this;
@@ -37,6 +38,10 @@ App.Views.TimeTables = Backbone.View.extend({
 
   renderTemplate: function() {
     this.$el.html(this.template(this.attributes));
+  },
+
+  renderTimeTableLegend: function() {
+    $('.legend').append(JST['templates/time-table-legend']());
   },
 
   // *************************************************************************
