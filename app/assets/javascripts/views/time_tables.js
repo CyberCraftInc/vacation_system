@@ -3,9 +3,9 @@ App.Views.TimeTables = Backbone.View.extend({
   template: JST['templates/time_tables'],
 
   events: {
-    'change input[name=from]':  'onFrom',
-    'change input[name=to]':    'onTo',
-    'change select[name=view-type]':    'onViewType'
+    'change input[name=from]':        'onFromChange',
+    'change input[name=to]':          'onToChange',
+    'change select[name=view-type]':  'onViewType'
   },
 
   initialize: function(options) {
@@ -24,6 +24,7 @@ App.Views.TimeTables = Backbone.View.extend({
 
   render: function() {
     this.renderTemplate(this.attributes);
+    App.Helpers.assignDatePicker($('.input-daterange'));
     this.renderTimeTableLegend();
     this.renderTimeTables();
 
@@ -84,14 +85,26 @@ App.Views.TimeTables = Backbone.View.extend({
   },
 
   // *************************************************************************
-  onFrom: function(event) {
-    this.timeTableDateRange.begin = moment(event.target.value);
-    this.updateTimeTables();
+  onFromChange: function(event) {
+    var oldDate = this.timeTableDateRange.begin,
+        newDate = moment(event.target.value),
+        interval = oldDate.toDate() - newDate.toDate();
+
+    if (interval !== 0) {
+      this.timeTableDateRange.begin = moment(event.target.value);
+      this.updateTimeTables();
+    }
   },
 
-  onTo: function(event) {
-    this.timeTableDateRange.end   = moment(event.target.value);
-    this.updateTimeTables();
+  onToChange: function(event) {
+    var oldDate = this.timeTableDateRange.end,
+        newDate = moment(event.target.value),
+        interval = oldDate.toDate() - newDate.toDate();
+
+    if (interval !== 0) {
+      this.timeTableDateRange.end   = moment(event.target.value);
+      this.updateTimeTables();
+    }
   },
 
   onViewType: function(event) {
@@ -105,7 +118,7 @@ App.Views.TimeTables = Backbone.View.extend({
   setDefaultDateRange: function() {
     var now = moment();
     this.timeTableDateRange.begin = moment(now.format('YYYY-MM-DD'));
-    this.timeTableDateRange.end   = moment().add(3, 'months');
+    this.timeTableDateRange.end   = moment(now.add(3, 'months').format('YYYY-MM-DD'));
     this.attributes.from  = this.timeTableDateRange.begin.format('YYYY-MM-DD');
     this.attributes.to    = this.timeTableDateRange.end.format('YYYY-MM-DD');
   },
