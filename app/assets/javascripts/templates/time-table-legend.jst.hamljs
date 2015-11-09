@@ -24,6 +24,16 @@
     %td.unpaid.accepted &nbsp;
     %td.unpaid.accepted &nbsp;
   %tr
+    %td.description inprogress
+    %td.planned.inprogress &nbsp;
+    %td.planned.inprogress &nbsp;
+    %td.description inprogress
+    %td.sickness.inprogress &nbsp;
+    %td.sickness.inprogress &nbsp;
+    %td.description inprogress
+    %td.unpaid.inprogress &nbsp;
+    %td.unpaid.inprogress &nbsp;
+  %tr
     %td.description used
     %td.planned.used &nbsp;
     %td.planned.used &nbsp;
