@@ -12,6 +12,7 @@ $planned-vacation: #0a0;
 $unpaid-vacation: #4b0082;
 $sickness-vacation: #f00;
 $weekend: #ddd;
+$holiday: #868686;
 $silver: #c0c0c0;
 
 .footer {
@@ -152,6 +153,11 @@ $silver: #c0c0c0;
 
 .weekend {
   background-color: $weekend;
+}
+
+.holiday {
+  color: $holiday;
+  text-align: center;
 }
 
 .time-table-content {
