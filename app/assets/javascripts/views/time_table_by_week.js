@@ -56,6 +56,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     this.drawMonths();
     this.drawWeeks();
     this.drawEmptyTable();
+    this.markHolidays();
     this.markVacations();
     return this;
   },
@@ -132,6 +133,27 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         $td = $('<td>').appendTo($tr)
           .attr('id', this.composeCellID(this.teamID, user.id, date.add(1,'day')))
           .addClass('right-cell');
+      }
+    }, this);
+  },
+
+  markHolidays: function() {
+    this.holidays.each(function(holiday) {
+      this.markHoliday(holiday);
+    }, this);
+  },
+
+  markHoliday: function(holiday) {
+    var date = null,
+        duration =  moment(holiday.get('duration')),
+        beginDate = moment(holiday.get('start'));
+
+    this.members.each(function(member) {
+      for (date = beginDate.clone(); date < moment(beginDate).add(duration, 'days'); date.add(1, 'day')) {
+        selector = '#'+ this.composeCellID(this.teamID, member.get('id'), date);
+        $(selector).addClass('holiday');
+        $(selector).attr('title', holiday.get('description'));
+        $(selector).html('<span class="glyphicon glyphicon-asterisk"></span>');
       }
     }, this);
   },
