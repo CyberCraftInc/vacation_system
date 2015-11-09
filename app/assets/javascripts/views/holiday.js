@@ -43,7 +43,7 @@ App.Views.Holiday = Backbone.View.extend({
     this.attributes.description = this.model.get('description');
     this.attributes.from = this.model.get('start');
     this.attributes.to = moment(this.model.get('start')).add(this.model.get('duration')-1, 'day').format('YYYY-MM-DD');
-    this.attributes.date = moment(this.model.get('start')).format('MMMM D, dddd');
+    this.attributes.date = moment(this.model.get('start')).format('YYYY, MMMM D, dddd');
     this.attributes.duration = moment.duration(this.model.get('duration'), 'days').humanize();
   },
 
