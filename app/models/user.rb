@@ -31,6 +31,13 @@ class User < ActiveRecord::Base
     Time.zone.today - employment_date + 1
   end
 
+  def full_name
+    result = []
+    result.push(first_name)  unless first_name.nil?
+    result.push(last_name)   unless last_name.nil?
+    result.join(' ')
+  end
+
   def owns_vacation_request?(vacation_request)
     vacation_requests.ids.include? vacation_request.id
   end
