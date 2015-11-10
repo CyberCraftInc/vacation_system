@@ -14,7 +14,7 @@ App.Views.Dashboard = Backbone.View.extend({
     this.data = {role:'', teams:[]};
     this.data.role = App.currentUserRoles.highestPrivilege();
 
-    this.listenTo(this.teams, 'sync', this.render);
+    this.listenTo(this.options.approvalRequests, 'sync', this.render);
   },
 
   render: function() {
@@ -33,10 +33,12 @@ App.Views.Dashboard = Backbone.View.extend({
 
   renderPersonalRequests: function() {
     this.personalRequests = new App.Views.PersonalVacationRequests(this.options);
+    this.personalRequests.render();
   },
 
   renderPendingRequests: function() {
     this.pendingRequests = new App.Views.ApprovalRequests(this.options);
+    this.pendingRequests.render();
   },
 
   renderTimeTable: function() {
