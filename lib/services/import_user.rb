@@ -1,36 +1,120 @@
+# The class encapsulates the following services:
+#   - adding new users into DB,
+#   - updating users in DB.
+#
+# A hash of the following attributes is required for a new instance:
+#   - first_name
+#   - last_name
+#   - email
+#   - birth_date
+#   - employment_date
+#   - password
+# The hash attributes are mapped into appropriate original fields.
+# For example:
+# ```
+# 'first_name' => 'Name'
+# ```
+#
+# The service tries to create a record in DB.
+# There following outcomes are possible:
+#   - new user is added into DB,
+#   - existing user is updated with provided data,
+#   - fail due to errors.
+#
+# A new user is added into DB if there was no error during record
+# creation DB transaction.
+#
+# A record creation DB transaction can fail. An error with
+# the 'Email has already been taken' message is possible.
+# In this case the existing user with given email is updated with provided data.
+#
+# In case of any other errors the service just reports about errors without
+# any changes in DB.
 class ImportUser
-  EXPECTED_COLUMNS = %w(first_name last_name email birth_date employment_date password)
-  STATUS_NEW  = 'NEW'
-  STATUS_OK   = 'OK'
-  STATUS_FAIL = 'FAIL'
+  EXPECTED_COLUMNS = {
+    'first_name' => "Ім'я",
+    'last_name'  => 'Прізвище',
+    'email'      => 'Email',
+    'birth_date' => 'ДН',
+    'password'   => 'password',
+    'employment_date' => 'Дата приходу на роботу'
+  }
+
+  STATUSES = {
+    new:      { short: 'o', verbose: 'NEW' },
+    created:  { short: '+', verbose: 'CREATED' },
+    updated:  { short: '.', verbose: 'UPDATED' },
+    fail:     { short: 'x', verbose: 'FAIL' }
+  }
 
   attr_reader :error
 
   def initialize(attributes, options = {})
     @options = { verbose: false }.merge(options)
-    @attributes = attributes.select { |key| EXPECTED_COLUMNS.include?(key) }
-    @status = 'new'
+    @attributes = attributes
+    @status = STATUSES[:new]
     @error = ''
+
+    select_expected_attributes
+    translate_attributes_keys
   end
 
   def insert_to_db
-    User.create!(@attributes)
-    @status = STATUS_OK
+    insert_user
+  rescue ActiveRecord::RecordInvalid => e
+    if user_already_exists?(e)
+      update_user
+    else
+      update_status(e)
+    end
   rescue StandardError => e
-    @status = STATUS_FAIL
-    @error = e.message
+    update_status(e)
   end
 
   def report
-    report_verbose      if      @options[:verbose]
-    report_with_symbol  unless  @options[:verbose]
+    @options[:verbose] ? report_verbose : report_with_symbol
   end
 
   def report_verbose
-    puts "#{@attributes['email']} #{@status} #{@error}".strip
+    message = format('%-8s', @status[:verbose])
+    message += "#{@attributes['first_name']} #{@attributes['last_name']} "
+      .squeeze(' ')
+    message += "[#{@error}]" unless @error.empty?
+    puts message.strip
   end
 
   def report_with_symbol
-    print @status
+    print @status[:short]
+  end
+
+private
+
+  def insert_user
+    User.create!(@attributes)
+    @status = STATUSES[:created]
+  end
+
+  def select_expected_attributes
+    @attributes.keep_if { |key| EXPECTED_COLUMNS.values.include?(key) }
+  end
+
+  def translate_attributes_keys
+    EXPECTED_COLUMNS.each do |key, value|
+      @attributes[key] = @attributes.delete(value) if EXPECTED_COLUMNS[key]
+    end
+  end
+
+  def update_status(error)
+    @status = STATUSES[:fail]
+    @error = error.message
+  end
+
+  def update_user
+    User.find_by(email: @attributes['email']).update_attributes(@attributes)
+    @status = STATUSES[:updated]
+  end
+
+  def user_already_exists?(error)
+    error.message =~ /Email has already been taken/
   end
 end
