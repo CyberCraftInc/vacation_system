@@ -1,7 +1,4 @@
-require 'available_vacations/calculus'
 require 'errors/conflict_error'
-
-include AvailableVacations
 
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!

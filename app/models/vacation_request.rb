@@ -56,8 +56,6 @@ class VacationRequest < ActiveRecord::Base
 
   # Takes result of `Holiday.dates` as a parameter.
   # As the `Holiday.dates` hits DB, it is not good idea to use it here.
-  # This method is used in `calculus.rb` to calculate available vacations days,
-  # and `Holiday.dates` is already done there.
   def duration(holidays)
     vacation_range_duration - day_offs(holidays)
   end
