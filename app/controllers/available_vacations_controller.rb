@@ -1,7 +1,3 @@
-require 'available_vacations/calculus'
-
-include AvailableVacations
-
 class AvailableVacationsController < ApplicationController
   before_action :authenticate_user!
 

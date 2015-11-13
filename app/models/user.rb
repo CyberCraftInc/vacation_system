@@ -20,9 +20,9 @@ class User < ActiveRecord::Base
   def accumulated_days_of_all_types
     days = days_since_employment
     Hash[
-      planned:  days * PLANNED_PER_DAY,
-      unpaid:   days * UNPAID_PER_DAY,
-      sickness: days * SICKNESS_PER_DAY,
+      planned:  days * AvailableVacations::RATES[:planned],
+      unpaid:   1,
+      sickness: days * AvailableVacations::RATES[:sickness],
     ]
   end
 
