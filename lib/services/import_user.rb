@@ -32,12 +32,12 @@
 # any changes in DB.
 class ImportUser
   EXPECTED_COLUMNS = {
-    'first_name' => "Ім'я",
-    'last_name'  => 'Прізвище',
+    'first_name' => 'First Name',
+    'last_name'  => 'Last Name',
     'email'      => 'Email',
-    'birth_date' => 'ДН',
+    'birth_date' => 'Birth Day',
     'password'   => 'password',
-    'employment_date' => 'Дата приходу на роботу'
+    'employment_date' => 'Employment Date'
   }
 
   STATUSES = {
