@@ -21,13 +21,13 @@ App.Router = Backbone.Router.extend({
 
     holidays.fetch()
       .then(function() {
-        teams.fetch();
-      })
-      .then(function() {
-        availableVacations.fetch();
-      })
-      .then(function() {
-        approvalRequests.fetch();
+        teams.fetch()
+          .then(function() {
+            availableVacations.fetch()
+              .then(function() {
+                approvalRequests.fetch();
+              });
+          });
       });
   },
 
@@ -55,10 +55,10 @@ App.Router = Backbone.Router.extend({
 
     availableVacations.fetch()
       .then(function() {
-        holidays.fetch();
-      })
-      .then(function() {
-        vacationRequests.fetch();
+        holidays.fetch()
+          .then(function() {
+            vacationRequests.fetch();
+          });
       });
   },
 
