@@ -27,6 +27,7 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
 
     this.listenTo(this.requests, 'sync', this.render);
 
+    this.requests.fetch();
     this.onCancel = _.bind(this.onCancel, this);
   },
 
