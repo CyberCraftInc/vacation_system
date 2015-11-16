@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   has_many  :available_vacations, dependent: :destroy
   has_many  :approval_requests, foreign_key: :manager_id, dependent: :destroy
 
+  validates :employment_date,
+            presence: true,
+            inclusion: { in: Date.new(2013, 01, 01)..Date.new(2050, 01, 01) }
+
   def accumulated_days(kind)
     days_since_employment * AvailableVacations::RATES[kind.to_sym]
   end
