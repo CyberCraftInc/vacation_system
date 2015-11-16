@@ -1,6 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe User do
+  it 'has a valid factory' do
+    record = FactoryGirl.build(:user)
+
+    expect(record).to be_valid
+  end
+
+  context 'validations' do
+    it { should validate_presence_of(:employment_date) }
+    it do
+      should validate_inclusion_of(:employment_date)
+        .in_range(Date.new(2013, 01, 01)..Date.new(2050, 01, 01))
+    end
+  end
+
   describe 'destroys all the records of dependant model' do
     let(:team) { create(:team, :with_users, number_of_members: 1) }
     let(:another_team) { create(:team) }
