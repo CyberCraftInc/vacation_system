@@ -11,8 +11,8 @@ The project is powered by **Ruby**, **Node.js**, **Ruby on Rails**, **Backbone**
 
 2.  Install Ruby with the following command:
     ```
-    rvm install 2.2.1
-    rvm --default use 2.2.1
+    rvm install 2.2.3
+    rvm --default use 2.2.3
     ```
 
 3.  Install **bundler** with the following command:
@@ -56,28 +56,29 @@ For details on how to install **Node.js** see https://nodejs.org.
     ```
     In the command above failed, something like the following may be needed:
     ```
-    bundle update devise
+    bundle update <gem>
     ```
+    Substitute `<gem>` with particular gem name.
 
 ### Configuration
-1.  Create the following file from the project's directory:
+1.  Generate secret token:
     ```
-    touch config/secrets.yml
+    echo SECRET_KEY_BASE=`rake secret` > .env
     ```
 
-2.  the file must specify MySQL credentials, as follows
-    ```yaml
-    development:
-      secret_key_base: <secret_key>
-      database_username: <user>
-      database_password: <pass>
-    test:
-      secret_key_base: <secret_key>
-      database_username: <user>
-      database_password: <pass>
+2.  Add DB related credentials:
     ```
-    Replace `<user>` and `<pass>` with user name and password respectively.
-    Replace `<secret_key>` with Devise related secret key.
+    echo DATABASE_USER=user >> .env
+    echo DATABASE_PASS=pass >> .env
+    ```
+    Replace `user` and `pass` with appropriate values.
+
+2.  Add action mailer related credentials:
+    ```
+    echo EMAIL_USER=user >> .env
+    echo EMAIL_PASS=pass >> .env
+    ```
+    Replace `user` and `pass` with appropriate values.
 
 3.  Create DB with the following command:
     ```
@@ -87,4 +88,9 @@ For details on how to install **Node.js** see https://nodejs.org.
     ```
 
 ##  Deployment
-The application server is to be hosted on Heroku.
+The application server is to be hosted on **Heroku**.
+
+### Prerequisites
+1.  The Ruby version must be `2.2.3`.
+    For the list of supported Ruby versions see appropriate **Heroku**
+    [documentation](https://devcenter.heroku.com/articles/ruby-support#ruby-versions).
