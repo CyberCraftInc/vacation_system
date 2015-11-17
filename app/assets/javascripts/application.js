@@ -14,8 +14,6 @@
 //= require jquery2
 //= require jquery_ujs
 //
-//= require jquery.loadmask
-//
 //= require moment
 //= require moment-range
 //

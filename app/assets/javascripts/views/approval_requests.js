@@ -10,9 +10,8 @@ App.Views.ApprovalRequests = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    this.options = options;
-    this.approvalRequests = this.options.approvalRequests;
-    this.availableVacations = this.options.availableVacations;
+    this.approvalRequests = options.approvalRequests;
+    this.availableVacations = options.availableVacations;
     this.listenTo(this.approvalRequests, 'sync', this.render);
 
     this.onAccept   = _.bind(this.onAccept, this);
