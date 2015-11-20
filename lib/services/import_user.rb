@@ -52,7 +52,7 @@ class ImportUser
   def initialize(attributes, options = {})
     @options = { verbose: false }.merge(options)
     @attributes = attributes
-    @status = STATUSES[:new]
+    update_status(:new)
     @error = ''
 
     select_expected_attributes
@@ -65,10 +65,10 @@ class ImportUser
     if user_already_exists?(e)
       update_user
     else
-      update_status(e)
+      update_status(e.message)
     end
   rescue StandardError => e
-    update_status(e)
+    update_status(e.message)
   end
 
   def report
@@ -91,7 +91,7 @@ private
 
   def insert_user
     User.create!(@attributes)
-    @status = STATUSES[:created]
+    update_status(:created)
   end
 
   def select_expected_attributes
@@ -104,14 +104,18 @@ private
     end
   end
 
-  def update_status(error)
-    @status = STATUSES[:fail]
-    @error = error.message
+  def update_status(status, message = '')
+    @status = STATUSES[status]
+    @error = message
   end
 
   def update_user
-    User.find_by(email: @attributes['email']).update_attributes(@attributes)
-    @status = STATUSES[:updated]
+    user = User.find_by(email: @attributes['email'])
+    user.update_attributes(@attributes)
+    errors = ''
+    errors = user.errors.full_messages unless user.errors.empty?
+
+    errors.empty? ? update_status(:updated) : update_status(:fail, errors)
   end
 
   def user_already_exists?(error)
