@@ -1,4 +1,5 @@
 #   Vacation Management System for CyberCraft Inc.
+This is implementation of the **First Iteration**.
 
 ##  Installation
 The project is powered by **Ruby**, **Node.js**, **Ruby on Rails**, **Backbone**, and **MySQL**.
