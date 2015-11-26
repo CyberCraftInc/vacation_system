@@ -37,7 +37,7 @@ RSpec.describe Holiday do
     it { should validate_presence_of(:start) }
     it do
       should validate_inclusion_of(:start)
-        .in_range(Date.new(2015, 01, 01)..Date.new(2115, 01, 01))
+        .in_range(Date.new(2013, 9, 1)..Date.new(2050, 1, 1))
     end
   end
 end
