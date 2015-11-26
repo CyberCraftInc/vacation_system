@@ -517,19 +517,19 @@ RSpec.describe VacationRequest do
 
     it 'should ensure inclusion of end_date in proper range' do
       vacation_request = build(:vacation_request)
-      vacation_request.end_date = '2014-12-31'
+      vacation_request.end_date = '2013-08-31'
       expect(vacation_request).to be_invalid
 
-      vacation_request.end_date = '2115-12-31'
+      vacation_request.end_date = '2050-01-02'
       expect(vacation_request).to be_invalid
 
-      vacation_request.end_date = '2055-12-31'
+      vacation_request.end_date = '2050-01-01'
       expect(vacation_request).to be_valid
     end
 
     it do
       should validate_inclusion_of(:end_date)
-        .in_range(Date.new(2015, 01, 01)..Date.new(2115, 01, 01))
+        .in_range(Date.new(2013, 9, 1)..Date.new(2050, 1, 1))
     end
   end
 
