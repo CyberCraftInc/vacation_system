@@ -145,7 +145,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
   markHoliday: function(holiday) {
     var date = null,
-        duration =  moment(holiday.get('duration')),
+        duration =  holiday.get('duration'),
         beginDate = moment(holiday.get('start'));
 
     this.members.each(function(member) {
