@@ -6,7 +6,7 @@ class VacationRequest < ActiveRecord::Base
             :status, :start_date, :user,
             presence: true
   validates :end_date, :start_date,
-            inclusion: { in: Date.new(2015, 01, 01)..Date.new(2115, 01, 01) }
+            inclusion: { in: Date.new(2013, 9, 1)..Date.new(2050, 1, 1) }
   validate :cannot_intersect_with_other_vacations,
            unless: 'start_date.nil? || end_date.nil?'
 
