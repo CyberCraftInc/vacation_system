@@ -51,6 +51,10 @@ class User < ActiveRecord::Base
     user.list_of_assigned_managers_ids.include? id
   end
 
+  def admin?
+    team_roles.admins.exists?
+  end
+
   def manager?
     team_roles.managers.exists?
   end

@@ -29,6 +29,7 @@
 //= require       main.js
 //= require_tree ./helpers
 //= require_tree ./templates
+//= require_tree ./views/base
 //= require_tree ./views
 //= require_tree ./routers
 //= require_tree ./models

@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
   end
 
   def index
-    render json: Team.all
+    render json: Team.select(:id, :name)
   end
 
   def create
@@ -16,23 +16,25 @@ class TeamsController < ApplicationController
     if team.save
       render json: team
     else
-      render json: { errors: team.errors }, status: :unprocessable_entity
+      render json: { errors: team.errors.full_messages },
+             status: :unprocessable_entity
     end
   end
 
   def update
     authorize @team
     if @team.update(team_params)
-      head status: :no_content
+      render json: @team
     else
-      render json: { errors: @team.errors }, status: :unprocessable_entity
+      render json: { errors: @team.errors.full_messages },
+             status: :unprocessable_entity
     end
   end
 
   def destroy
     authorize @team
     @team.destroy
-    head status: :no_content
+    render json: {}, status: :no_content
   end
 
   def members

@@ -37,9 +37,23 @@ App.Router = Backbone.Router.extend({
   },
 
   teams: function() {
-    var collection = new App.Collections.Teams();
-    App.teams = new App.Views.Teams({'collection':collection});
-    collection.fetch();
+    var roles = new App.Collections.Roles(),
+        teams = new App.Collections.Teams(),
+        users = new App.Collections.Users();
+
+    App.teams = new App.Views.Teams({
+      'roles':roles,
+      'teams':teams,
+      'users':users
+    });
+
+    roles.fetch()
+      .then(function() {
+        return teams.fetch();
+      })
+      .then(function() {
+        return users.fetch();
+      });
   },
 
   vacation_requests: function() {
