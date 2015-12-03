@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Guest updates team', js: true do
+RSpec.feature 'Guest creates a team', js: true do
   given(:user) { create(:user) }
   given(:team) { create(:team) }
 
@@ -10,9 +10,11 @@ RSpec.feature 'Guest updates team', js: true do
     click_on 'Teams'
   end
 
-  scenario 'unsuccessfully, due to authorization issue' do
+  scenario 'and fails due to authorization issue' do
     expect(page).to     have_content('Sign out')
+    expect(page).to     have_content(team.name)
     expect(page).not_to have_content('Create New Team')
-    expect(page).not_to have_content(team.name)
+    expect(page).not_to have_selector('input[name="new-team-name"]')
+    expect(page).not_to have_selector('button[name="create"]')
   end
 end

@@ -2,7 +2,11 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    render json: User.all
+    users = User
+      .select(:id, :first_name, :last_name, :email, :position, :username,
+              :birth_date, :employment_date)
+
+    render json: users
   end
 
   def approval_requests

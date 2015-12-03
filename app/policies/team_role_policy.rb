@@ -1,13 +1,9 @@
-class TeamPolicy < ApplicationPolicy
+class TeamRolePolicy < ApplicationPolicy
   def index?
     user
   end
 
   def create?
-    user && user.admin?
-  end
-
-  def update?
     user && user.admin?
   end
 

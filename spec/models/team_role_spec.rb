@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe TeamRole do
   it 'has a valid factory' do
-    team_role = FactoryGirl.build(:team_role)
+    team_role = build(:team_role)
     expect(team_role).to be_valid
   end
 
@@ -17,7 +17,7 @@ RSpec.describe TeamRole do
   end
 
   context 'as a new valid object' do
-    let(:team_role) { FactoryGirl.build(:team_role) }
+    let(:team_role) { build(:team_role) }
 
     it { expect(team_role).to     have_attributes role: 'member' }
     it { expect(team_role).not_to have_attributes user_id: nil }
@@ -26,17 +26,17 @@ RSpec.describe TeamRole do
     it { expect(team_role).to be_valid }
   end
 
-  it 'does not allow records with duplicate team_id and user_id' do
-    team = FactoryGirl.create(:team)
-    user = FactoryGirl.create(:user)
-    FactoryGirl.create(:team_role, team: team, user: user, role: 'member')
+  it 'does not allow records with duplicate role, team_id, and user_id' do
+    team = create(:team)
+    user = create(:user)
+    create(:team_role, team: team, user: user, role: 'member')
 
-    expect { create(:team_role, team: team, user: user, role: 'guest') }
+    expect { create(:team_role, team: team, user: user, role: 'member') }
       .to raise_exception(ActiveRecord::RecordInvalid)
   end
 
   describe '.managers' do
-    let(:team) { FactoryGirl.create(:team, :with_users, number_of_managers: 1) }
+    let(:team) { create(:team, :with_users, number_of_managers: 1) }
 
     it 'provides list of users with "manager" role' do
       expect(TeamRole).to respond_to(:managers)
@@ -45,7 +45,7 @@ RSpec.describe TeamRole do
   end
 
   describe '.members' do
-    let(:team) { FactoryGirl.create(:team, :with_users, number_of_members: 1) }
+    let(:team) { create(:team, :with_users, number_of_members: 1) }
 
     it 'provides list of users with "member" role' do
       expect(TeamRole).to respond_to(:members)
@@ -54,7 +54,7 @@ RSpec.describe TeamRole do
   end
 
   describe '.guests' do
-    let(:team) { FactoryGirl.create(:team, :with_users, number_of_guests: 1) }
+    let(:team) { create(:team, :with_users, number_of_guests: 1) }
 
     it 'provides list of users with "guest" role' do
       expect(TeamRole).to respond_to(:guests)

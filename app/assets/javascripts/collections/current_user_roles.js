@@ -1,31 +1,4 @@
 App.Collections.CurrentUserRoles = Backbone.Collection.extend({
-  roleFromTeamID: function(teamID) {
-    var result = null;
-
-      result = this.find(function(model) {
-      return teamID == model.attributes.team_id;
-    });
-    return result.attributes.role;
-  },
-
-  teams: function() {
-    var result = [];
-    this.each(function(model) {
-      result.push(model.attributes.team_id);
-    });
-
-    return result;
-  },
-
-  highestPrivilege: function() {
-    var result = 'guest';
-    result = this.max(function(model) {
-      return this.getRoleAsNumber(model.get('role'));
-    }, this).get('role');
-
-    return result;
-  },
-
   getRoleAsNumber: function(role) {
     var number = 0;
 
@@ -36,10 +9,42 @@ App.Collections.CurrentUserRoles = Backbone.Collection.extend({
       case 'manager':
         number = 2;
         break;
+      case 'admin':
+        number = 3;
+        break;
       default:
         number = 0;
     }
 
     return number;
+  },
+
+  highestPrivilege: function() {
+    var result = 'guest';
+
+    result = this.max(function(model) {
+      return this.getRoleAsNumber(model.get('role'));
+    }, this).get('role');
+
+    return result;
+  },
+
+  roleFromTeamID: function(teamID) {
+    var result = null;
+
+    result = this.find(function(model) {
+      return teamID == model.attributes.team_id;
+    });
+
+    return result.attributes.role;
+  },
+
+  teams: function() {
+    var result = [];
+    this.each(function(model) {
+      result.push(model.attributes.team_id);
+    });
+
+    return result;
   }
 });

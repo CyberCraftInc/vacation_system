@@ -16,56 +16,60 @@ RSpec.describe User do
   end
 
   describe 'destroys all the records of dependant model' do
-    let(:team) { create(:team, :with_users, number_of_members: 1) }
+    let(:team) { create(:team, :compact) }
     let(:another_team) { create(:team) }
     let(:manager) { team.team_roles.managers.first.user }
     let(:member) { team.team_roles.members.first.user }
     let(:user) { member }
 
     context 'TeamRole' do
+      let(:number_of_roles) { TeamRole.roles.count }
+
       before do
         expect(User.count).to eq(0)
         expect(Team.count).to eq(0)
         expect(TeamRole.count).to eq(0)
 
-        expect(team.team_roles.count).to eq(3)
+        expect(team.team_roles.count).to eq(number_of_roles)
         expect(user.team_roles.count).to eq(1)
 
         create(:team_role, team: another_team, user: user)
 
-        expect(User.count).to eq(3)
+        expect(User.count).to eq(number_of_roles)
         expect(Team.count).to eq(2)
-        expect(TeamRole.count).to eq(4)
+        expect(TeamRole.count).to eq(number_of_roles + 1)
       end
 
       it 'successfully' do
         expect { user.destroy }.not_to raise_exception
 
-        expect(User.count).to eq(2)
+        expect(User.count).to eq(number_of_roles - 1)
         expect(Team.count).to eq(2)
-        expect(TeamRole.count).to eq(2)
+        expect(TeamRole.count).to eq(number_of_roles - 1)
       end
     end
 
     context 'VacationRequest' do
+      let(:number_of_roles) { TeamRole.roles.count }
+
       before do
         expect(User.count).to eq(0)
         expect(VacationRequest.count).to eq(0)
         expect(ApprovalRequest.count).to eq(0)
 
-        expect(team.team_roles.count).to eq(3)
+        expect(team.team_roles.count).to eq(number_of_roles)
         expect(user.team_roles.count).to eq(1)
 
         create(:vacation_request, user: user)
 
-        expect(User.count).to eq(3)
+        expect(User.count).to eq(number_of_roles)
         expect(VacationRequest.count).to eq(1)
       end
 
       it 'successfully' do
         expect { user.destroy }.not_to raise_exception
 
-        expect(User.count).to eq(2)
+        expect(User.count).to eq(number_of_roles - 1)
         expect(VacationRequest.count).to eq(0)
       end
     end
@@ -92,16 +96,17 @@ RSpec.describe User do
     end
 
     context 'ApprovalRequest' do
+      let(:number_of_roles) { TeamRole.roles.count }
+
       before do
         expect(User.count).to eq(0)
         expect(ApprovalRequest.count).to eq(0)
         expect(VacationRequest.count).to eq(0)
 
         vacation = create(:vacation_request, user: user)
-        ApprovalRequest
-          .create(user: manager, vacation_request: vacation)
+        ApprovalRequest.create(user: manager, vacation_request: vacation)
 
-        expect(User.count).to eq(3)
+        expect(User.count).to eq(number_of_roles)
         expect(ApprovalRequest.count).to eq(1)
         expect(VacationRequest.count).to eq(1)
       end
@@ -109,7 +114,7 @@ RSpec.describe User do
       it 'successfully' do
         expect { manager.destroy }.not_to raise_exception
 
-        expect(User.count).to eq(2)
+        expect(User.count).to eq(number_of_roles - 1)
         expect(ApprovalRequest.count).to eq(0)
         expect(VacationRequest.count).to eq(1)
       end
