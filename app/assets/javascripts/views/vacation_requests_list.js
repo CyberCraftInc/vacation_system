@@ -11,6 +11,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
   },
 
   initialize: function(options) {
+    this.options = options;
     this.collection = options.vacationRequests;
     this.availableVacations = options.availableVacations;
 
@@ -19,6 +20,7 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.onCancel = _.bind(this.onCancel, this);
     this.onFinish = _.bind(this.onFinish, this);
     this.onStart  = _.bind(this.onStart, this);
+    this.durationFormatter = _.bind(this.durationFormatter, this);
   },
 
   render: function() {
@@ -45,6 +47,12 @@ App.Views.VacationRequestsList = Backbone.View.extend({
           field: 'end_date',
           title: 'End date',
           valign: 'middle',
+          sortable: true
+      }, {
+          title: 'Duration',
+          align: 'center',
+          valign: 'middle',
+          formatter: this.durationFormatter,
           sortable: true
       }, {
           field: 'kind',
@@ -119,6 +127,19 @@ App.Views.VacationRequestsList = Backbone.View.extend({
         console.error('FAIL');
         console.error(response.responseText);
       });
+  },
+
+  durationFormatter: function(value, row, index) {
+      var duration,
+          vacation = new App.Models.VacationRequest();
+
+      vacation.set('kind', row.kind);
+      vacation.set('start_date', row.start_date);
+      vacation.set('end_date', row.end_date);
+
+      duration = vacation.calculateDuration(this.options.holidays);
+
+      return duration;
   },
 
   ownerOperationsFormatter: function(value, row, index) {

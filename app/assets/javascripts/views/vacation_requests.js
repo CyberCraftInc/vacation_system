@@ -21,6 +21,7 @@ App.Views.VacationRequests = Backbone.View.extend({
     }).render();
 
     this.vacationRequestsList = new App.Views.VacationRequestsList({
+      'holidays': this.options.holidays,
       'vacationRequests': this.options.vacationRequests,
       'availableVacations': this.options.availableVacations,
     }).render();
