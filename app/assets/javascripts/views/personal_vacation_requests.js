@@ -66,7 +66,6 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
           valign: 'middle',
           sortable: true
       }, {
-          field: 'end_date',
           title: 'Duration',
           align: 'center',
           valign: 'middle',
