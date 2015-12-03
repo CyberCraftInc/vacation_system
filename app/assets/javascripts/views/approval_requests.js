@@ -10,12 +10,14 @@ App.Views.ApprovalRequests = Backbone.View.extend({
   },
 
   initialize: function(options) {
+    this.options = options;
     this.approvalRequests = options.approvalRequests;
     this.availableVacations = options.availableVacations;
     this.listenTo(this.approvalRequests, 'sync', this.render);
 
     this.onAccept   = _.bind(this.onAccept, this);
     this.onDecline  = _.bind(this.onDecline, this);
+    this.durationFormatter = _.bind(this.durationFormatter, this);
     this.availableDaysFormatter  = _.bind(this.availableDaysFormatter, this);
   },
 
@@ -50,6 +52,12 @@ App.Views.ApprovalRequests = Backbone.View.extend({
           title: 'Type',
           align: 'center',
           valign: 'middle',
+          sortable: true
+      }, {
+          title: 'Duration',
+          align: 'center',
+          valign: 'middle',
+          formatter: this.durationFormatter,
           sortable: true
       }, {
           title: 'Available Days',
@@ -108,6 +116,19 @@ App.Views.ApprovalRequests = Backbone.View.extend({
       .fail(function(response) {
         // TODO: implement notification
       });
+  },
+
+  durationFormatter: function(value, row, index) {
+      var duration,
+          vacation = new App.Models.VacationRequest();
+
+      vacation.set('kind', row.kind);
+      vacation.set('start_date', row.start_date);
+      vacation.set('end_date', row.end_date);
+
+      duration = vacation.calculateDuration(this.options.holidays);
+
+      return duration;
   },
 
   availableDaysFormatter: function (value, row, index) {
