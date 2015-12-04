@@ -84,4 +84,60 @@ describe VacationRequestPolicy do
       end
     end
   end
+
+  permissions :approvers? do
+    context 'for user with manager role' do
+      let(:user) { manager }
+
+      context 'who does not own the vacation request' do
+        it 'denies access' do
+          expect(subject).not_to permit(user, vacation_request)
+        end
+      end
+
+      context 'who owns the vacation request' do
+        let(:vacation_request) { create(:vacation_request, user: user) }
+
+        it 'denies access' do
+          expect(subject).not_to permit(user, vacation_request)
+        end
+      end
+    end
+
+    context 'for user with member role' do
+      let(:user) { member }
+
+      context 'who does not own the vacation request' do
+        it 'denies access' do
+          expect(subject).not_to permit(user, vacation_request)
+        end
+      end
+
+      context 'who owns the vacation request' do
+        let(:vacation_request) { create(:vacation_request, user: user) }
+
+        it 'grants access' do
+          expect(subject).to permit(user, vacation_request)
+        end
+      end
+    end
+
+    context 'for user with guest role' do
+      let(:user) { guest }
+
+      context 'who does not own the vacation request' do
+        it 'denies access' do
+          expect(subject).not_to permit(user, vacation_request)
+        end
+      end
+
+      context 'who owns the vacation request' do
+        let(:vacation_request) { create(:vacation_request, user: user) }
+
+        it 'denies access' do
+          expect(subject).not_to permit(user, vacation_request)
+        end
+      end
+    end
+  end
 end

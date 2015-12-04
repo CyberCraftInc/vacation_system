@@ -10,24 +10,29 @@ App.Router = Backbone.Router.extend({
     var holidays = new App.Collections.Holidays(),
         teams = new App.Collections.Teams(),
         approvalRequests = new App.Collections.ApprovalRequests(),
-        availableVacations = new App.Collections.AvailableVacations();
+        availableVacations = new App.Collections.AvailableVacations(),
+        personalVacationRequests = new App.Collections.PersonalVacationRequests();
 
     App.dashboard = new App.Views.Dashboard({
       'holidays': holidays,
       'teams': teams,
       'approvalRequests': approvalRequests,
-      'availableVacations': availableVacations
+      'availableVacations': availableVacations,
+      'personalVacationRequests': personalVacationRequests
     });
 
-    holidays.fetch()
+    personalVacationRequests.fetch()
       .then(function() {
-        teams.fetch()
-          .then(function() {
-            availableVacations.fetch()
-              .then(function() {
-                approvalRequests.fetch();
-              });
-          });
+        return holidays.fetch();
+      })
+      .then(function() {
+        return teams.fetch();
+      })
+      .then(function() {
+        return availableVacations.fetch();
+      })
+      .then(function() {
+        return approvalRequests.fetch();
       });
   },
 
