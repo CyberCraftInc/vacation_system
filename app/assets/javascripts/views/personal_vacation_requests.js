@@ -28,7 +28,6 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
     this.onCancel = _.bind(this.onCancel, this);
     this.approversFormatter = _.bind(this.approversFormatter, this);
     this.durationFormatter = _.bind(this.durationFormatter, this);
-    this.durationSorter = _.bind(this.durationSorter, this);
   },
 
   render: function() {
