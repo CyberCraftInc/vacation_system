@@ -3,7 +3,7 @@ require 'errors/conflict_error'
 class VacationRequestsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_vacation_request,
-                only: [:show, :update, :cancel, :finish, :start]
+                only: [:show, :update, :approvers, :cancel, :finish, :start]
 
   after_action  :update_available_vacations!,
                 only: [:index, :finish]
@@ -51,6 +51,17 @@ class VacationRequestsController < ApplicationController
     else
       head  status: :not_found
     end
+  end
+
+  def approvers
+    authorize @vacation_request
+
+    users = User
+      .joins(:approval_requests)
+      .where(approval_requests: { vacation_request_id: @vacation_request[:id] })
+      .select(:id, :first_name, :last_name)
+
+    render json: users
   end
 
   def cancel

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
             only: [:index, :show, :create, :update],
             defaults: { format: :json } do
     member do
+      get 'approvers'
       get 'cancel'
       get 'finish'
       get 'start'

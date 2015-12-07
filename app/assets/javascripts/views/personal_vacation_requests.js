@@ -23,12 +23,10 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
 
   initialize: function(options) {
     this.options = options;
-    this.requests = new App.Collections.PersonalVacationRequests();
+    this.requests = options.personalVacationRequests;
 
-    this.listenTo(this.requests, 'sync', this.render);
-
-    this.requests.fetch();
     this.onCancel = _.bind(this.onCancel, this);
+    this.approversFormatter = _.bind(this.approversFormatter, this);
     this.durationFormatter = _.bind(this.durationFormatter, this);
   },
 
@@ -78,6 +76,12 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
           valign: 'middle',
           sortable: true
       }, {
+          title: 'Approvers',
+          align: 'center',
+          valign: 'middle',
+          formatter: this.approversFormatter,
+          sortable: true
+      }, {
           field: 'operations',
           title: 'Operations',
           align: 'center',
@@ -87,6 +91,38 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
           sortable: false
       }],
     });
+    this.getApprovers();
+  },
+
+  getApprovers: function() {
+    var approvers = [];
+
+    this.requests.forEach(function(vacation) {
+      var collection = new App.Collections.Approvers();
+      collection.url = function() { return '/vacation_requests/'+vacation.id+'/approvers'; };
+      approvers.push(collection);
+    });
+
+    this.requests.forEach(function(vacation) {
+      approvers.forEach(function(collection) {
+        collection.fetch()
+          .then(function() {
+            var list = [];
+            collection.forEach(function(user) {
+              var info = '';
+              info += user.get('first_name');
+              info += ' ';
+              info += user.get('last_name');
+              list.push(info);
+            });
+            $('span#'+vacation.get('id')).text(list.join(', '));
+          });
+      });
+    });
+  },
+
+  approversFormatter: function(value, row, index) {
+    return '<span id='+row.id+'></span>';
   },
 
   durationFormatter: function(value, row, index) {

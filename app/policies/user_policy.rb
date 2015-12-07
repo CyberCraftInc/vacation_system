@@ -7,6 +7,10 @@ class UserPolicy < ApplicationPolicy
     manager_or_member?
   end
 
+  def available_vacations?
+    manager_or_member?
+  end
+
   def requested_vacations?
     manager_or_member?
   end

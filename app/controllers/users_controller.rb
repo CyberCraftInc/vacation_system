@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
 
   def available_vacations
-    # authorize current_user
+    authorize current_user
     records = AvailableVacation.where(user_id: params[:id])
     records.each(&:accumulate_more_days)
 

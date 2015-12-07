@@ -21,6 +21,19 @@ RSpec.describe VacationRequestsController do
     end
   end
 
+  shared_examples 'pretty approvers request' do
+    it 'should respond with status code :ok (200)' do
+      send_request
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should respond with proper JSON data structure' do
+      send_request
+      expected = %w(id first_name last_name)
+      expect(response.body).to have_json_attributes(expected)
+    end
+  end
+
   shared_examples 'pretty cancel request' do
     it 'should respond with status code :ok (200)' do
       send_request
@@ -217,6 +230,80 @@ RSpec.describe VacationRequestsController do
           expect { send_request }.not_to change(VacationRequest, :count)
         end
       end
+    end
+  end
+
+  ############################################################### GET #approvers
+  describe 'GET #approvers' do
+    let(:team) do
+      create :team, :with_users, number_of_managers: 2, number_of_members: 1
+    end
+    let(:send_request) { get :approvers, params }
+    let(:params) { Hash[format: :json, id: vacation.id] }
+
+    context 'from authenticated user' do
+      before { sign_in user }
+
+      context 'with ID of not existing vacation request' do
+        let(:params) { Hash[format: :json, id: (vacation.id - 1)] }
+
+        it 'should respond with status code :not_found (404)' do
+          send_request
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context 'with manager role' do
+        context 'who owns the vacation request' do
+          let(:vacation) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+
+        context 'who does not own the vacation request' do
+          let(:vacation) do
+            create(:vacation_request, :with_approval_requests, user: member)
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+
+      context 'with member role' do
+        let(:user) { member }
+        context 'who owns the vacation request' do
+          let(:vacation) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          it_should_behave_like 'pretty approvers request'
+        end
+
+        context 'who does not own the vacation request' do
+          let(:vacation) do
+            create(:vacation_request, :with_approval_requests, user: manager)
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+
+      context 'with guest role' do
+        let(:user) { guest }
+        context 'who owns the vacation request' do
+          let(:vacation) do
+            create(:vacation_request, :with_approval_requests, user: user)
+          end
+
+          it_should_behave_like 'unauthorized request'
+        end
+      end
+    end
+
+    context 'from unauthenticated user' do
+      it_should_behave_like 'unauthenticated request'
     end
   end
 
