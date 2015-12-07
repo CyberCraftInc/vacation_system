@@ -53,7 +53,6 @@ App.Views.VacationRequestsList = Backbone.View.extend({
           align: 'center',
           valign: 'middle',
           formatter: this.durationFormatter,
-          sortable: true
       }, {
           field: 'kind',
           title: 'Type',

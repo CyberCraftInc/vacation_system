@@ -58,7 +58,6 @@ App.Views.ApprovalRequests = Backbone.View.extend({
           align: 'center',
           valign: 'middle',
           formatter: this.durationFormatter,
-          sortable: true
       }, {
           title: 'Available Days',
           align: 'center',
