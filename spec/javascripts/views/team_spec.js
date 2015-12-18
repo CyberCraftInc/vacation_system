@@ -2,7 +2,7 @@ describe('Team view', function() {
   beforeEach(function() {
     // Stub User roles
     App.currentUserRoles = new App.Collections.CurrentUserRoles([
-      {'id':1, 'team_id':1, 'role':'manager'}
+      {'id':1, 'team_id':1, 'role':'admin'}
     ]);
   });
 

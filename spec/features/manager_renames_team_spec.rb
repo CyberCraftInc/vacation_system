@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.feature 'Member deletes team', js: true do
+RSpec.feature 'Manager renames team', js: true do
   given(:user)          { create(:user) }
   given(:team)          { create(:team) }
   given(:another_team)  { create(:team) }
 
   background do
     another_team
-    create(:team_role, user: user, team: team, role: 'member')
+    create(:team_role, user: user, team: team, role: 'manager')
     sign_in_with user.email, user.password
     click_on 'Teams'
   end
@@ -16,6 +16,6 @@ RSpec.feature 'Member deletes team', js: true do
     expect(page).to     have_content('Sign out')
     expect(page).not_to have_content('Create New Team')
     expect(page).to     have_content(team.name)
-    expect(page).not_to have_css('button[name=delete]')
+    expect(page).not_to have_css('button[name=rename]')
   end
 end

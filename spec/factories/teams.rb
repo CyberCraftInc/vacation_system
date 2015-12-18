@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :team do
     transient do
+      number_of_admins    1
       number_of_managers  1
       number_of_members   3
       number_of_guests    1
@@ -10,6 +11,10 @@ FactoryGirl.define do
 
     trait :with_users do
       after :create do |team, evaluator|
+        evaluator.number_of_admins.times do
+          user = FactoryGirl.create(:user)
+          FactoryGirl.create(:team_role, user: user, team: team, role: 'admin')
+        end
         evaluator.number_of_managers.times do
           user = FactoryGirl.create(:user)
           FactoryGirl.create(:team_role, user: user, team: team, role: 'manager')
@@ -27,6 +32,9 @@ FactoryGirl.define do
 
     trait :compact do
       after :create do |team|
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:team_role, user: user, team: team, role: 'admin')
+
         user = FactoryGirl.create(:user)
         FactoryGirl.create(:team_role, user: user, team: team, role: 'manager')
 

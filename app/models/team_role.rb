@@ -2,6 +2,10 @@ class TeamRole < ActiveRecord::Base
   belongs_to  :user
   belongs_to  :team
 
+  scope :admins, lambda {
+    where(role: TeamRole.roles[:admin])
+  }
+
   scope :managers, lambda {
     where(role: TeamRole.roles[:manager])
   }
@@ -18,8 +22,8 @@ class TeamRole < ActiveRecord::Base
   validates :team_id, presence: true
   validates :user_id,
             presence: true,
-            uniqueness: { scope: :team,
-                          message: 'already has a role in the team' }
+            uniqueness: { scope: [:role, :team],
+                          message: 'already has this role in the team' }
 
   validates_associated :user
   validates_associated :team
@@ -27,6 +31,7 @@ class TeamRole < ActiveRecord::Base
   enum role: [
     :guest,
     :member,
-    :manager
+    :manager,
+    :admin
   ]
 end

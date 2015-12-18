@@ -12,11 +12,11 @@ RSpec.describe Team do
       expect(Team.count).to eq(0)
       expect(TeamRole.count).to eq(0)
 
-      team = create(:team, :with_users, number_of_members: 1)
+      team = create(:team, :compact)
 
       expect(Team.count).to eq(1)
-      expect(TeamRole.count).to eq(3)
-      expect(team.team_roles.count).to eq(3)
+      expect(TeamRole.count).to eq(4)
+      expect(team.team_roles.count).to eq(4)
 
       expect { team.destroy }.not_to raise_exception
 
