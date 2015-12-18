@@ -5,6 +5,13 @@ module Enumerable
   end
 end
 
+# The matcher can be used as follows:
+# it 'should respond with proper data' do
+#   expect(response.body).to have_json_attribute(:name)
+#     .with_value(another_team.name)
+#   expect(response.body).to have_json_attribute(:id)
+#     .with_value(team.id)
+# end
 RSpec::Matchers.define :have_json_attribute do |expected|
   match do |response_body|
     begin

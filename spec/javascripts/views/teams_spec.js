@@ -9,7 +9,7 @@ describe('Teams view', function() {
 
     // Stub User roles
     App.currentUserRoles = new App.Collections.CurrentUserRoles([
-      {'id':1, 'role':'manager'}
+      {'id':1, 'role':'admin'}
     ]);
 
     this.view = new App.Views.Teams({'collection':collection});
