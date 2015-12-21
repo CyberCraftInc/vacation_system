@@ -98,24 +98,23 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
     this.requests.forEach(function(vacation) {
       var collection = new App.Collections.Approvers();
       collection.url = function() { return '/vacation_requests/'+vacation.id+'/approvers'; };
-      approvers.push(collection);
+      approvers.push({'collection':collection, 'vacationID': vacation.get('id')});
     });
 
-    this.requests.forEach(function(vacation) {
-      approvers.forEach(function(collection) {
-        collection.fetch()
-          .then(function() {
-            var list = [];
-            collection.forEach(function(user) {
-              var info = '';
-              info += user.get('first_name');
-              info += ' ';
-              info += user.get('last_name');
-              list.push(info);
-            });
-            $('span#'+vacation.get('id')).text(list.join(', '));
+    approvers.forEach(function(pair) {
+      pair.collection.fetch()
+        .then(function() {
+          var list = [];
+
+          pair.collection.forEach(function(user) {
+            var info = '';
+            info += user.get('first_name');
+            info += ' ';
+            info += user.get('last_name');
+            list.push(info);
           });
-      });
+          $('span#'+pair.vacationID).text(list.join(', '));
+        });
     });
   },
 
