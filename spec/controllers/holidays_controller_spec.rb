@@ -1,13 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe HolidaysController do
-  let(:team) { create(:team, :with_manager_only) }
-  let(:user) { team.team_roles.managers.first.user }
+  let(:team) { create(:team, :compact) }
+  let(:admin) { team.team_roles.admins.first.user }
+  let(:manager) { team.team_roles.managers.first.user }
+  let(:user) { create(:user) }
   let(:holiday) { create(:holiday, description: 'Ruby Day') }
 
   ################################################################### GET #index
   describe 'GET #index, format: :json' do
-    let(:holidays)  { create_list(:holiday, 2) }
+    let(:holidays) { create_list(:holiday, 2) }
     let(:send_request) { get :index, format: :json }
 
     context 'from authenticated user' do
@@ -37,8 +39,8 @@ RSpec.describe HolidaysController do
     let(:json_data)     { YAML.load(another_holiday.to_json) }
     let(:send_request)  { post :create, params }
 
-    context 'from authenticated user with manager role' do
-      before { sign_in user }
+    context 'from authenticated user with role=admin' do
+      before { sign_in admin }
 
       context 'with correct data' do
         it 'should respond with status code :ok (200)' do
@@ -78,6 +80,16 @@ RSpec.describe HolidaysController do
       end
     end
 
+    context 'from authenticated user with role=manager' do
+      before { sign_in manager }
+
+      it_should_behave_like 'unauthorized request'
+
+      it 'should not add any record to DB' do
+        expect { send_request }.not_to change(Holiday, :count)
+      end
+    end
+
     context 'from unauthenticated user' do
       context 'with correct data' do
         it_should_behave_like 'unauthenticated request'
@@ -96,8 +108,8 @@ RSpec.describe HolidaysController do
     let(:json_data)     { YAML.load(another_holiday.to_json) }
     let(:send_request)  { patch :update, params }
 
-    context 'from authenticated user with manager' do
-      before { sign_in user }
+    context 'from authenticated user with role=admin' do
+      before { sign_in admin }
 
       context 'with correct data' do
         before { send_request }
@@ -146,6 +158,12 @@ RSpec.describe HolidaysController do
       end
     end
 
+    context 'from authenticated user with role=manager' do
+      before { sign_in manager }
+
+      it_should_behave_like 'unauthorized request'
+    end
+
     context 'from unauthenticated user' do
       context 'with correct data' do
         before { send_request }
@@ -163,12 +181,12 @@ RSpec.describe HolidaysController do
   ############################################################## DELETE #destroy
   describe 'DELETE #destroy' do
     let(:params) { Hash[format: :json, id: holiday.id] }
-    let(:send_request)  { delete :destroy, params }
+    let(:send_request) { delete :destroy, params }
 
     before { holiday }
 
-    context 'from authenticated user with manager role' do
-      before { sign_in user }
+    context 'from authenticated user with role=admin' do
+      before { sign_in admin }
 
       it 'should respond with status code :no_content (204)' do
         send_request
@@ -186,6 +204,16 @@ RSpec.describe HolidaysController do
         before { send_request }
 
         it { expect(response).to have_http_status(:not_found) }
+      end
+    end
+
+    context 'from authenticated user with role=manager' do
+      before { sign_in manager }
+
+      it_should_behave_like 'unauthorized request'
+
+      it 'should not delete specified record' do
+        expect { send_request }.not_to change(Holiday, :count)
       end
     end
 
