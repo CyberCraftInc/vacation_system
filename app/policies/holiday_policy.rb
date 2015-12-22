@@ -4,14 +4,14 @@ class HolidayPolicy < ApplicationPolicy
   end
 
   def create?
-    user.manager?
+    user && user.admin?
   end
 
   def update?
-    user.manager?
+    user && user.admin?
   end
 
   def destroy?
-    user.manager?
+    user && user.admin?
   end
 end

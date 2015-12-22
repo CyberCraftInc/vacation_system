@@ -4,10 +4,10 @@
   = date
   ,&nbsp;
   = duration
-  :if role === 'manager'
+  :if role === 'admin'
     %button.pull-right.btn.btn-xs.btn-danger{name:'delete'} Delete
 
-:if role === 'manager'
+:if role === 'admin'
   .form-inline.edit
     .row
       .col-md-6

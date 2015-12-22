@@ -8,7 +8,7 @@ App.Views.Holiday = Backbone.View.extend({
         result = {};
 
     switch (role) {
-      case 'manager':
+      case 'admin':
         result = {
           'click button[name=delete]': 'onDelete',
           'dblclick .view': 'enterEditMode',

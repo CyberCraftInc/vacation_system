@@ -2,7 +2,7 @@
   .panel-heading Holidays
   .panel-body
     .holidays
-      :if highestPrivilege === 'manager'
+      :if highestPrivilege === 'admin'
         .form.form-inline.new{role:'form'}
           .row
             .col-md-6
