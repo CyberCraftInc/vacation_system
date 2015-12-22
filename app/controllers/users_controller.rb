@@ -1,12 +1,43 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_user, only: [:update, :destroy]
+
+  rescue_from ActiveRecord::RecordNotFound do
+    head status: :not_found
+  end
 
   def index
-    users = User
-      .select(:id, :first_name, :last_name, :email, :position, :username,
-              :birth_date, :employment_date)
+    authorize User
 
-    render json: users
+    render json: User.all
+  end
+
+  def create
+    user = User.new user_params
+    user.skip_password_validation = true
+    authorize user
+    if user.save
+      render json: user
+    else
+      render json: { errors: user.errors.full_messages },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update
+    authorize @user
+    if @user.update(user_params)
+      render json: @user
+    else
+      render json: { errors: @user.errors.full_messages },
+             status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    authorize @user
+    @user.destroy
+    render json: {}, status: :no_content
   end
 
   def approval_requests
@@ -33,5 +64,21 @@ class UsersController < ApplicationController
     authorize current_user
     requests = VacationRequest.where(user_id: params[:id]).requested
     render json: requests
+  end
+
+private
+
+  def user_params
+    params
+      .require(:user)
+      .permit(:first_name,
+              :last_name,
+              :email,
+              :birth_date,
+              :employment_date)
+  end
+
+  def set_user
+    @user = User.find_by!(id: params[:id])
   end
 end

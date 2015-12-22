@@ -15,7 +15,22 @@ class User < ActiveRecord::Base
 
   validates :employment_date,
             presence: true,
-            inclusion: { in: Date.new(2013, 01, 01)..Date.new(2050, 01, 01) }
+            inclusion: { in: Date.new(2013, 1, 1)..Date.new(2050, 1, 1) }
+
+  attr_accessor :skip_password_validation
+
+  def as_json(options)
+    options[:only] = [
+      :id,
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
+      :employment_date
+    ]
+
+    super options
+  end
 
   def accumulated_days(kind)
     days_since_employment * AvailableVacations::RATES[kind.to_sym]
@@ -79,5 +94,12 @@ class User < ActiveRecord::Base
     used_vacations.reduce(0) do |sum, vacation|
       sum + vacation.duration(holidays)
     end
+  end
+
+protected
+
+  def password_required?
+    return false if skip_password_validation
+    super
   end
 end

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :users,
-            only: [:index],
+            only: [:index, :create, :update, :destroy],
             defaults: { format: :json } do
     member do
       get 'approval_requests'
