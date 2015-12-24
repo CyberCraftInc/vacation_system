@@ -26,9 +26,11 @@ App.Collections.CurrentUserRoles = Backbone.Collection.extend({
   highestPrivilege: function() {
     var result = 'guest';
 
-    result = this.max(function(model) {
-      return this.getRoleAsNumber(model.get('role'));
-    }, this).get('role');
+    if (this.models.length > 0) {
+      result = this.max(function(model) {
+        return this.getRoleAsNumber(model.get('role'));
+      }, this).get('role');
+    }
 
     return result;
   },

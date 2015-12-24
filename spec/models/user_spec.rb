@@ -10,8 +10,12 @@ RSpec.describe User do
   context 'validations' do
     it { should validate_presence_of(:employment_date) }
     it do
+      should validate_inclusion_of(:birth_date)
+        .in_range(Date.new(1900, 1, 1)..Date.new(2050, 1, 1))
+    end
+    it do
       should validate_inclusion_of(:employment_date)
-        .in_range(Date.new(2013, 01, 01)..Date.new(2050, 01, 01))
+        .in_range(Date.new(2013, 01, 01)..Date.new(2050, 1, 1))
     end
   end
 

@@ -8,7 +8,6 @@ FactoryGirl.define do
     end
 
     name  { "#{FFaker::Skill.tech_skill} at #{FFaker::Company.name}" }
-    # name  { "#{FFaker::Skill.tech_skill} team" }
 
     trait :with_users do
       after :create do |team, evaluator|

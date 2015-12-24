@@ -104,6 +104,7 @@ RSpec.describe UsersController do
           it 'should respond with properly structured records' do
             send_request
             expected = %w(id first_name last_name email birth_date)
+            expected << 'invitation_accepted_at'
             expected << 'employment_date'
 
             expect(response.body).to have_json_attributes(expected)
@@ -199,6 +200,7 @@ RSpec.describe UsersController do
           it 'should respond with properly structured records' do
             send_request
             expected = %w(id first_name last_name email birth_date)
+            expected << 'invitation_accepted_at'
             expected << 'employment_date'
 
             expect(response.body).to have_json_attributes(expected)

@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   has_many  :available_vacations, dependent: :destroy
   has_many  :approval_requests, foreign_key: :manager_id, dependent: :destroy
 
+  validates :birth_date,
+            inclusion: { in: Date.new(1900, 1, 1)..Date.new(2050, 1, 1) }
   validates :employment_date,
             presence: true,
             inclusion: { in: Date.new(2013, 1, 1)..Date.new(2050, 1, 1) }
@@ -26,6 +28,7 @@ class User < ActiveRecord::Base
       :last_name,
       :email,
       :birth_date,
+      :invitation_accepted_at,
       :employment_date
     ]
 
@@ -93,6 +96,14 @@ class User < ActiveRecord::Base
 
     used_vacations.reduce(0) do |sum, vacation|
       sum + vacation.duration(holidays)
+    end
+  end
+
+  def receive_initial_available_vacations
+    accumulated_days_of_all_types.each do |kind, days|
+      AvailableVacation.create(kind: kind,
+                               available_days: days,
+                               user_id: id)
     end
   end
 
