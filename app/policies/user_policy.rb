@@ -3,21 +3,27 @@ class UserPolicy < ApplicationPolicy
     user
   end
 
+  def create?
+    user && user.admin?
+  end
+
+  def update?
+    user && user.admin?
+  end
+
+  def destroy?
+    user && user.admin?
+  end
+
   def approval_requests?
-    manager_or_member?
+    user
   end
 
   def available_vacations?
-    manager_or_member?
+    user && user.member?
   end
 
   def requested_vacations?
-    manager_or_member?
-  end
-
-private
-
-  def manager_or_member?
-    (user.manager? || user.member?)
+    user && user.member?
   end
 end
