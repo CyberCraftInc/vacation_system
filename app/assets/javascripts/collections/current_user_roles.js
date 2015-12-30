@@ -19,6 +19,10 @@ App.Collections.CurrentUserRoles = Backbone.Collection.extend({
     return number;
   },
 
+  hasRole: function(role) {
+    return _.contains(this.pluck('role'), role);
+  },
+
   highestPrivilege: function() {
     var result = 'guest';
 

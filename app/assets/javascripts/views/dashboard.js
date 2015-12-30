@@ -71,7 +71,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   updateUsersRequestsVisibility: function() {
-    if (this.data.role === 'manager') {
+    if (App.currentUserRoles.hasRole(App.TeamRoles.manager)) {
       this.$('.pending-requests').show();
       this.renderPendingRequests();
     } else {
