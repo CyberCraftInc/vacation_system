@@ -5,5 +5,5 @@ class Team < ActiveRecord::Base
   validates :name,
             presence: true,
             uniqueness: true,
-            length: { minimum: 5, maximum: 35 }
+            length: { minimum: 3, maximum: 80 }
 end

@@ -35,8 +35,8 @@ RSpec.describe Team do
     it { should validate_presence_of(:name) }
     it do
       should validate_length_of(:name)
-        .is_at_least(5)
-        .is_at_most(35)
+        .is_at_least(3)
+        .is_at_most(80)
     end
   end
 
