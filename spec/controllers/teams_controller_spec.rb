@@ -67,7 +67,7 @@ RSpec.describe TeamsController do
       end
 
       context 'with incorrect data' do
-        let(:team) { build(:team, name: 'Ants') }
+        let(:team) { build(:team, name: 'Oz') }
 
         it 'should respond with status code :unprocessable_entity (422)' do
           send_request
@@ -136,7 +136,7 @@ RSpec.describe TeamsController do
 
       context 'with a reference to not existing record' do
         let(:params)        { Hash[format: :json, id: 1, team: json_data] }
-        let(:another_team)  { build(:team, name: 'Ants') }
+        let(:another_team)  { build(:team, name: 'Oz') }
 
         it 'should respond with status code :not_found (404)' do
           send_request
@@ -149,7 +149,7 @@ RSpec.describe TeamsController do
       end
 
       context 'with incorrect data' do
-        let(:another_team) { build(:team, name: 'Ants') }
+        let(:another_team) { build(:team, name: 'Oz') }
 
         before { send_request }
 
@@ -219,7 +219,7 @@ RSpec.describe TeamsController do
 
       context 'with a reference to not existing record' do
         let(:params)        { Hash[format: :json, id: 1, team: json_data] }
-        let(:another_team)  { build(:team, name: 'Ants') }
+        let(:another_team)  { build(:team, name: 'Oz') }
 
         it 'should respond with status code :not_found (404)' do
           send_request
@@ -232,7 +232,7 @@ RSpec.describe TeamsController do
       end
 
       context 'with incorrect data' do
-        let(:another_team) { build(:team, name: 'Ants') }
+        let(:another_team) { build(:team, name: 'Oz') }
 
         before { send_request }
 
