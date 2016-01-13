@@ -12,7 +12,8 @@ App.Views.Dashboard = Backbone.View.extend({
     this.teams = options.teams;
     this.teamID = 0;
     this.data = {role:'', teams:[]};
-    this.data.role = App.currentUserRoles.highestPrivilege();
+    this.data.role = 'admin';
+    // this.data.role = App.currentUserRoles.highestPrivilege();
 
     this.listenTo(this.options.approvalRequests, 'sync', this.render);
   },

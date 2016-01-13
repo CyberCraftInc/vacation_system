@@ -1,9 +1,17 @@
 App.Router = Backbone.Router.extend({
   routes: {
-    'dashboard':              'dashboard',
-    'teams':                  'teams',
-    'vacation_requests':      'vacation_requests',
-    'holidays':               'holidays',
+    'dashboard':          'dashboard',
+    'teams':              'teams',
+    'vacation_requests':  'vacation_requests',
+    'holidays':           'holidays',
+    'users':              'users',
+    '*path':              'defaultRoute',
+  },
+
+  defaultRoute: function() {
+    // this.navigate('dashboard');
+    this.navigate('dashboard', {trigger: true});
+    // this.navigate('dashboard', {trigger: true, replace: true});
   },
 
   dashboard: function() {
