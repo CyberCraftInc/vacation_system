@@ -5,10 +5,10 @@
       #{team.attributes.name}
 .panel-group
   .panel.panel-primary.personal-requests
-    .panel-heading Requests
+    .panel-heading My Requests
     .panel-body
   .panel.panel-primary.pending-requests{style:'display:none'}
-    .panel-heading Pending Approval Requests
+    .panel-heading Requests to Approve
     .panel-body
   .panel.panel-primary
     .panel-heading Vacations Time Table
