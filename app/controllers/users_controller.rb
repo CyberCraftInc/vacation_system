@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: [:update, :destroy]
+  before_action :set_user,
+                only: [:update, :destroy, :available_vacations,
+                       :requested_vacations, :invite]
 
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
@@ -41,7 +43,7 @@ class UsersController < ApplicationController
   end
 
   def approval_requests
-    authorize current_user
+    authorize User
     requests = VacationRequest
       .joins(:approval_requests, :user)
       .where(approval_requests: { manager_id: params[:id] })
@@ -53,17 +55,23 @@ class UsersController < ApplicationController
   end
 
   def available_vacations
-    authorize current_user
-    records = AvailableVacation.where(user_id: params[:id])
+    authorize @user
+    records = AvailableVacation.where(user_id: @user.id)
     records.each(&:accumulate_more_days)
 
     render json: records
   end
 
   def requested_vacations
-    authorize current_user
-    requests = VacationRequest.where(user_id: params[:id]).requested
+    authorize @user
+    requests = VacationRequest.where(user_id: @user.id).requested
     render json: requests
+  end
+
+  def invite
+    authorize @user
+    @user.invite!
+    render json: @user
   end
 
 private

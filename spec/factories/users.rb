@@ -3,6 +3,7 @@ FactoryGirl.define do
     email { "#{first_name.downcase}.#{last_name.downcase}@i.ua" }
     first_name      { FFaker::Name.first_name }
     last_name       { FFaker::Name.last_name }
+    birth_date      { Date.new(1980, 5, 25) }
     employment_date { Date.new(2015, 1, 1) }
     password        'myPrecious'
 

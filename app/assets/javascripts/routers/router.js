@@ -1,9 +1,10 @@
 App.Router = Backbone.Router.extend({
   routes: {
-    'dashboard':              'dashboard',
-    'teams':                  'teams',
-    'vacation_requests':      'vacation_requests',
-    'holidays':               'holidays',
+    'dashboard':          'dashboard',
+    'teams':              'teams',
+    'vacation_requests':  'vacation_requests',
+    'holidays':           'holidays',
+    'users':              'users',
   },
 
   dashboard: function() {
@@ -85,5 +86,18 @@ App.Router = Backbone.Router.extend({
     var collection = new App.Collections.Holidays();
     App.holidays = new App.Views.Holidays({'collection':collection});
     collection.fetch();
+  },
+
+  users: function() {
+    var users = new App.Collections.Users();
+
+    App.users = new App.Views.Users({
+      'users': users
+    });
+
+    users.fetch()
+      .then(function() {
+          App.users.render();
+      });
   }
 });

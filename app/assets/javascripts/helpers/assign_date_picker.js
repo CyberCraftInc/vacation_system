@@ -2,7 +2,7 @@
 // https://bootstrap-datepicker.readthedocs.org
 App.Helpers.assignDatePicker = function(container, options) {
   var settings = {
-        autoclose: false,
+        autoclose: true,
         calendarWeeks: false,
         format: 'yyyy-mm-dd',
         orientation: 'top auto',

@@ -23,6 +23,10 @@ class UserPolicy < ApplicationPolicy
     user && user.member?
   end
 
+  def invite?
+    user && user.admin?
+  end
+
   def requested_vacations?
     user && user.member?
   end

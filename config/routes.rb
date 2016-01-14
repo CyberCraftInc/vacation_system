@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root to: 'home#index'
 
-  devise_for :users
+  devise_for :users, controllers: { invitations: 'users/invitations' }
 
   resources :users,
             only: [:index, :create, :update, :destroy],
@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get 'approval_requests'
       get 'available_vacations'
       get 'requested_vacations'
+      get 'invite'
     end
   end
 

@@ -1,12 +1,13 @@
 App.Models.User = Backbone.Model.extend({
+  urlRoot: 'users',
   defaults: {
     'first_name':'',
     'last_name':'',
     'email':'',
     'position':'',
     'username':'',
-    'birth_date':'',
-    'employment_date':''
+    'birth_date':'1990-01-01',
+    'employment_date': moment(new Date()).format('YYYY-MM-DD')
   },
 
   composeFullName: function() {
@@ -41,21 +42,28 @@ App.Models.User = Backbone.Model.extend({
     }, this);
 
     return result;
-  }
+  },
 
-  // TODO: add validation
-  // validation: {
-  //   description: {
-  //     required: true,
-  //     rangeLength: [5, 25]
-  //   },
-  //   duration: {
-  //     required: true,
-  //     range: [1, 5]
-  //   },
-  //   start: {
-  //     required: true,
-  //     length: 10
-  //   },
-  // }
+  validation: {
+    first_name: {
+      required: true,
+      rangeLength: [1, 50]
+    },
+    last_name: {
+      required: true,
+      rangeLength: [1, 70]
+    },
+    email: {
+      required: true,
+      pattern: 'email',
+    },
+    birth_date: {
+      required: true,
+      length: 10
+    },
+    employment_date: {
+      required: true,
+      length: 10
+    },
+  }
 });

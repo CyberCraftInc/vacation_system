@@ -116,7 +116,6 @@ App.Views.EditableTeam = App.Views.Team.extend({
   },
 
   onRoleError: function(model, response, options) {
-    console.log(response);
     if (response.statusText === 'Forbidden') {
       alert('You are not allowed to operate on roles');
     }
@@ -129,8 +128,6 @@ App.Views.EditableTeam = App.Views.Team.extend({
 
   onTeamError: function(model, response, options) {
     var message = '';
-
-    console.log('onTeamError', arguments);
 
     if (response.statusText === 'Forbidden') {
       message = 'You are not allowed to operate on teams';
@@ -156,7 +153,6 @@ App.Views.EditableTeam = App.Views.Team.extend({
   onTeamInvalid: function(model) {
     var message = '';
 
-    console.log('onTeamInvalid', arguments);
     message = _.chain(model.validationError)
       .map(function(error) {
         return error;

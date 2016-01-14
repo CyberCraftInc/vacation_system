@@ -27,7 +27,7 @@ App.Models.Team = Backbone.Model.extend({
   validation: {
     name: {
       required: true,
-      rangeLength: [5, 35]
+      rangeLength: [3, 80]
     },
   }
 });
