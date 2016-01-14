@@ -1,6 +1,6 @@
-App.Views.PersonalVacationRequests = Backbone.View.extend({
-  el: '.personal-requests .panel-body',
-  template: JST['templates/vacation_requests_table'],
+App.Views.MyRequests = Backbone.View.extend({
+  el: '.my-requests',
+  template: JST['templates/my_requests'],
 
   operationsEvents: function() {
     return {
@@ -14,10 +14,19 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
     $.get('vacation_requests/'+row.id.toString()+'/cancel')
       .done(function() {
         that.$table.bootstrapTable('remove', {field:'id', values: [row.id]});
-        // TODO: implement notification, if needed
       })
       .fail(function(response) {
-        // TODO: implement notification
+        var message = 'ERROR' + response.status.toString(),
+            suggestion = '\n\nThere is possibility that you work with outdated data.\nPage refresh may be helpful.';
+
+        if (response.status === 404) {
+          message = 'ERROR: Vacation request is not found on server.';
+        } else if (response.status === 409) {
+          message = 'ERROR: Vacation request state conflicts with the action.';
+        }
+
+        message += suggestion;
+        alert(message);
       });
   },
 
@@ -25,27 +34,19 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
     this.options = options;
     this.requests = options.personalVacationRequests;
 
+    this.listenTo(this.requests, 'sync', this.update);
+
     this.onCancel = _.bind(this.onCancel, this);
     this.approversFormatter = _.bind(this.approversFormatter, this);
     this.durationFormatter = _.bind(this.durationFormatter, this);
   },
 
   render: function() {
-    this.$el.html(this.template());
-
-    if (this.requests.isEmpty()) {
-      this.renderMessage();
-    } else {
+    if (! this.requests.isEmpty()) {
+      this.$el.html(this.template());
       this.renderRequests();
     }
     return this;
-  },
-
-  renderMessage: function() {
-    var message = 'No pending requests.',
-        html = '<p>' + message + '</p>';
-
-    this.$el.html(html);
   },
 
   renderRequests: function() {
@@ -137,5 +138,13 @@ App.Views.PersonalVacationRequests = Backbone.View.extend({
 
   ownerOperationsFormatter: function(value, row, index) {
     return JST['templates/approval_request_owner_operations']();
+  },
+
+  update: function() {
+    if (this.requests.length > 0) {
+      this.$table.bootstrapTable('load', this.requests);
+    } else {
+      this.remove();
+    }
   }
 });

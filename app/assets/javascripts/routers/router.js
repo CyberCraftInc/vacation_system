@@ -34,6 +34,9 @@ App.Router = Backbone.Router.extend({
       })
       .then(function() {
         return approvalRequests.fetch();
+      })
+      .then(function() {
+        App.dashboard.render();
       });
   },
 

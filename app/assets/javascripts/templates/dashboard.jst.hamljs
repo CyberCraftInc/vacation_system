@@ -3,14 +3,9 @@
     %label.btn.btn-default.active
       %input{type:'checkbox',name:'teams',value:team.attributes.id,checked:'checked'}
       #{team.attributes.name}
-.panel-group
-  .panel.panel-primary.personal-requests
-    .panel-heading My Requests
-    .panel-body
-  .panel.panel-primary.pending-requests{style:'display:none'}
-    .panel-heading Requests to Approve
-    .panel-body
-  .panel.panel-primary
-    .panel-heading Vacations Time Table
-    .panel-body.time-table-content
-    .panel-footer.legend
+.my-requests
+.requests-to-approve
+.panel.panel-primary
+  .panel-heading Vacations Time Table
+  .panel-body.time-table-content
+  .panel-footer.legend
