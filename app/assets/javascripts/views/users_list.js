@@ -113,17 +113,13 @@ App.Views.UsersList = Backbone.View.extend({
 
   onClickInvite: function(event, value, row, index) {
     var that = this;
-    console.log('onClickInvite: NIY');
 
     $.get('/users/'+row.id+'/invite')
       .done(function() {
         that.showSuccessMessage('Invitation is sent to '+row.email);
-        console.log('OK');
       })
       .fail(function(response) {
-        console.log('FAIL');
         that.showErrorMessage('Failed to send invitation to '+row.email);
-        console.log(response);
       });
   },
 

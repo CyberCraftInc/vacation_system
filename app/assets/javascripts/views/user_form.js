@@ -65,8 +65,6 @@ App.Views.UserForm = App.Views.BootstrapModal.extend({
       this.model.save();
     } else if (isValid && !this.model.isChanged) {
       this.hide();
-    } else {
-      console.log('onSave: unpredictable state');
     }
   },
 
@@ -79,23 +77,13 @@ App.Views.UserForm = App.Views.BootstrapModal.extend({
   },
 
   onError: function(model, response, options) {
-    var message = _.chain(response.responseJSON.errors)
-      .map(function(error) {
-        return error;
-      })
-      .join('\n')
-      .value();
+    var message = response.responseJSON.errors.join('\n');
 
     alert(message);
   },
 
   onInvalid: function(model, errors, options) {
-    var message = _.chain(errors)
-      .map(function(error) {
-        return error;
-      })
-      .join('\n')
-      .value();
+    var message = _.values(errors).join('\n');
 
     alert(message);
   },

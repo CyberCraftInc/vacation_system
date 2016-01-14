@@ -5,16 +5,12 @@ App.Views.Users = Backbone.View.extend({
   initialize: function(options) {
     this.users = options.users;
 
-    this.data = {
-      highestPrivilege: App.currentUserRoles.highestPrivilege()
-    };
-
     this.$el.html(this.template());
     this.$users = $('.panel-group');
   },
 
   render: function() {
-    if (this.data.highestPrivilege === 'admin') {
+    if (App.currentUserRoles.highestPrivilege() === App.TeamRoles.admin) {
       this.renderTable();
     } else {
       this.showError('Access denied');
