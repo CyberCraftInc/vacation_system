@@ -35,7 +35,7 @@ class VacationRequestsController < ApplicationController
               json: @vacation_request
     else
       render  status: :unprocessable_entity,
-              json: { errors: @vacation_request.errors }
+              json: { errors: @vacation_request.errors.full_messages }
     end
   end
 

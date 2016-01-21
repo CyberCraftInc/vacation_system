@@ -56,14 +56,18 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   onError: function(model, response, options) {
-    // TODO: show error messages to user
-    // console.log(response.responseJSON.errors.base);
-    console.error(response.responseJSON.errors);
+    var message = 'ERROR ' + response.status.toString();
+
+    if (response.status === 422) {
+      message = response.responseJSON.errors.join('\n');
+    }
+
+    alert(message);
   },
 
   onInvalid: function(model, response, options) {
-    // TODO: show error messages to user
-    console.error(model.validationError);
+    var message = _.values(model.validationError).join('\n');
+    alert(message);
   },
 
   onSuccess: function(model, response, options) {
