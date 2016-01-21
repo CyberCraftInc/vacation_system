@@ -8,9 +8,9 @@
           .badge{class:item.attributes.kind}= item.attributes.available_days
   .col-md-4
     .input-group.input-daterange
-      %input.form-control{type:'text', name:'from', title:'Date of the holiday start'}
+      %input.form-control{type:'text', name:'from', title:'Start date'}
       .input-group-addon to
-      %input.form-control{type:'text', name:'to',   title:'Date of the holiday end'}
+      %input.form-control{type:'text', name:'to',   title:'End date'}
   .col-md-3
     .pull-right
       .btn-group

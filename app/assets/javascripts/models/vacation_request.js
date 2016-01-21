@@ -82,11 +82,7 @@ App.Models.VacationRequest = Backbone.Model.extend({
       required: true,
       pattern: /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/
     },
-    actual_end_date: {
-      required: true,
-      pattern: /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/
-    },
-    planned_end_date: {
+    end_date: {
       required: true,
       pattern: /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/
     }
