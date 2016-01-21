@@ -13,8 +13,6 @@ App.Views.Dashboard = Backbone.View.extend({
     this.teamID = 0;
     this.data = {role:'', teams:[]};
     this.data.role = App.currentUserRoles.highestPrivilege();
-
-    this.listenTo(this.options.approvalRequests, 'sync', this.render);
   },
 
   render: function() {
@@ -24,21 +22,21 @@ App.Views.Dashboard = Backbone.View.extend({
 
     this.$el.html(this.template(this.data));
 
-    this.renderPersonalRequests();
-    this.updateUsersRequestsVisibility();
+    this.renderMyRequests();
+    this.renderRequestsToApprove();
     this.renderTimeTable();
 
     return this;
   },
 
-  renderPersonalRequests: function() {
-    this.personalRequests = new App.Views.PersonalVacationRequests(this.options);
+  renderMyRequests: function() {
+    this.personalRequests = new App.Views.MyRequests(this.options);
     this.personalRequests.render();
   },
 
-  renderPendingRequests: function() {
-    this.pendingRequests = new App.Views.ApprovalRequests(this.options);
-    this.pendingRequests.render();
+  renderRequestsToApprove: function() {
+    this.requestsToApprove = new App.Views.RequestsToApprove(this.options);
+    this.requestsToApprove.render();
   },
 
   renderTimeTable: function() {
@@ -66,20 +64,6 @@ App.Views.Dashboard = Backbone.View.extend({
 
     this.data.teams = this.teams.getTeamsByIDs(teamIDs);
 
-    this.updateUsersRequestsVisibility();
     this.renderTimeTable();
-  },
-
-  updateUsersRequestsVisibility: function() {
-    if (App.currentUserRoles.hasRole(App.TeamRoles.manager)) {
-      this.$('.pending-requests').show();
-      this.renderPendingRequests();
-    } else {
-      this.$('.pending-requests').hide();
-      if (!_.isUndefined(this.pendingRequests)) {
-        this.pendingRequests.remove();
-        delete this.pendingRequests.remove;
-      }
-    }
   }
 });

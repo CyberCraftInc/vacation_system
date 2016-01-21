@@ -1,6 +1,6 @@
-App.Views.ApprovalRequests = Backbone.View.extend({
-  el: '.pending-requests .panel-body',
-  template: JST['templates/vacation_requests_table'],
+App.Views.RequestsToApprove = Backbone.View.extend({
+  el: '.requests-to-approve',
+  template: JST['templates/requests_to_approve'],
 
   operationsEvents: function() {
     return {
@@ -13,7 +13,7 @@ App.Views.ApprovalRequests = Backbone.View.extend({
     this.options = options;
     this.approvalRequests = options.approvalRequests;
     this.availableVacations = options.availableVacations;
-    this.listenTo(this.approvalRequests, 'sync', this.render);
+    this.listenTo(this.approvalRequests, 'sync', this.update);
 
     this.onAccept   = _.bind(this.onAccept, this);
     this.onDecline  = _.bind(this.onDecline, this);
@@ -22,14 +22,27 @@ App.Views.ApprovalRequests = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.html(this.template());
-
-    if (this.approvalRequests.isEmpty()) {
-      this.renderMessage();
-    } else {
+    if (! this.approvalRequests.isEmpty()) {
+      this.$el.html(this.template());
       this.renderRequests();
     }
     return this;
+  },
+
+  show: function() {
+    this.$el.show();
+  },
+
+  hide: function() {
+    this.$el.hide();
+  },
+
+  update: function() {
+    if (this.approvalRequests.length > 0) {
+      this.$table.bootstrapTable('load', this.approvalRequests);
+    } else {
+      this.remove();
+    }
   },
 
   renderRequests: function() {
@@ -84,23 +97,16 @@ App.Views.ApprovalRequests = Backbone.View.extend({
     });
   },
 
-  renderMessage: function() {
-    var message = 'No pending requests.',
-        html = '<p>' + message + '</p>';
-
-    this.$el.html(html);
-  },
-
   onAccept: function(event, value, row, index) {
     var that = this;
 
     $.get('approval_requests/'+row.id.toString()+'/accept')
       .done(function() {
         that.$table.bootstrapTable('remove', {field:'id', values: [row.id]});
-        // TODO: implement notification, if needed
+        that.approvalRequests.fetch();
       })
       .fail(function(response) {
-        // TODO: implement notification
+        that.showError(response);
       });
   },
 
@@ -110,10 +116,10 @@ App.Views.ApprovalRequests = Backbone.View.extend({
     $.get('approval_requests/'+row.id.toString()+'/decline')
       .done(function() {
         that.$table.bootstrapTable('remove', {field:'id', values: [row.id]});
-        // TODO: implement notification, if needed
+        that.approvalRequests.fetch();
       })
       .fail(function(response) {
-        // TODO: implement notification
+        that.showError(response);
       });
   },
 
@@ -152,5 +158,21 @@ App.Views.ApprovalRequests = Backbone.View.extend({
 
   managerOperationsFormatter: function() {
     return JST['templates/approval_request_manager_operations']();
+  },
+  showError: function(response) {
+    var message = 'ERROR ' + response.status.toString(),
+        suggestion = '\n\nThere is possibility that you work with outdated data.\nPage refresh may be helpful.';
+
+    if (response.status === 403) {
+      message = 'ERROR: You are not allowed to do this action.';
+      suggestion = '\n\nThere is possibility that you lost some priviliges.';
+    } else if (response.status === 404) {
+      message = 'ERROR: Vacation request is not found on server.';
+    } else if (response.status === 409) {
+      message = 'ERROR: Vacation request state conflicts with the action.';
+    }
+
+    message += suggestion;
+    alert(message);
   }
 });
