@@ -194,3 +194,12 @@ $silver: #c0c0c0;
     margin-left: 5px;
   }
 }
+
+.time-tables {
+  .time-table {
+    margin-bottom: 25px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}

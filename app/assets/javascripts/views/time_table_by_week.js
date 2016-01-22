@@ -5,11 +5,11 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     var that = this;
 
     this.el = options.el;
-    this.teamID = options.team_id;
+    this.team = options.team;
 
     this.holidays   = options.holidays;
-    this.members = new App.Collections.TeamMembers(options.team_id);
-    this.vacations = new App.Collections.TeamVacations({team_id: options.team_id});
+    this.members = new App.Collections.TeamMembers(options.team.get('id'));
+    this.vacations = new App.Collections.TeamVacations({team_id: options.team.get('id')});
 
     this.cellWidth  = 20;
     this.colSpan    = 5;
@@ -45,7 +45,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
   renderMembersTable: function() {
     var $list = this.$('.members tbody');
-    $list.append('<tr><td>&nbsp;</td></tr>');
+    $list.append('<tr><td><strong>'+this.team.get('name')+'</strong></td></tr>');
     $list.append('<tr><td>&nbsp;</td></tr>');
     this.members.each(function(model) {
       $list.append('<tr><td class="member">'+ model.composeFullName() +'</td></tr>');
@@ -122,16 +122,16 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         date = moment(weekStart).add(col,'weeks');
         // Mark first day of week
         $td = $('<td>').appendTo($tr)
-          .attr('id', this.composeCellID(this.teamID, user.id, date))
+          .attr('id', this.composeCellID(this.team.get('id'), user.id, date))
           .addClass('left-cell');
         // Three days
         for (var i = 0; i < 3; i++) {
           $td = $('<td>').appendTo($tr)
-            .attr('id', this.composeCellID(this.teamID, user.id, date.add(1,'day')));
+            .attr('id', this.composeCellID(this.team.get('id'), user.id, date.add(1,'day')));
         }
         // Mark last day of week
         $td = $('<td>').appendTo($tr)
-          .attr('id', this.composeCellID(this.teamID, user.id, date.add(1,'day')))
+          .attr('id', this.composeCellID(this.team.get('id'), user.id, date.add(1,'day')))
           .addClass('right-cell');
       }
     }, this);
@@ -150,7 +150,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
 
     this.members.each(function(member) {
       for (date = beginDate.clone(); date < moment(beginDate).add(duration, 'days'); date.add(1, 'day')) {
-        selector = '#'+ this.composeCellID(this.teamID, member.get('id'), date);
+        selector = '#'+ this.composeCellID(this.team.get('id'), member.get('id'), date);
         $(selector).addClass('holiday');
         $(selector).attr('title', holiday.get('description'));
         $(selector).html('<span class="glyphicon glyphicon-asterisk"></span>');
@@ -180,7 +180,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
         duration++;
         continue;
       }
-      selector = '#'+ this.composeCellID(this.teamID, vacation.get('user_id'), date);
+      selector = '#'+ this.composeCellID(this.team.get('id'), vacation.get('user_id'), date);
       $(selector).addClass(vacation.get('kind'));
       $(selector).addClass(vacation.get('status'));
     }
@@ -198,7 +198,7 @@ App.Views.TimeTableByWeek = Backbone.View.extend({
     return range.diff('weeks');
   },
 
-  composeCellID: function(teamID, userID, date) {
-    return [teamID, userID, date.format('YY-MM-DD')].join('-');
+  composeCellID: function(teamId, userId, date) {
+    return [teamId, userId, date.format('YY-MM-DD')].join('-');
   }
 });

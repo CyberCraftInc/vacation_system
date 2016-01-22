@@ -57,9 +57,10 @@ App.Views.TimeTables = Backbone.View.extend({
     this.teams.forEach(function(team) {
       selector = 'team'+team.id;
       $timeTableContainer = $('<div>').appendTo('.time-tables')
-        .attr('id', selector);
+        .attr('id', selector)
+        .addClass('time-table');
       this.timeTableViews.push( new timeTable({
-                                  'team_id': team.id,
+                                  'team': team,
                                   'el': '#'+selector,
                                   'from': this.timeTableDateRange.begin,
                                   'to': this.timeTableDateRange.end,
