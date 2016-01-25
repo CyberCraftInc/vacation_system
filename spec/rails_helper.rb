@@ -16,7 +16,15 @@ Capybara.javascript_driver = :poltergeist
 
 RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
+  config.include Features::UserInterfaceHelpers, type: :feature
   config.include Features::SessionHelpers, type: :feature
+  config.include Features::SignInPageHelpers, type: :feature
+  config.include Features::HomePageHelpers, type: :feature
+  config.include Features::DashboardPageHelpers, type: :feature
+  config.include Features::VacationsPageHelpers, type: :feature
+  config.include Features::HolidaysPageHelpers, type: :feature
+  config.include Features::TeamsPageHelpers, type: :feature
+  config.include Features::UsersPageHelpers, type: :feature
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

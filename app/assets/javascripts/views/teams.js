@@ -29,9 +29,13 @@ App.Views.Teams = Backbone.View.extend({
   },
 
   render: function() {
-    this.renderForm();
-    this.renderTeams();
-    this.listenTo(this.teams, 'sync', this.renderTeams);
+    if (App.currentUserRoles.highestPrivilege() === App.TeamRoles.admin) {
+      this.renderForm();
+      this.renderTeams();
+      this.listenTo(this.teams, 'sync', this.renderTeams);
+    } else {
+      this.showError('Access denied');
+    }
 
     return this;
   },
@@ -62,5 +66,9 @@ App.Views.Teams = Backbone.View.extend({
 
     teamView.render();
     this.teamViews.push(teamView);
+  },
+
+  showError: function(message) {
+    this.$el.html(JST['templates/alerts/error']({'message':message}));
   }
 });

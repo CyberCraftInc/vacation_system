@@ -8,61 +8,71 @@ describe TeamPolicy do
   let(:guest)   { team.team_roles.guests.first.user }
   let(:unregistred) { nil }
 
+  shared_examples 'a good boy' do
+    it 'and grants access' do
+      expect(subject).to permit(user)
+    end
+  end
+
+  shared_examples 'a good guard' do
+    it 'and denies access' do
+      expect(subject).not_to permit(user)
+    end
+  end
+
   subject { TeamPolicy }
 
   permissions :index? do
     context 'for user with role=admin' do
-      it 'grants access' do
-        expect(subject).to permit(admin, team)
-      end
+      let(:user) { admin }
+      it_behaves_like 'a good boy'
     end
+
     context 'for user with role=manager' do
-      it 'grants access' do
-        expect(subject).to permit(manager, team)
-      end
+      let(:user) { manager }
+      it_behaves_like 'a good boy'
     end
+
     context 'for user with role=member' do
-      it 'grants access' do
-        expect(subject).to permit(member, team)
-      end
+      let(:user) { member }
+      it_behaves_like 'a good boy'
     end
+
     context 'for user with role=guest' do
-      it 'grants access' do
-        expect(subject).to permit(guest, team)
-      end
+      let(:user) { guest }
+      it_behaves_like 'a good boy'
     end
+
     context 'for not registered user' do
-      it 'denies access' do
-        expect(subject).not_to permit(unregistred, team)
-      end
+      let(:user) { unregistred }
+      it_behaves_like 'a good guard'
     end
   end
 
   permissions :create?, :update?, :destroy? do
     context 'for user with role=admin' do
-      it 'grants access' do
-        expect(subject).to permit(admin, team)
-      end
+      let(:user) { admin }
+      it_behaves_like 'a good boy'
     end
+
     context 'for user with role=manager' do
-      it 'denies access' do
-        expect(subject).not_to permit(manager, team)
-      end
+      let(:user) { manager }
+      it_behaves_like 'a good guard'
     end
+
     context 'for user with role=member' do
-      it 'denies access' do
-        expect(subject).not_to permit(member, team)
-      end
+      let(:user) { member }
+      it_behaves_like 'a good guard'
     end
+
     context 'for user with role=guest' do
-      it 'denies access' do
-        expect(subject).not_to permit(guest, team)
-      end
+      let(:user) { guest }
+      it_behaves_like 'a good guard'
     end
+
     context 'for not registered user' do
-      it 'denies access' do
-        expect(subject).not_to permit(unregistred, team)
-      end
+      let(:user) { unregistred }
+      it_behaves_like 'a good guard'
     end
   end
 end

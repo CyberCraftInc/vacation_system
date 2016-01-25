@@ -1,4 +1,14 @@
 class TeamPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user.admin?
+        scope.select(:id, :name).uniq
+      else
+        user.teams.select(:id, :name).uniq
+      end
+    end
+  end
+
   def index?
     user
   end

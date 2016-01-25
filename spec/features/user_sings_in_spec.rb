@@ -1,29 +1,45 @@
 require 'rails_helper'
 
 RSpec.feature 'User signs in' do
-  given(:user) { FactoryGirl.create(:user) }
-  scenario 'with valid email and password' do
-    sign_in_with user.email, user.password
+  given(:user) { create(:user) }
 
-    expect(page).to have_content('Sign out')
+  background do
+    visit root_path
   end
 
-  scenario 'with invalid email, and fails' do
-    sign_in_with 'invalid_email', user.password
+  context 'with valid email and password' do
+    scenario 'successfully' do
+      user_sees_sign_in_page
 
-    expect(page).to have_content('Sign in')
+      sign_in_with user.email, user.password
+
+      user_sees_home_page
+      expect(page).to have_selector('.notice',
+                                    text: 'Signed in successfully.')
+    end
   end
 
-  scenario 'with blank password, and fails' do
-    sign_in_with user.email, ''
+  context 'with invalid email' do
+    scenario 'and fails' do
+      user_sees_sign_in_page
 
-    expect(page).to have_content('Sign in')
+      sign_in_with 'invalid_email', user.password
+
+      user_sees_sign_in_page
+      expect(page).to have_selector('.alert',
+                                    text: 'Invalid email or password.')
+    end
   end
 
-  def sign_in_with(email, password)
-    visit new_user_session_path
-    fill_in 'Email', with: email
-    fill_in 'Password', with: password
-    click_button 'Log in'
+  context 'with blank password' do
+    scenario 'and fails' do
+      user_sees_sign_in_page
+
+      sign_in_with user.email, ''
+
+      user_sees_sign_in_page
+      expect(page).to have_selector('.alert',
+                                    text: 'Invalid email or password.')
+    end
   end
 end
