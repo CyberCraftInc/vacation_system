@@ -23,13 +23,14 @@ RSpec.describe TeamsController do
 
     context 'from authenticated user' do
       before do
+        create(:team_role, user: user, team: teams.first, role: 'member')
         sign_in user
         send_request
       end
 
       it { expect(response).to have_http_status(:ok) }
       it 'should contain correct records as JSON data in response body' do
-        expect(response.body).to match_records_by_ids_with(teams)
+        expect(response.body).to match_records_by_ids_with([teams.first])
       end
     end
 

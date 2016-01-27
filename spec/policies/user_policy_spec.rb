@@ -10,13 +10,13 @@ RSpec.describe UserPolicy do
   let(:guest)   { team.team_roles.guests.first.user }
 
   shared_examples 'a good boy' do
-    it 'grants access' do
+    it 'and grants access' do
       expect(subject).to permit(user)
     end
   end
 
   shared_examples 'a good guard' do
-    it 'denies access' do
+    it 'and denies access' do
       expect(subject).not_to permit(user)
     end
   end
@@ -78,12 +78,12 @@ RSpec.describe UserPolicy do
   end
 
   permissions :approval_requests? do
-    context 'with role=admin' do
+    context 'for user with role=admin' do
       let(:user) { admin }
       it_behaves_like 'a good boy'
     end
 
-    context 'with role=manager' do
+    context 'for user with role=manager' do
       let(:user) { manager }
       it_behaves_like 'a good boy'
     end
@@ -105,22 +105,22 @@ RSpec.describe UserPolicy do
   end
 
   permissions :available_vacations?, :requested_vacations? do
-    context 'with role=admin' do
+    context 'for user with role=admin' do
       let(:user) { admin }
       it_behaves_like 'a good guard'
     end
 
-    context 'with role=manager' do
+    context 'for user with role=manager' do
       let(:user) { manager }
       it_behaves_like 'a good guard'
     end
 
-    context 'with role=member' do
+    context 'for user with role=member' do
       let(:user) { member }
       it_behaves_like 'a good boy'
     end
 
-    context 'role=guest' do
+    context 'for user with role=guest' do
       let(:user) { guest }
       it_behaves_like 'a good guard'
     end

@@ -7,7 +7,8 @@ class TeamsController < ApplicationController
   end
 
   def index
-    render json: Team.select(:id, :name)
+    authorize User
+    render json: policy_scope(Team)
   end
 
   def create

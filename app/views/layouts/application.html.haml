@@ -29,12 +29,12 @@
             %ul.nav.navbar-nav.navbar-left
               - if current_user && current_user.member?
                 %li
-                  = link_to "Home", '/#dashboard'
-              - if current_user && current_user.member?
+                  = link_to "Dashboard", '/#dashboard'
                 %li
                   = link_to "Vacations", '/#vacation_requests'
-              %li
-                = link_to "Holidays", '/#holidays'
+              - if current_user
+                %li
+                  = link_to "Holidays", '/#holidays'
               - if current_user && current_user.admin?
                 %li
                   = link_to "Teams", '/#teams'
