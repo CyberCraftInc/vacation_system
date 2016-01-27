@@ -28,6 +28,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def requested_vacations?
-    user && user.member?
+    user
   end
 end

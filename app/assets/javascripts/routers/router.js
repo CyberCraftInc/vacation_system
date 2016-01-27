@@ -8,18 +8,18 @@ App.Router = Backbone.Router.extend({
   },
 
   dashboard: function() {
-    var holidays = new App.Collections.Holidays(),
-        teams = new App.Collections.Teams(),
-        approvalRequests = new App.Collections.ApprovalRequests(),
+    var approvalRequests = new App.Collections.ApprovalRequests(),
         availableVacations = new App.Collections.AvailableVacations(),
-        personalVacationRequests = new App.Collections.PersonalVacationRequests();
+        holidays = new App.Collections.Holidays(),
+        personalVacationRequests = new App.Collections.PersonalVacationRequests(),
+        teams = new App.Collections.Teams();
 
     App.dashboard = new App.Views.Dashboard({
-      'holidays': holidays,
-      'teams': teams,
       'approvalRequests': approvalRequests,
       'availableVacations': availableVacations,
-      'personalVacationRequests': personalVacationRequests
+      'holidays': holidays,
+      'personalVacationRequests': personalVacationRequests,
+      'teams': teams,
     });
 
     personalVacationRequests.fetch()

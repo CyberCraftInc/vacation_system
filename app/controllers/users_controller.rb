@@ -64,7 +64,7 @@ class UsersController < ApplicationController
 
   def requested_vacations
     authorize @user
-    requests = VacationRequest.where(user_id: @user.id).requested
+    requests = @user.vacation_requests.requested
     render json: requests
   end
 

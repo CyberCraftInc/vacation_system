@@ -11,20 +11,29 @@ App.Views.Dashboard = Backbone.View.extend({
     this.holidays = options.holidays;
     this.teams = options.teams;
     this.teamID = 0;
-    this.data = {role:'', teams:[]};
-    this.data.role = App.currentUserRoles.highestPrivilege();
+    this.exportData = {role:'', teams:[]};
+    this.exportData.role = App.currentUserRoles.highestPrivilege();
   },
 
   render: function() {
-    var userTeamIDs = App.currentUserRoles.teams();
+    var userTeamIDs = App.currentUserRoles.teams(),
+        userHasAccessToPage = false;
 
-    this.data.teams = this.teams.getTeamsByIDs(userTeamIDs);
+    userHasAccessToPage = App.currentUserRoles.hasRole(App.TeamRoles.manager) ||
+                          App.currentUserRoles.hasRole(App.TeamRoles.member)  ||
+                          App.currentUserRoles.hasRole(App.TeamRoles.guest);
 
-    this.$el.html(this.template(this.data));
+    if (userHasAccessToPage) {
+      this.exportData.teams = this.teams.getTeamsByIDs(userTeamIDs);
 
-    this.renderMyRequests();
-    this.renderRequestsToApprove();
-    this.renderTimeTable();
+      this.$el.html(this.template(this.exportData));
+
+      this.renderMyRequests();
+      this.renderRequestsToApprove();
+      this.renderTimeTable();
+    } else {
+      this.showError('Access denied');
+    }
 
     return this;
   },
@@ -40,7 +49,7 @@ App.Views.Dashboard = Backbone.View.extend({
   },
 
   renderTimeTable: function() {
-    var options = {'teams': this.data.teams, 'holidays': this.holidays};
+    var options = {'teams': this.exportData.teams, 'holidays': this.holidays};
         options.from  = moment();
         options.to    = moment().add(2,'months');
 
@@ -62,8 +71,12 @@ App.Views.Dashboard = Backbone.View.extend({
       }
     });
 
-    this.data.teams = this.teams.getTeamsByIDs(teamIDs);
+    this.exportData.teams = this.teams.getTeamsByIDs(teamIDs);
 
     this.renderTimeTable();
+  },
+
+  showError: function(message) {
+    this.$el.html(JST['templates/alerts/error']({'message':message}));
   }
 });
