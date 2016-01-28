@@ -1,9 +1,9 @@
 App.Router = Backbone.Router.extend({
   routes: {
     'dashboard':          'dashboard',
-    'teams':              'teams',
     'vacation_requests':  'vacation_requests',
     'holidays':           'holidays',
+    'teams':              'teams',
     'users':              'users',
   },
 
@@ -40,6 +40,40 @@ App.Router = Backbone.Router.extend({
       });
   },
 
+  vacation_requests: function() {
+    var availableVacations = new App.Collections.AvailableVacations(),
+        holidays = new App.Collections.Holidays(),
+        vacationRequests = new App.Collections.VacationRequests();
+
+    availableVacations.url = function () {
+      var userID = App.currentUser.get('id').toString();
+      return 'users/'+userID+'/available_vacations';
+    };
+
+    App.vacation_requests = new App.Views.VacationRequests({
+      'availableVacations': availableVacations,
+      'holidays': holidays,
+      'vacationRequests': vacationRequests,
+    });
+
+    availableVacations.fetch()
+      .then(function() {
+        return holidays.fetch();
+      })
+      .then(function() {
+        return vacationRequests.fetch();
+      })
+      .then(function() {
+        App.vacation_requests.render();
+      });
+  },
+
+  holidays: function() {
+    var collection = new App.Collections.Holidays();
+    App.holidays = new App.Views.Holidays({'collection':collection});
+    collection.fetch();
+  },
+
   teams: function() {
     var roles = new App.Collections.Roles(),
         teams = new App.Collections.Teams(),
@@ -58,37 +92,6 @@ App.Router = Backbone.Router.extend({
       .then(function() {
         return users.fetch();
       });
-  },
-
-  vacation_requests: function() {
-    var holidays = new App.Collections.Holidays(),
-        vacationRequests = new App.Collections.VacationRequests(),
-        availableVacations = new App.Collections.AvailableVacations();
-
-    availableVacations.url = function () {
-      var userID = App.currentUser.get('id').toString();
-      return 'users/'+userID+'/available_vacations';
-    };
-
-    App.vacation_requests = new App.Views.VacationRequests({
-      'holidays': holidays,
-      'vacationRequests': vacationRequests,
-      'availableVacations': availableVacations
-    });
-
-    availableVacations.fetch()
-      .then(function() {
-        holidays.fetch()
-          .then(function() {
-            vacationRequests.fetch();
-          });
-      });
-  },
-
-  holidays: function() {
-    var collection = new App.Collections.Holidays();
-    App.holidays = new App.Views.Holidays({'collection':collection});
-    collection.fetch();
   },
 
   users: function() {

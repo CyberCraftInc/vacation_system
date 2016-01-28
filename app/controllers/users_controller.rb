@@ -56,7 +56,7 @@ class UsersController < ApplicationController
 
   def available_vacations
     authorize @user
-    records = AvailableVacation.where(user_id: @user.id)
+    records = @user.available_vacations
     records.each(&:accumulate_more_days)
 
     render json: records

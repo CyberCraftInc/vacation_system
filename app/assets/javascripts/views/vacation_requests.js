@@ -4,28 +4,39 @@ App.Views.VacationRequests = Backbone.View.extend({
 
   initialize: function(options) {
     this.options = options;
-    this.data = {
+    this.exportData = {
       highestPrivilege: App.currentUserRoles.highestPrivilege()
     };
-
-    this.listenToOnce(this.options.vacationRequests, 'sync',  this.render);
   },
 
   render: function() {
-    this.$el.html(this.template(this.data));
+    var userHasAccessToPage = false;
 
-    this.vacationRequestForm = new App.Views.VacationRequestForm({
-      'holidays': this.options.holidays,
-      'vacationRequests': this.options.vacationRequests,
-      'availableVacations': this.options.availableVacations,
-    }).render();
+    userHasAccessToPage = App.currentUserRoles.hasRole(App.TeamRoles.admin) ||
+                          App.currentUserRoles.hasRole(App.TeamRoles.member);
 
-    this.vacationRequestsList = new App.Views.VacationRequestsList({
-      'holidays': this.options.holidays,
-      'vacationRequests': this.options.vacationRequests,
-      'availableVacations': this.options.availableVacations,
-    }).render();
+    this.$el.html(this.template(this.exportData));
+
+    if (userHasAccessToPage) {
+      this.vacationRequestForm = new App.Views.VacationRequestForm({
+        'availableVacations': this.options.availableVacations,
+        'holidays': this.options.holidays,
+        'vacationRequests': this.options.vacationRequests,
+      }).render();
+
+      this.vacationRequestsList = new App.Views.VacationRequestsList({
+        'availableVacations': this.options.availableVacations,
+        'holidays': this.options.holidays,
+        'vacationRequests': this.options.vacationRequests,
+      }).render();
+    } else {
+      this.showError('Access denied');
+    }
 
     return this;
+  },
+
+  showError: function(message) {
+    this.$el.html(JST['templates/alerts/error']({'message':message}));
   }
 });
