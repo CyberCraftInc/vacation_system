@@ -20,7 +20,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def available_vacations?
-    user && user.member?
+    user
   end
 
   def invite?
