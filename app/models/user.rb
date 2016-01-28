@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
     team_roles.members.exists?
   end
 
+  def guest?
+    team_roles.guest.exists?
+  end
+
   # List of managers' IDs the user is assigned to, from all the teams.
   # If user is manager, then remove the user from the list.
   def list_of_assigned_managers_ids

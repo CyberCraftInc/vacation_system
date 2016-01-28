@@ -27,9 +27,10 @@
             %a.navbar-brand{:href => "/#dashboard"} CyberCraft Vacations
           #navbar.navbar-collapse.collapse
             %ul.nav.navbar-nav.navbar-left
-              - if current_user && current_user.member?
+              - if current_user && (current_user.manager? || current_user.member? || current_user.guest?)
                 %li
                   = link_to "Dashboard", '/#dashboard'
+              - if current_user && current_user.member?
                 %li
                   = link_to "Vacations", '/#vacation_requests'
               - if current_user

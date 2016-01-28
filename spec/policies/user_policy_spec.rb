@@ -23,7 +23,7 @@ RSpec.describe UserPolicy do
 
   subject { UserPolicy }
 
-  permissions :index?, :approval_requests? do
+  permissions :index?, :approval_requests?, :requested_vacations? do
     context 'for user with role=admin' do
       let(:user) { admin }
       it_behaves_like 'a good boy'
@@ -104,7 +104,7 @@ RSpec.describe UserPolicy do
     end
   end
 
-  permissions :available_vacations?, :requested_vacations? do
+  permissions :available_vacations? do
     context 'for user with role=admin' do
       let(:user) { admin }
       it_behaves_like 'a good guard'
