@@ -32,7 +32,7 @@
                   = link_to "Dashboard", '/#dashboard'
               - if current_user && (current_user.admin? || current_user.member?)
                 %li
-                  = link_to "Vacations", '/#vacation_requests'
+                  = link_to "Vacations", '/#vacations'
               - if current_user
                 %li
                   = link_to "Holidays", '/#holidays'
