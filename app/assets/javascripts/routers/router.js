@@ -59,6 +59,8 @@ App.Router = Backbone.Router.extend({
   vacations: function() {
     var availableVacations = new App.Collections.AvailableVacations(),
         holidays = new App.Collections.Holidays(),
+        teamMates = new App.Collections.Users(),
+        vacationApprovals = new App.Collections.VacationApprovals(),
         vacationRequests = new App.Collections.VacationRequests();
 
     availableVacations.url = function () {
@@ -69,12 +71,20 @@ App.Router = Backbone.Router.extend({
     App.vacation_requests = new App.Views.VacationRequests({
       'availableVacations': availableVacations,
       'holidays': holidays,
+      'teamMates': teamMates,
+      'vacationApprovals': vacationApprovals,
       'vacationRequests': vacationRequests,
     });
 
     availableVacations.fetch()
       .then(function() {
+        return teamMates.fetch();
+      })
+      .then(function() {
         return holidays.fetch();
+      })
+      .then(function() {
+        return vacationApprovals.fetch();
       })
       .then(function() {
         return vacationRequests.fetch();

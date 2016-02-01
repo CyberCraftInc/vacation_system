@@ -62,14 +62,14 @@ RSpec.describe UsersController do
     context 'from authenticated user' do
       before do
         create_users
-        sign_in simple_user
+        create(:team_role, team: team, user: users.first)
+        sign_in member
         send_request
       end
 
       it { expect(response).to have_http_status(:ok) }
       it 'should contain correct records as JSON data in response body' do
-        expected = users
-        expected << simple_user
+        expected = team.users
         expect(response.body).to match_records_by_ids_with(expected)
       end
     end

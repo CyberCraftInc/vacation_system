@@ -7,4 +7,14 @@ class ApprovalRequest < ActiveRecord::Base
   validates :vacation_request_id,
             uniqueness: { scope: :user,
                           message: 'is already assigned to this mamager' }
+
+  def as_json(options)
+    options[:only] = [
+      :id,
+      :manager_id,
+      :vacation_request_id
+    ]
+
+    super options
+  end
 end
