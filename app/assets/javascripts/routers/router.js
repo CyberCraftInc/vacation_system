@@ -1,10 +1,26 @@
 App.Router = Backbone.Router.extend({
+  execute: function(callback, args, name) {
+    if (this.authorize(name)) {
+      if (callback) callback.apply(this, args);
+    } else {
+      this.showError('Access denied.');
+    }
+  },
+
+  permissions: {
+    'dashboard': [App.TeamRoles.guest, App.TeamRoles.member, App.TeamRoles.manager],
+    'vacations': [App.TeamRoles.member, App.TeamRoles.admin],
+    'holidays': [App.TeamRoles.guest, App.TeamRoles.member, App.TeamRoles.manager, App.TeamRoles.admin],
+    'teams': [App.TeamRoles.admin],
+    'users': [App.TeamRoles.admin],
+  },
+
   routes: {
-    'dashboard':          'dashboard',
-    'vacation_requests':  'vacation_requests',
-    'holidays':           'holidays',
-    'teams':              'teams',
-    'users':              'users',
+    'dashboard':  'dashboard',
+    'vacations':  'vacations',
+    'holidays':   'holidays',
+    'teams':      'teams',
+    'users':      'users',
   },
 
   dashboard: function() {
@@ -40,7 +56,7 @@ App.Router = Backbone.Router.extend({
       });
   },
 
-  vacation_requests: function() {
+  vacations: function() {
     var availableVacations = new App.Collections.AvailableVacations(),
         holidays = new App.Collections.Holidays(),
         vacationRequests = new App.Collections.VacationRequests();
@@ -105,5 +121,21 @@ App.Router = Backbone.Router.extend({
       .then(function() {
           App.users.render();
       });
+  },
+
+  authorize: function(name) {
+    var roles = App.currentUserRoles.pluck('role'),
+        userHasAccessToPage = false;
+
+    result = _.intersection(this.permissions[name], roles);
+    userHasAccessToPage = _.isArray(result) && !_.isEmpty(result);
+    return userHasAccessToPage;
+  },
+
+  showError: function(msg) {
+    var theMessage = new App.Views.Message({
+      messageType:'error',
+      message:msg,
+    }).render();
   }
 });

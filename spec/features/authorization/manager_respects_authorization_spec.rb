@@ -44,10 +44,10 @@ RSpec.feature 'Manager respects authorization', js: true do
       user_sees_home_page
       user_does_not_see_menu_item 'Vacations'
 
-      visit '/#vacation_requests'
+      visit '/#vacations'
 
       expect(page).to have_current_path(root_path)
-      expect(page).to have_current_fragment('vacation_requests')
+      expect(page).to have_current_fragment('vacations')
       user_does_not_see_panel 'Request New Vacation'
       user_does_not_see_panel 'List of Vacations'
       user_sees_alert 'Access denied'

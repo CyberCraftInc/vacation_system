@@ -44,7 +44,7 @@ RSpec.feature 'User with all roles respects authorization', js: true do
       user_sees_home_page
       user_sees_menu_item 'Teams'
 
-      visit '/#teams'
+      click_link 'Teams'
 
       user_sees_teams_page
     end
@@ -53,7 +53,7 @@ RSpec.feature 'User with all roles respects authorization', js: true do
       user_sees_home_page
       user_sees_menu_item 'Users'
 
-      visit '/#users'
+      click_link 'Users'
 
       user_sees_users_page
     end

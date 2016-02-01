@@ -2,7 +2,7 @@ module Features
   module VacationsPageHelpers
     def user_sees_vacations_page
       expect(page).to have_current_path(root_path)
-      expect(page).to have_current_fragment('vacation_requests')
+      expect(page).to have_current_fragment('vacations')
       user_sees_panel 'Request New Vacation'
       user_sees_panel 'List of Vacations'
     end
