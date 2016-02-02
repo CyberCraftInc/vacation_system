@@ -27,6 +27,8 @@ App.Views.VacationRequests = Backbone.View.extend({
       this.vacationRequestsList = new App.Views.VacationRequestsList({
         'availableVacations': this.options.availableVacations,
         'holidays': this.options.holidays,
+        'teamMates': this.options.teamMates,
+        'vacationApprovals': this.options.vacationApprovals,
         'vacationRequests': this.options.vacationRequests,
       }).render();
     } else {

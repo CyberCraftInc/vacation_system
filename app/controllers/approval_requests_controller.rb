@@ -24,10 +24,7 @@ class ApprovalRequestsController < ApplicationController
   end
 
   def index
-    approvals = current_user.approval_requests
-      .select(:id, :vacation_request_id, :manager_id)
-
-    render json: approvals
+    render json: policy_scope(ApprovalRequest)
   end
 
   def accept

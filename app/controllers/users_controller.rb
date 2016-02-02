@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user,
-                only: [:update, :destroy, :available_vacations,
-                       :requested_vacations, :invite]
+                only: [:update, :destroy, :available_vacations, :invite,
+                       :requested_vacations, :vacation_approvals]
 
   rescue_from ActiveRecord::RecordNotFound do
     head status: :not_found
@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    render json: User.all
+    render json: policy_scope(User)
   end
 
   def create
@@ -62,16 +62,25 @@ class UsersController < ApplicationController
     render json: records
   end
 
+  def invite
+    authorize @user
+    @user.invite!
+    render json: @user
+  end
+
   def requested_vacations
     authorize @user
     requests = @user.vacation_requests.requested
     render json: requests
   end
 
-  def invite
+  def vacation_approvals
     authorize @user
-    @user.invite!
-    render json: @user
+    approval_requests = ApprovalRequest
+      .joins(:vacation_request)
+      .where(vacation_requests: { user_id: @user.id })
+
+    render json: approval_requests
   end
 
 private

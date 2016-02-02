@@ -14,12 +14,15 @@ App.Views.VacationRequestsList = Backbone.View.extend({
     this.options = options;
     this.collection = options.vacationRequests;
     this.availableVacations = options.availableVacations;
+    this.teamMates = options.teamMates;
+    this.vacationApprovals = options.vacationApprovals;
 
     this.listenTo(this.collection, 'sync',  this.renderTable);
 
     this.onCancel = _.bind(this.onCancel, this);
     this.onFinish = _.bind(this.onFinish, this);
     this.onStart  = _.bind(this.onStart, this);
+    this.approversFormatter = _.bind(this.approversFormatter, this);
     this.durationFormatter = _.bind(this.durationFormatter, this);
   },
 
@@ -66,6 +69,11 @@ App.Views.VacationRequestsList = Backbone.View.extend({
           valign: 'middle',
           sortable: true
       }, {
+          title: 'Approvers',
+          align: 'center',
+          valign: 'middle',
+          formatter: this.approversFormatter,
+      }, {
           field: 'operations',
           title: 'Operations',
           align: 'center',
@@ -100,7 +108,6 @@ App.Views.VacationRequestsList = Backbone.View.extend({
         // TODO: trigger new vacation request from to refresh available days in badges
         // TODO: implement notification, if needed
         // Trigger table update
-        console.log('DONE');
         that.collection.fetch();
         that.availableVacations.fetch();
       })
@@ -118,7 +125,6 @@ App.Views.VacationRequestsList = Backbone.View.extend({
       .done(function() {
         // TODO: implement notification, if needed
         // Trigger table update
-        console.log('DONE');
         that.collection.fetch();
       })
       .fail(function(response) {
@@ -126,6 +132,24 @@ App.Views.VacationRequestsList = Backbone.View.extend({
         console.error('FAIL');
         console.error(response.responseText);
       });
+  },
+
+  approversFormatter: function(value, row, index) {
+    var approver = null,
+        teamMates = this.teamMates,
+        vacationId = row.id;
+
+    approvers = this.vacationApprovals
+      .filter(function(o) {
+        return o.get('vacation_request_id') === vacationId;
+      })
+      .map(function(o) {
+        approver = teamMates.findWhere({'id': o.get('manager_id')});
+
+        return _.isUndefined(approver) ? '[hidden]' : approver.composeFullName();
+      });
+
+    return approvers.join(', ');
   },
 
   durationFormatter: function(value, row, index) {

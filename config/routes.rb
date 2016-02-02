@@ -9,8 +9,9 @@ Rails.application.routes.draw do
     member do
       get 'approval_requests'
       get 'available_vacations'
-      get 'requested_vacations'
       get 'invite'
+      get 'requested_vacations'
+      get 'vacation_approvals'
     end
   end
 
