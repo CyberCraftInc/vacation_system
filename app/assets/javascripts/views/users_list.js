@@ -10,7 +10,7 @@ App.Views.UsersList = Backbone.View.extend({
     return {
       'click button[name=invite]':  this.onClickInvite,
       'click button[name=delete]':  this.onClickDelete,
-      'click button[name=edit]':  this.onClickEdit,
+      'click button[name=edit]':    this.onClickEdit,
     };
   },
 
@@ -123,11 +123,23 @@ App.Views.UsersList = Backbone.View.extend({
       });
   },
 
-  onClickDelete: function(event, value, row, index) {
-    var userToDelete = this.collection.get(row.id);
+  getUserDeleteConfirmation: function(user) {
+    var message = '';
 
-    this.listenToOnce(userToDelete, 'sync', this.onUserDeleteSuccess);
-    userToDelete.destroy();
+    message+='You are about to delete <'+user.composeFullName()+'> from DB, for ever.\n';
+    message+='NOTE: All the user related things like vacations and approvals will be deleted as well.';
+    return confirm(message);
+  },
+
+  onClickDelete: function(event, value, row, index) {
+    var confirmed = false,
+        userToDelete = this.collection.get(row.id);
+
+    confirmed = this.getUserDeleteConfirmation(userToDelete);
+    if (confirmed) {
+      this.listenToOnce(userToDelete, 'sync', this.onUserDeleteSuccess);
+      userToDelete.destroy();
+    }
   },
 
   onUserDeleteSuccess: function(model) {
