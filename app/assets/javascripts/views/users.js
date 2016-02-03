@@ -10,11 +10,7 @@ App.Views.Users = Backbone.View.extend({
   },
 
   render: function() {
-    if (App.currentUserRoles.highestPrivilege() === App.TeamRoles.admin) {
-      this.renderTable();
-    } else {
-      this.showError('Access denied');
-    }
+    this.renderTable();
 
     return this;
   },
@@ -25,9 +21,5 @@ App.Views.Users = Backbone.View.extend({
     });
 
     this.table.render();
-  },
-
-  showError: function(message) {
-    this.$el.html(JST['templates/alerts/error']({'message':message}));
   }
 });
