@@ -47,11 +47,11 @@
                   = link_to "Sign out (#{current_user.full_name}, #{current_user.email})", destroy_user_session_path, method: :delete
                 - else
                   = link_to "Sign in", new_user_session_path
-    %p.notice= notice
-    %p.alert= alert
     .container
       .col-md-12
         %section
+          %p.notice= notice
+          %p.alert= alert
           = yield
         %footer
           © 2015 CyberCraft Inc.
