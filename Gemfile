@@ -10,7 +10,7 @@ gem 'pundit'
 
 group :development, :test do
   gem 'spring'
-  gem 'jasmine'
+  gem 'jasmine', '2.4.0'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails', '~> 4.5'
 end

@@ -10,7 +10,7 @@ module AvailableVacations
 
   # Hash of rates
   RATES = Hash[
-    planned:  PLANNED_PER_DAY,
+    regular:  PLANNED_PER_DAY,
     sickness: SICKNESS_PER_DAY,
   ]
 end

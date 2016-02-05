@@ -60,7 +60,7 @@ RSpec.describe VacationRequestsController do
     end
 
     it 'should properly update available vacations of the user' do
-      av_id = user.available_vacations.planned.first.id
+      av_id = user.available_vacations.regular.first.id
       expect { send_request }
         .to change { AvailableVacation.find_by(id: av_id).available_days.to_i }
         .by(-vacation.duration(Holiday.dates))
@@ -491,8 +491,8 @@ RSpec.describe VacationRequestsController do
     let(:create_available_vacations) do
       create(:available_vacation,
              user: user,
-             available_days: user.accumulated_days(:planned),
-             kind: :planned)
+             available_days: user.accumulated_days(:regular),
+             kind: :regular)
     end
 
     let(:send_request) { get :finish, params }

@@ -10,30 +10,21 @@ App.Views.VacationRequests = Backbone.View.extend({
   },
 
   render: function() {
-    var userHasAccessToPage = false;
-
-    userHasAccessToPage = App.currentUserRoles.hasRole(App.TeamRoles.admin) ||
-                          App.currentUserRoles.hasRole(App.TeamRoles.member);
-
     this.$el.html(this.template(this.exportData));
 
-    if (userHasAccessToPage) {
-      this.vacationRequestForm = new App.Views.VacationRequestForm({
-        'availableVacations': this.options.availableVacations,
-        'holidays': this.options.holidays,
-        'vacationRequests': this.options.vacationRequests,
-      }).render();
+    this.vacationRequestForm = new App.Views.VacationRequestForm({
+      'availableVacations': this.options.availableVacations,
+      'holidays': this.options.holidays,
+      'vacationRequests': this.options.vacationRequests,
+    }).render();
 
-      this.vacationRequestsList = new App.Views.VacationRequestsList({
-        'availableVacations': this.options.availableVacations,
-        'holidays': this.options.holidays,
-        'teamMates': this.options.teamMates,
-        'vacationApprovals': this.options.vacationApprovals,
-        'vacationRequests': this.options.vacationRequests,
-      }).render();
-    } else {
-      this.showError('Access denied');
-    }
+    this.vacationRequestsList = new App.Views.VacationRequestsList({
+      'availableVacations': this.options.availableVacations,
+      'holidays': this.options.holidays,
+      'teamMates': this.options.teamMates,
+      'vacationApprovals': this.options.vacationApprovals,
+      'vacationRequests': this.options.vacationRequests,
+    }).render();
 
     return this;
   },

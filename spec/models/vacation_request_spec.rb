@@ -10,7 +10,7 @@ RSpec.describe VacationRequest do
   context 'as a brand new object' do
     let(:vacation_request) { VacationRequest.new }
 
-    it { expect(vacation_request).to have_attributes kind: 'planned' }
+    it { expect(vacation_request).to have_attributes kind: 'regular' }
     it { expect(vacation_request).to have_attributes status: 'requested' }
     it { expect(vacation_request).to have_attributes end_date: nil }
     it { expect(vacation_request).to have_attributes start_date: nil }

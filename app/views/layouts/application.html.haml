@@ -10,7 +10,7 @@
     - unless current_user.nil?
       :javascript
         window.App.currentUser = new App.Models.CurrentUser(
-          #{raw(current_user.to_json(only: [:id,:first_name,:last_name]))}
+          #{raw(current_user.to_json())}
         );
         window.App.currentUserRoles = new App.Collections.CurrentUserRoles(#{raw(current_user.team_roles.to_json(only: [:id,:role,:team_id]))});
     = csrf_meta_tags

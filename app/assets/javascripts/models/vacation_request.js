@@ -2,7 +2,7 @@
 // record.
 App.Models.VacationRequest = Backbone.Model.extend({
   defaults: {
-    'kind': App.Vacation.types.planned,
+    'kind': App.Vacation.types.regular,
     'status': App.Vacation.statuses.requested,
     'start_date':'',
     'end_date':'',
@@ -54,29 +54,67 @@ App.Models.VacationRequest = Backbone.Model.extend({
 
   // Calculate duration and return the result.
   // Solution is based on sets of days and their unions and instersections.
-  calculateDuration: function(holidays) {
+  calculateDuration: function(holidays, dateRange) {
     var result = 0,
         arrayOfHolidays = [],
         arrayOfVacationDays = [],
         arrayOfWeekends = [],
-        duration = App.Helpers.dateRangeDuration(this.get('start_date'), this.get('end_date'));
+        start_date = this.get('start_date'),
+        end_date = this.get('end_date'),
+        duration = 0;
+
+
+    if (_.isObject(dateRange)) {
+      if (start_date < dateRange.start) {
+        start_date = dateRange.start;
+      }
+
+      if (end_date > dateRange.end) {
+        end_date = dateRange.end;
+      }
+    }
+
+    duration = App.Helpers.dateRangeDuration(start_date, end_date);
 
     arrayOfHolidays = holidays.arrayOfDates();
-    arrayOfVacationDays = App.Helpers.arrayOfDates(this.get('start_date'), duration);
-    arrayOfWeekends = App.Helpers.arrayOfWeekends(this.get('start_date'), duration);
+    arrayOfVacationDays = App.Helpers.arrayOfDates(start_date, duration);
+    arrayOfWeekends = App.Helpers.arrayOfWeekends(start_date, duration);
 
     result = duration - _.intersection(_.union(arrayOfHolidays, arrayOfWeekends), arrayOfVacationDays).length;
+
     return result;
   },
 
+  getEndMoment: function() {
+    return moment(this.get('end_date'));
+  },
+
+  getStartMoment: function() {
+    return moment(this.get('start_date'));
+  },
+
+  toDates: function() {
+    var result = [],
+        date = moment(this.get('start_date'), App.Helpers.getDateFormat()),
+        isoDate = date.format(App.Helpers.getDateFormat());
+
+    while (isoDate <= this.get('end_date')) {
+      result.push(isoDate);
+      isoDate = date.add(1, 'day').format(App.Helpers.getDateFormat());
+    }
+
+    return result;
+  },
+
+  // Validation ================================================================
   validation: {
     kind: {
       required: true,
-      oneOf: ['planned', 'unpaid', 'sickness']
+      oneOf: _.values(App.Vacation.types)
     },
     status: {
       required: true,
-      oneOf: ['requested', 'accepted', 'declined', 'cancelled', 'inprogress', 'used']
+      oneOf: _.values(App.Vacation.statuses)
     },
     start_date: {
       required: true,

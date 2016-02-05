@@ -17,10 +17,21 @@ class AvailableVacation < ActiveRecord::Base
   validates_associated :user
 
   enum kind: [
-    :planned,
+    :regular,
     :unpaid,
     :sickness
   ]
+
+  def as_json(options)
+    options[:only] = [
+      :id,
+      :available_days,
+      :kind,
+      :user_id
+    ]
+
+    super options
+  end
 
   def accumulate_more_days
     diff_in_days = days_since_last_update

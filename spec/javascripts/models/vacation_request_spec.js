@@ -27,9 +27,9 @@ describe('VacationRequest model', function() {
 
 
   describe('as a new instance', function() {
-    describe('stes its attribute properly,', function() {
-      it('kind="planned"', function() {
-        expect(this.model.get('kind')).toEqual('planned');
+    describe('sets its attribute properly,', function() {
+      it('kind="regular"', function() {
+        expect(this.model.get('kind')).toEqual('regular');
       });
       it('status="requested"', function() {
         expect(this.model.get('status')).toEqual('requested');
@@ -52,7 +52,22 @@ describe('VacationRequest model', function() {
     expect(this.model.calculateDuration).toEqual(jasmine.any(Function));
   });
 
-  describe('with .calculateDuration() method', function() {
+  it('has .getEndMoment() method', function() {
+    expect(this.model.getEndMoment).toBeDefined();
+    expect(this.model.getEndMoment).toEqual(jasmine.any(Function));
+  });
+
+  it('has .getStartMoment() method', function() {
+    expect(this.model.getStartMoment).toBeDefined();
+    expect(this.model.getStartMoment).toEqual(jasmine.any(Function));
+  });
+
+  it('has .toDates() method', function() {
+    expect(this.model.toDates).toBeDefined();
+    expect(this.model.toDates).toEqual(jasmine.any(Function));
+  });
+
+  describe('with .calculateDuration()', function() {
     beforeEach(function() {
       this.model.set('start_date', '2015-08-25');
       this.model.set('end_date', '2015-09-05');
@@ -118,6 +133,80 @@ describe('VacationRequest model', function() {
       it('returns proper duration', function() {
         expect(this.model.calculateDuration(this.holidays)).toEqual(this.result);
       });
+    });
+
+    describe('with date range limitation that truncates vacation duration at its tail', function() {
+      beforeEach(function() {
+        this.model.set('start_date', '2015-12-25');
+        this.model.set('end_date', '2016-01-05');
+        this.numberOfWeekends = 2;
+        this.numberOfVacationDays = 7;
+        this.dateRange = {'start':'2015-01-01', 'end':'2015-12-31'};
+
+        this.result = this.numberOfVacationDays - this.numberOfWeekends;
+        this.holidays = new App.Collections.Holidays([]);
+      });
+      it('returns proper duration', function() {
+
+        expect(this.model.calculateDuration(this.holidays, this.dateRange)).toEqual(this.result);
+      });
+    });
+
+    describe('with date range limitation that truncates vacation duration at its head', function() {
+      beforeEach(function() {
+        this.model.set('start_date', '2015-12-25');
+        this.model.set('end_date', '2016-01-05');
+        this.numberOfWeekends = 2;
+        this.numberOfVacationDays = 5;
+        this.dateRange = {'start':'2016-01-01', 'end':'2016-12-31'};
+
+        this.result = this.numberOfVacationDays - this.numberOfWeekends;
+        this.holidays = new App.Collections.Holidays([]);
+      });
+      it('returns proper duration', function() {
+
+        expect(this.model.calculateDuration(this.holidays, this.dateRange)).toEqual(this.result);
+      });
+    });
+  });
+
+  describe('with .getEndMoment()', function() {
+    beforeEach(function() {
+      this.model.set('start_date', '2015-08-25');
+      this.model.set('end_date', '2015-08-27');
+      this.result = moment('2015-08-27', App.Helpers.getDateFormat());
+    });
+
+    it('returns proper moments.js instance', function() {
+      var obj = this.model.getEndMoment();
+      expect(moment.isMoment(obj)).toBeTruthy();
+      expect(obj.format(App.Helpers.getDateFormat())).toEqual('2015-08-27');
+    });
+  });
+
+  describe('with .getStartMoment()', function() {
+    beforeEach(function() {
+      this.model.set('start_date', '2015-08-25');
+      this.model.set('end_date', '2015-08-27');
+      this.result = moment('2015-08-25', App.Helpers.getDateFormat());
+    });
+
+    it('returns proper moments.js instance', function() {
+      var obj = this.model.getStartMoment();
+      expect(moment.isMoment(obj)).toBeTruthy();
+      expect(obj.format(App.Helpers.getDateFormat())).toEqual('2015-08-25');
+    });
+  });
+
+  describe('with .toDates()', function() {
+    beforeEach(function() {
+      this.model.set('start_date', '2015-08-25');
+      this.model.set('end_date', '2015-08-27');
+      this.result = ['2015-08-25', '2015-08-26', '2015-08-27'];
+    });
+
+    it('returns proper set of dates', function() {
+      expect(this.model.toDates()).toEqual(this.result);
     });
   });
 

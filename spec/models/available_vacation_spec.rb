@@ -42,7 +42,7 @@ RSpec.describe AvailableVacation do
       it 'updates the record' do
         av_id = available_vacation.id
         days = available_vacation.available_days
-        expected = days + AvailableVacations::RATES[:planned]
+        expected = days + AvailableVacations::RATES[:regular]
         expect { available_vacation.accumulate_more_days }
           .to change { AvailableVacation.find_by!(av_id).available_days }
           .to(expected.round(5))
@@ -54,7 +54,7 @@ RSpec.describe AvailableVacation do
     let(:available_vacation) { AvailableVacation.new }
 
     it { expect(available_vacation).to have_attributes available_days: nil }
-    it { expect(available_vacation).to have_attributes kind: 'planned' }
+    it { expect(available_vacation).to have_attributes kind: 'regular' }
     it { expect(available_vacation).to have_attributes user_id: nil }
 
     it { expect(available_vacation).not_to be_valid }

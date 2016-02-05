@@ -1,18 +1,22 @@
-.form.form-inline{role:'form'}
-  .col-md-5
-    .btn-group{data-toggle:'buttons'}
-      :each item in availableVacations
-        .btn.btn-default
-          %input{type:'radio', name:'vacation-type', value:item.attributes.kind}
-          #{item.attributes.kind} &nbsp;
-          .badge{class:item.attributes.kind}= item.attributes.available_days
-  .col-md-4
-    .input-group.input-daterange
-      %input.form-control{type:'text', name:'from', title:'Start date'}
-      .input-group-addon to
-      %input.form-control{type:'text', name:'to',   title:'End date'}
-  .col-md-3
-    .pull-right
-      .btn-group
-        %button.btn.btn-default{name:'clear'}   Clear form
-        %button.btn.btn-default{name:'request'} Request
+.panel.panel-primary
+  .panel-heading Request New Vacation
+  .panel-body
+    .form.form-inline{role:'form'}
+      .col-md-5
+        .input-group
+          .input-group-addon Vacation request type:
+          %select.form-control{name:'vacation-type', title:'Vacation type'}
+            %option{value:'none', disabled: true, selected: true} Please select vacation type
+            :each item in types
+              %option{value:item}= item
+      .col-md-4
+        .input-group.input-daterange
+          %input.form-control{type:'text', name:'from', value:'', title:'Start date'}
+          .input-group-addon to
+          %input.form-control{type:'text', name:'to',   value:'', title:'End date'}
+      .col-md-3
+        .pull-right
+          .btn-group
+            %button.btn.btn-default{name:'clear'}   Clear form
+            %button.btn.btn-default{name:'request'} Request
+  .panel-footer

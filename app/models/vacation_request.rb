@@ -42,7 +42,7 @@ class VacationRequest < ActiveRecord::Base
   ]
 
   enum kind: [
-    :planned,
+    :regular,
     :unpaid,
     :sickness
   ]

@@ -18,9 +18,9 @@ window.App = {
     },
 
     types: {
-      planned:    'planned',
-      unpaid:     'unpaid',
-      sickness:   'sickness'
+      regular:    'regular',
+      sickness:   'sickness',
+      unpaid:     'unpaid'
     }
   },
 

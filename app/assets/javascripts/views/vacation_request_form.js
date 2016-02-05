@@ -7,28 +7,48 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     'change input[name=from]':      'onFromChange',
     'click  button[name=request]':  'onRequest',
     'change input[name=to]':        'onToChange',
-    'change input:radio[name=vacation-type]': 'onTypeChange'
+    'change select[name=vacation-type]': 'onTypeChange'
   },
 
   initialize: function(options) {
     this.holidays = options.holidays;
     this.vacationRequests = options.vacationRequests;
-    this.availableVacations = options.availableVacations;
     this.model = new App.Models.VacationRequest();
     this.model.urlRoot = 'vacation_requests';
+    this.vacationType = null;
 
     this.listenTo(this.model, 'sync', this.onSuccess);
     this.listenTo(this.model, 'error', this.onError);
     this.listenTo(this.model, 'invalid', this.onInvalid);
-    this.listenTo(this.availableVacations, 'sync', this.render);
   },
 
   render: function() {
-    this.$el.html(this.template({'availableVacations':this.availableVacations.models}));
+    this.$el.html(this.template({
+      'types': _.values(App.Vacation.types)
+    }));
+
     App.Helpers.assignDatePicker($('.input-daterange'));
     this.$('input:radio[value='+this.model.get('kind')+']').trigger('click');
 
+    this.$requestButton = this.$('button[name=request]');
+    this.disableSubmitButton();
+
+    this.statistics = new App.Views.VacationsMiniStatistics({
+      'vacationType': this.vacationType,
+      'holidays': this.holidays,
+      'vacationRequests': this.vacationRequests
+    });
+    this.statistics.render();
+
     return this;
+  },
+
+  enableSubmitButton: function() {
+    this.$requestButton.prop('disabled', false);
+  },
+
+  disableSubmitButton: function() {
+    this.$requestButton.prop('disabled', true);
   },
 
   onClear: function() {
@@ -37,8 +57,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   onFromChange: function(event) {
-    this.model.set('start_date', event.currentTarget.value);
-    this.updateFormState();
+    this.model.set('start_date', event.target.value);
   },
 
   onRequest: function() {
@@ -47,12 +66,14 @@ App.Views.VacationRequestForm = Backbone.View.extend({
 
   onToChange: function(event) {
     this.model.set('end_date', event.currentTarget.value);
-    this.updateFormState();
   },
 
   onTypeChange: function(event) {
-    this.model.set('kind', event.currentTarget.value);
-    this.updateFormState();
+    this.vacationType = event.target.value;
+
+    this.model.set('kind', this.vacationType);
+    this.enableSubmitButton();
+    this.statistics.update(this.vacationType);
   },
 
   onError: function(model, response, options) {
@@ -74,7 +95,6 @@ App.Views.VacationRequestForm = Backbone.View.extend({
     // Trigger 'sync' on the collection to initiate it's view,
     // VacationRequestsList, about changes.
     this.vacationRequests.fetch();
-    // TODO: add some tests
     // Clear model to set it as a new one,
     // and initialize it with form data.
     // Otherwise, the model is initialized with response data and a next save()
@@ -84,9 +104,9 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   fetchFormData: function () {
-    this.model.set('kind',              this.$('input:radio[name=vacation-type]:checked').val());
-    this.model.set('start_date',        this.$('input[name=from]').val());
-    this.model.set('end_date',          this.$('input[name=to]').val());
+    this.model.set('kind',        this.$('input:radio[name=vacation-type]:checked').val());
+    this.model.set('start_date',  this.$('input[name=from]').val());
+    this.model.set('end_date',    this.$('input[name=to]').val());
   },
 
   clearForm: function () {
@@ -96,38 +116,7 @@ App.Views.VacationRequestForm = Backbone.View.extend({
   },
 
   clearModel: function () {
-    // TODO: add some feature tests
-    // this.model = new App.Models.VacationRequest();
     this.model.clear();
     this.model.set(this.model.defaults);
-  },
-
-  updateAvailableDaysInBadges: function() {
-    var $badge;
-
-    this.availableVacations.each(function(model) {
-      $badge = this.$('.badge.'+model.attributes.kind);
-      $badge.text(this.model.calculateDuration(this.holidays)+'|'+Math.floor(model.attributes.available_days));
-    }, this);
-  },
-
-  updateFormState: function() {
-    this.updateAvailableDaysInBadges();
-    this.updateRequestButtonState();
-  },
-
-  updateRequestButtonState: function() {
-    var isWrongDuration = true,
-        $button = this.$('button[name=request]');
-
-    isWrongDuration = ((this.availableVacations.availableDaysOfType(this.model.get('kind')) - this.model.calculateDuration(this.holidays)) < 0);
-
-    if (isWrongDuration) {
-      $button.removeClass('btn-default');
-      $button.addClass('btn-danger');
-    } else {
-      $button.removeClass('btn-danger');
-      $button.addClass('btn-default');
-    }
   }
 });

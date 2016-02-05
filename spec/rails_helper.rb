@@ -25,6 +25,7 @@ RSpec.configure do |config|
   config.include Features::HolidaysPageHelpers, type: :feature
   config.include Features::TeamsPageHelpers, type: :feature
   config.include Features::UsersPageHelpers, type: :feature
+  config.include WaitForAjax, type: :feature
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

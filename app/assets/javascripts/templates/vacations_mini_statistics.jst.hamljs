@@ -1,0 +1,9 @@
+.simple
+  .row
+    .col-md-6.col-md-offset-3
+      %label{name:'available'} Available: #{available} &nbsp;
+      %label{name:'requested'} Requested: #{requested} &nbsp;
+      %label{name:'used'} Used: #{used} &nbsp;
+      %button{name:'details'} #{buttonText}
+.extended.hidden
+  %table.table.table-condesed
