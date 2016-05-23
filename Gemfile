@@ -44,3 +44,4 @@ gem 'bootstrap-sass', '~> 3.3'
 # Heroku
 gem 'rails_12factor', group: :production
 gem 'puma'
+gem 'pg', group: :production
