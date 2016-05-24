@@ -6,7 +6,7 @@ class ApprovalRequest < ActiveRecord::Base
             presence: true
   validates :vacation_request_id,
             uniqueness: { scope: :user,
-                          message: 'is already assigned to this mamager' }
+                          message: 'is already assigned to this manager' }
 
   def as_json(options)
     options[:only] = [
