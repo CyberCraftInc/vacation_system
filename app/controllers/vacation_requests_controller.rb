@@ -22,7 +22,7 @@ class VacationRequestsController < ApplicationController
 
   def create
     @vacation_request = current_user
-      .vacation_requests.new vacation_request_params
+                            .vacation_requests.new vacation_request_params
 
     authorize @vacation_request
     managers_ids = current_user.list_of_assigned_managers_ids
@@ -33,6 +33,7 @@ class VacationRequestsController < ApplicationController
     if @vacation_request.save && create_approval_request(managers_ids)
       render  status: :created,
               json: @vacation_request
+      UserNotifier.send_confirm_email(current_user).deliver_now
     else
       render  status: :unprocessable_entity,
               json: { errors: @vacation_request.errors.full_messages }
