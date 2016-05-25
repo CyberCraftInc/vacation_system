@@ -14,15 +14,26 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'http://cybercraft-vacations.herokuapp.com' }
   config.action_mailer.delivery_method = :smtp
+
   config.action_mailer.smtp_settings = {
-    tls: true,
-    address:              'smtp.yandex.ru',
-    port:                 465,
-    domain:               'yandex.ru',
-    user_name:            Rails.application.secrets[:email_user],
-    password:             Rails.application.secrets[:email_pass],
-    authentication:       :plain
+      user_name: Rails.application.secrets[:sendgrid_user],
+      password: Rails.application.secrets[:sendgrid_pass],
+      domain: 'heroku.com',
+      address: 'smtp.sendgrid.net',
+      port: 587,
+      authentication: :plain,
+      enable_starttls_auto: true
   }
+
+  # config.action_mailer.smtp_settings = {
+  #   tls: true,
+  #   address:              'smtp.yandex.ru',
+  #   port:                 465,
+  #   domain:               'yandex.ru',
+  #   user_name:            Rails.application.secrets[:email_user],
+  #   password:             Rails.application.secrets[:email_pass],
+  #   authentication:       :plain
+  # }
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false

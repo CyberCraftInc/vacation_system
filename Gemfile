@@ -13,6 +13,7 @@ group :development, :test do
   gem 'jasmine'
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails', '~> 4.5'
+  gem 'pry-byebug'
 end
 
 group :development do
