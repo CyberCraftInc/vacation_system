@@ -12,12 +12,11 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: 'http://cybercraft-vacations.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: 'http://radiant-beyond-46287.herokuapp.com' }
   config.action_mailer.delivery_method = :smtp
-
   config.action_mailer.smtp_settings = {
-      user_name: Rails.application.secrets[:sendgrid_user],
-      password: Rails.application.secrets[:sendgrid_pass],
+      user_name: ENV['SENDGRID_USERNAME'],
+      password: ENV['SENDGRID_PASSWORD'],
       domain: 'heroku.com',
       address: 'smtp.sendgrid.net',
       port: 587,
