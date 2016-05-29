@@ -1,4 +1,4 @@
-# it receives data clump
+# it prevent data clump
 UsersNames = Struct.new(:user, :approver)
 
 # it sends notifications about vacation request
