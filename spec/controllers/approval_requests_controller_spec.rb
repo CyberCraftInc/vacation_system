@@ -195,6 +195,13 @@ RSpec.describe ApprovalRequestsController do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
     end
+
+    it 'sends accepted vacation email notification' do
+      sign_in user
+
+      expect { send_request }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
   end
 
   ################################################################# GET #decline
@@ -361,6 +368,13 @@ RSpec.describe ApprovalRequestsController do
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
+    end
+
+    it 'sends declined vacation email notification' do
+      sign_in user
+
+      expect { send_request }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end
 end

@@ -7,7 +7,6 @@
 # is set to 'declined'.
 # Only managers are authorized to operate on approval requests.
 require 'errors/conflict_error'
-RequesterName = Struct.new(:requester, :approver)
 
 class ApprovalRequestsController < ApplicationController
   before_action :authenticate_user!
@@ -34,9 +33,8 @@ class ApprovalRequestsController < ApplicationController
     change_vacation_request_status(status) if approval_request_count == 1
     @approval_request.destroy
     render status: :ok, json: {}
-    a_users = ini_names
-    UserNotifier.send_accepted_email(UsersNames.new(a_users.requester,
-                                                    a_users.approver)).deliver_now
+    UserNotifier.send_accepted_email(UsersNames.new(init_requester,
+                                                    init_approver)).deliver_now
   end
 
   def decline
@@ -45,9 +43,8 @@ class ApprovalRequestsController < ApplicationController
     change_vacation_request_status(status)
     @approval_request.vacation_request.approval_requests.destroy_all
     render status: :ok, json: {}
-    a_users = ini_names
-    UserNotifier.send_declined_email(UsersNames.new(a_users.requester,
-                                                    a_users.approver)).deliver_now
+    UserNotifier.send_declined_email(UsersNames.new(init_requester,
+                                                    init_approver)).deliver_now
   end
 
 private
@@ -71,9 +68,11 @@ private
     @approval_request = ApprovalRequest.find_by!(id: params[:id])
   end
 
-  def ini_names
-    requester = @approval_request.vacation_request.user
-    approver = @approval_request.user
-    RequesterName.new(requester, approver)
+  def init_requester
+    @approval_request.vacation_request.user
+  end
+
+  def init_approver
+    @approval_request.user
   end
 end

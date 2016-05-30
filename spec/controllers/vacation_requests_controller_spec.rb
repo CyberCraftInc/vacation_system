@@ -231,6 +231,13 @@ RSpec.describe VacationRequestsController do
         end
       end
     end
+
+    it 'sends confirm vacation email notification' do
+      sign_in user
+
+      expect { send_request }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
   end
 
   ############################################################### GET #approvers
