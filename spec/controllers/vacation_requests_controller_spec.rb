@@ -137,6 +137,11 @@ RSpec.describe VacationRequestsController do
 
       before { sign_in user }
 
+      it 'sends confirm vacation email notification' do
+        expect { send_request }
+          .to change(ActionMailer::Base.deliveries, :count)
+      end
+
       context 'who has roles only in one team' do
         context 'with correct data' do
           it 'should respond with status code :created (201)' do
@@ -187,6 +192,15 @@ RSpec.describe VacationRequestsController do
 
       before { sign_in user }
 
+      context 'with authenticated unauthorized user' do
+        it_behaves_like 'unauthorized request'
+
+        it "passes if confirm vacation email notification wasn't sent" do
+          expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                                :count)
+        end
+      end
+
       context 'who has roles only in one team,' do
         context 'with correct data' do
           it 'should respond with status code :forbidden (403)' do
@@ -229,14 +243,12 @@ RSpec.describe VacationRequestsController do
         it 'should not add any record to DB' do
           expect { send_request }.not_to change(VacationRequest, :count)
         end
+
+        it "passes if confirm vacation email notification wasn't sent" do
+          expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                                :count)
+        end
       end
-    end
-
-    it 'sends confirm vacation email notification' do
-      sign_in user
-
-      expect { send_request }
-          .to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end
 

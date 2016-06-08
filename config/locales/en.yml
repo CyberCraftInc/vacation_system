@@ -22,6 +22,6 @@
 en:
   hello: "Hello world"
   vacation_requests:
-    confirm: 'You have requested vacation!'
+    confirm: 'You have requested vacation'
     accepted: 'Your vacation request was accepted'
     declined: 'Your vacation request was declined'

@@ -11,6 +11,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Don't care if the mailer can't send.
+  config.action_mailer.default_options = { from: 'andrey.migal@gmail.com' }
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'http://radiant-beyond-46287.herokuapp.com' }
   config.action_mailer.delivery_method = :smtp

@@ -176,6 +176,11 @@ RSpec.describe ApprovalRequestsController do
           end
         end
       end
+
+      it 'sends accepted vacation email notification' do
+        expect { send_request }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
     end
 
     context 'from authenticated unauthorized user' do
@@ -186,6 +191,11 @@ RSpec.describe ApprovalRequestsController do
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
+
+      it "passes if accepted vacation email notification wasn't sent" do
+        expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                              :count)
+      end
     end
 
     context 'from unauthenticated user' do
@@ -194,13 +204,11 @@ RSpec.describe ApprovalRequestsController do
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
-    end
 
-    it 'sends accepted vacation email notification' do
-      sign_in user
-
-      expect { send_request }
-          .to change { ActionMailer::Base.deliveries.count }.by(1)
+      it "passes if accepted vacation email notification wasn't sent" do
+        expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                              :count)
+      end
     end
   end
 
@@ -350,6 +358,11 @@ RSpec.describe ApprovalRequestsController do
           end
         end
       end
+
+      it 'sends declined vacation email notification' do
+        expect { send_request }
+          .to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
     end
 
     context 'from authenticated unauthorized user' do
@@ -360,6 +373,11 @@ RSpec.describe ApprovalRequestsController do
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
+
+      it "passes if declined vacation email notification wasn't sent" do
+        expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                              :count)
+      end
     end
 
     context 'from unauthenticated user' do
@@ -368,13 +386,11 @@ RSpec.describe ApprovalRequestsController do
       it 'should not delete approval request from DB' do
         expect { send_request }.not_to change(ApprovalRequest, :count)
       end
-    end
 
-    it 'sends declined vacation email notification' do
-      sign_in user
-
-      expect { send_request }
-          .to change { ActionMailer::Base.deliveries.count }.by(1)
+      it "passes if declined vacation email notification wasn't sent" do
+        expect { send_request }.not_to change(ActionMailer::Base.deliveries,
+                                              :count)
+      end
     end
   end
 end

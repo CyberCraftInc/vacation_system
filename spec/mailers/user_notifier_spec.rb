@@ -12,9 +12,14 @@ RSpec.describe UserNotifier, type: :mailer do
   let(:vacation_request_participant) do
     double UsersNames, user: requester, approver: approver
   end
+  let(:vacation_dates) do
+    { start_date: @start_date, end_date: @end_date }
+  end
 
   describe '#send_confirm_email' do
-    let(:mail) { UserNotifier.send_confirm_email(requester).deliver_now }
+    let(:mail) do
+      UserNotifier.send_confirm_email(requester, vacation_dates).deliver_now
+    end
 
     it 'renders the subject' do
       expect(mail.subject).to eq('You have requested vacation')
@@ -22,6 +27,14 @@ RSpec.describe UserNotifier, type: :mailer do
 
     it 'renders the receiver email' do
       expect(mail.to).to eq([requester.email])
+    end
+
+    it 'assigns @start_date' do
+      expect(mail.body.encoded).to match(vacation_dates[:start_date].to_s)
+    end
+
+    it 'assigns @end_date' do
+      expect(mail.body.encoded).to match(vacation_dates[:end_date].to_s)
     end
   end
 
@@ -40,6 +53,45 @@ RSpec.describe UserNotifier, type: :mailer do
 
     it 'assigns @approver.last_name' do
       expect(mail.body.encoded).to match(approver.last_name)
+    end
+  end
+
+  describe '#send_vacation_request_to_managers' do
+    let(:mail) do
+      UserNotifier.send_vacation_request_to_managers(requester, approver,
+                                                     vacation_dates).deliver_now
+    end
+
+    it 'renders the subject' do
+      expect(mail.subject).to match('has requested vacation')
+    end
+
+    it "renders the subject's first name" do
+      expect(mail.subject).to match(requester.first_name)
+    end
+
+    it "renders the subject's last name" do
+      expect(mail.subject).to match(requester.last_name)
+    end
+
+    it 'renders the receiver email' do
+      expect(mail.to).to eq([approver.email])
+    end
+
+    it 'assigns @start_date' do
+      expect(mail.body.encoded).to match(vacation_dates[:start_date].to_s)
+    end
+
+    it 'assigns @end_date' do
+      expect(mail.body.encoded).to match(vacation_dates[:end_date].to_s)
+    end
+
+    it 'assigns @requester.first_name' do
+      expect(mail.body.encoded).to match(requester.first_name)
+    end
+
+    it 'assigns @requester.first_name' do
+      expect(mail.body.encoded).to match(requester.last_name)
     end
   end
 

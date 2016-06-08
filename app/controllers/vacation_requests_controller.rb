@@ -21,19 +21,24 @@ class VacationRequestsController < ApplicationController
   end
 
   def create
-    @vacation_request = current_user
-                            .vacation_requests.new vacation_request_params
+    @vacation_request = current_user.vacation_requests
+                                    .new vacation_request_params
 
     authorize @vacation_request
     managers_ids = current_user.list_of_assigned_managers_ids
+    users = User.find(managers_ids)
 
     set_allowed_values!
     change_status!(managers_ids)
 
+    vacation_dates = { start_date: params[:start_date],
+                       end_date: params[:end_date] }
+
     if @vacation_request.save && create_approval_request(managers_ids)
       render  status: :created,
               json: @vacation_request
-      UserNotifier.send_confirm_email(current_user).deliver_now
+      UserNotifier.send_confirm_email(current_user, vacation_dates).deliver_now
+      send_managers_notification(users, vacation_dates)
     else
       render  status: :unprocessable_entity,
               json: { errors: @vacation_request.errors.full_messages }
@@ -135,11 +140,19 @@ private
     accumulated = current_user.accumulated_days(kind)
 
     current_user.available_vacations.find_by!(kind: kind)
-      .update_attribute(:available_days, accumulated - used)
+                .update_attribute(:available_days, accumulated - used)
   end
 
   def vacation_request_params
     params.require(:vacation_request)
-      .permit(:kind, :status, :start_date, :end_date)
+          .permit(:kind, :status, :start_date, :end_date)
+  end
+
+  def send_managers_notification(users, vacation_dates)
+    users.each do |item|
+      UserNotifier
+        .send_vacation_request_to_managers(current_user, item,
+                                           vacation_dates).deliver_now
+    end
   end
 end
