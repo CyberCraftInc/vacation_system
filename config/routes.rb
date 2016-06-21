@@ -1,3 +1,4 @@
+# Copyright (c) 2015i-2016 CyberCraft Ltd. All Rights Reserved
 Rails.application.routes.draw do
   root to: 'home#index'
 
