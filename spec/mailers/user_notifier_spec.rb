@@ -2,23 +2,29 @@ require 'rails_helper'
 
 RSpec.describe UserNotifier, type: :mailer do
   let(:requester) do
-    double User, first_name: 'Andrew', last_name: 'Migal',
+    double User, id: 42, first_name: 'Andrew', last_name: 'Migal',
                  email: 'andrey.migal@gmail.com'
   end
   let(:approver) do
-    double User, first_name: 'Eugene', last_name: 'Safronov',
+    double User, id: 43, first_name: 'Eugene', last_name: 'Safronov',
                  email: 'es@cybercraft.com'
   end
   let(:vacation_request_participant) do
     double UsersNames, user: requester, approver: approver
   end
-  let(:vacation_dates) do
-    { start_date: @start_date, end_date: @end_date }
+  let(:vacation_request) do
+    VacationRequest.new(kind: 0, start_date: '2016-08-12',
+                        end_date: '2016-08-16', status: 0,
+                        user_id: requester.id).decorate
+  end
+  let(:approval_request) do
+    double ApprovalRequest, manager_id: approver.id,
+                            vacation_request_id: vacation_request.id
   end
 
   describe '#send_confirm_email' do
     let(:mail) do
-      UserNotifier.send_confirm_email(requester, vacation_dates).deliver_now
+      UserNotifier.send_confirm_email(requester, vacation_request).deliver_now
     end
 
     it 'renders the subject' do
@@ -29,12 +35,12 @@ RSpec.describe UserNotifier, type: :mailer do
       expect(mail.to).to eq([requester.email])
     end
 
-    it 'assigns @start_date' do
-      expect(mail.body.encoded).to match(vacation_dates[:start_date].to_s)
+    it 'assigns start_date' do
+      expect(mail.body.encoded).to match(vacation_request.start_date_to_s)
     end
 
-    it 'assigns @end_date' do
-      expect(mail.body.encoded).to match(vacation_dates[:end_date].to_s)
+    it 'assigns end_date' do
+      expect(mail.body.encoded).to match(vacation_request.end_date_to_s)
     end
   end
 
@@ -57,9 +63,15 @@ RSpec.describe UserNotifier, type: :mailer do
   end
 
   describe '#send_vacation_request_to_managers' do
+    before do
+      allow(requester).to receive(:full_name).and_return("#{requester.first_name}"\
+      " #{requester.last_name}")
+    end
     let(:mail) do
-      UserNotifier.send_vacation_request_to_managers(requester, approver,
-                                                     vacation_dates).deliver_now
+      UserNotifier
+        .send_vacation_request_to_managers(requester, approver,
+                                           vacation_request,
+                                           approval_request).deliver_now
     end
 
     it 'renders the subject' do
@@ -79,11 +91,11 @@ RSpec.describe UserNotifier, type: :mailer do
     end
 
     it 'assigns @start_date' do
-      expect(mail.body.encoded).to match(vacation_dates[:start_date].to_s)
+      expect(mail.body.encoded).to match(vacation_request.start_date_to_s)
     end
 
     it 'assigns @end_date' do
-      expect(mail.body.encoded).to match(vacation_dates[:end_date].to_s)
+      expect(mail.body.encoded).to match(vacation_request.end_date_to_s)
     end
 
     it 'assigns @requester.first_name' do

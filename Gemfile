@@ -31,6 +31,7 @@ group :test do
 end
 
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'draper', '~> 1.3'
 
 # Assets
 gem 'sass-rails', '~> 5.0'

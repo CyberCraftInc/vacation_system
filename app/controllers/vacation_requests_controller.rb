@@ -31,14 +31,12 @@ class VacationRequestsController < ApplicationController
     set_allowed_values!
     change_status!(managers_ids)
 
-    vacation_dates = { start_date: params[:start_date],
-                       end_date: params[:end_date] }
-
-    if @vacation_request.save && create_approval_request(managers_ids)
+    if @vacation_request.save && approval_request = create_approval_request(managers_ids)
       render  status: :created,
               json: @vacation_request
-      UserNotifier.send_confirm_email(current_user, vacation_dates).deliver_now
-      send_managers_notification(users, vacation_dates)
+      UserNotifier.send_confirm_email(current_user,
+                                      @vacation_request).deliver_now
+      send_managers_notification(users, @vacation_request, approval_request)
     else
       render  status: :unprocessable_entity,
               json: { errors: @vacation_request.errors.full_messages }
@@ -148,11 +146,11 @@ private
           .permit(:kind, :status, :start_date, :end_date)
   end
 
-  def send_managers_notification(users, vacation_dates)
+  def send_managers_notification(users, vacation_request, approval_request)
     users.each do |item|
       UserNotifier
         .send_vacation_request_to_managers(current_user, item,
-                                           vacation_dates).deliver_now
+                                           vacation_request, approval_request).deliver_now
     end
   end
 end
