@@ -10,6 +10,7 @@
                 " from #{@vacation_request.start_date_to_s} " \
                 "to #{@vacation_request.end_date_to_s}" %>
 </p>
-<%#= link_to 'Accept', accept_approval_request_url(@approval_request) %>
+<%= link_to 'Accept', accept_approval_request_url(@approval_request) %>
+<%= link_to 'Decline', decline_approval_request_url(@approval_request) %>
 </body>
 </html>
