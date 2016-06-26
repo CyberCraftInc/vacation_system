@@ -33,6 +33,8 @@ class ApprovalRequestsController < ApplicationController
     change_vacation_request_status(status) if approval_request_count == 1
     @approval_request.destroy
     render status: :ok, json: {}
+    UserNotifier.send_accepted_email(UsersNames.new(init_requester,
+                                                    init_approver)).deliver_now
   end
 
   def decline
@@ -41,6 +43,8 @@ class ApprovalRequestsController < ApplicationController
     change_vacation_request_status(status)
     @approval_request.vacation_request.approval_requests.destroy_all
     render status: :ok, json: {}
+    UserNotifier.send_declined_email(UsersNames.new(init_requester,
+                                                    init_approver)).deliver_now
   end
 
 private
@@ -62,5 +66,13 @@ private
 
   def set_approval_request
     @approval_request = ApprovalRequest.find_by!(id: params[:id])
+  end
+
+  def init_requester
+    @approval_request.vacation_request.user
+  end
+
+  def init_approver
+    @approval_request.user
   end
 end

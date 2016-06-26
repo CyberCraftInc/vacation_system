@@ -48,6 +48,7 @@ GEM
     brice (0.4.0)
       nuggets
     builder (3.2.2)
+    byebug (9.0.4)
     capybara (2.5.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -55,6 +56,7 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     cliver (0.3.2)
+    coderay (1.1.1)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -78,6 +80,11 @@ GEM
     dotenv-rails (2.0.2)
       dotenv (= 2.0.2)
       railties (~> 4.0)
+    draper (1.4.0)
+      actionpack (>= 3.0)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0)
     erubis (2.7.0)
     execjs (2.6.0)
     factory_girl (4.5.0)
@@ -121,6 +128,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    method_source (0.8.2)
     mime-types (2.6.2)
     mini_portile (0.6.2)
     minitest (5.8.3)
@@ -136,6 +144,13 @@ GEM
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    pry (0.10.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-byebug (3.4.0)
+      byebug (~> 9.0)
+      pry (~> 0.10)
     puma (2.15.3)
     pundit (1.0.1)
       activesupport (>= 3.0.0)
@@ -172,6 +187,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
+    request_store (1.3.1)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rspec-core (3.4.1)
@@ -206,6 +222,7 @@ GEM
     sexp_processor (4.6.0)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
+    slop (3.6.0)
     spring (1.4.4)
     sprockets (3.4.0)
       rack (> 1, < 3)
@@ -242,6 +259,7 @@ DEPENDENCIES
   devise (= 3.5.2)
   devise_invitable
   dotenv-rails
+  draper (~> 1.3)
   factory_girl_rails (~> 4.5)
   ffaker
   haml (~> 4.0.7)
@@ -252,6 +270,7 @@ DEPENDENCIES
   jquery-rails
   mysql2 (~> 0.3.20)
   poltergeist
+  pry-byebug
   puma
   pundit
   rails (= 4.2.3)
@@ -263,5 +282,8 @@ DEPENDENCIES
   spring
   uglifier (>= 1.3.0)
 
+RUBY VERSION
+   ruby 2.2.3p173
+
 BUNDLED WITH
-   1.10.6
+   1.12.4
