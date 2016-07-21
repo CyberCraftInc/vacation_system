@@ -13,7 +13,7 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  socket: /var/run/mysqld/mysqld.sock
+  host: <%= Rails.application.secrets[:database_host] %>
 
 development:
   <<: *default
