@@ -1,0 +1,13 @@
+%h1 Notifications#create
+%p Find me in app/views/notifications/new.html.haml
+= form_for @notification, url: notifications_path, html: { method: :post } do |f|
+  = f.label :notification_type, 'Notification type:'
+  = f.select :notification_type, Notification::CATEGORIES
+  %br
+  = f.label :timer_days
+  = f.text_field :timer_days, class: 'form-control'
+  = f.label :team_names
+  = f.collection_check_boxes :id, Team.all, :id, :name.to_s
+  %br
+  = f.submit 'Add notification', class: 'btn btn-primary'
+-# form to partial

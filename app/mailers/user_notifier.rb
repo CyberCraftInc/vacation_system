@@ -21,4 +21,29 @@ class UserNotifier < ApplicationMailer
     @approver = a_user.approver
     mail(to: @user.email, subject: message)
   end
+
+  def send_birthday_reminder(team_member_mail, name_day, day)
+    @name_day = name_day
+    @f_name = name_day.first_name
+    @l_name = name_day.last_name
+    @day = day.strftime('%B %dth')
+    mail(to: team_member_mail, subject: "#{@f_name} #{@l_name}'s birthday soon")
+  end
+
+  def send_appraisal_reminder(team_member_mail, user, appraisal_day)
+    @f_name = user.first_name
+    @l_name = user.last_name
+    @day = appraisal_day.strftime('%B %dth')
+    mail(to: team_member_mail, subject: "#{@f_name} #{@l_name}'s appraisal soon")
+  end
+
+  def send_birthday_congrats(user)
+    @user = user
+    mail(to: @user.email, subject: 'Congratulations!')
+  end
+
+  def send_newcomers_congrats(user)
+    @user = user
+    mail(to: @user.email, subject: 'Welcome!')
+  end
 end
