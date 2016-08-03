@@ -11,16 +11,20 @@ Rails.application.configure do
   config.eager_load = true
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: 'http://cybercraft-vacations.herokuapp.com' }
+  config.action_mailer.raise_delivery_errors = true
+  #changed by me
+  #config.action_mailer.default_url_options = { host: 'http://cybercraft-vacations.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: 'localhost'}
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     tls: true,
-    address:              'smtp.yandex.ru',
+    address:              'smtp.yandex.ru', #spamed for every minute 
     port:                 465,
     domain:               'yandex.ru',
-    user_name:            Rails.application.secrets[:email_user],
-    password:             Rails.application.secrets[:email_pass],
+    user_name:            'cool.martin-borman',
+    password:             'porol1488',
+    #user_name:            'testcybermail',#Rails.application.secrets[:email_user],
+    #password:             'password1888',#Rails.application.secrets[:email_pass],
     authentication:       :plain
   }
 

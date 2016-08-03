@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 ruby '2.2.1'
 
+
+gem 'pg'
 gem 'rails', '4.2.3'
+gem 'whenever', require: false
+gem 'clockwork', '~> 2.0'
 gem 'mysql2', '~> 0.3.20'
 gem 'jbuilder', '~> 2.0'
 gem 'devise', '3.5.2'
