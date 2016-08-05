@@ -37,12 +37,14 @@ For details on how to install **Node.js** see https://nodejs.org.
 
 ### MySQL
 1.  Install **MySQL** related components with the following command:
+
     ```
     sudo apt-get install mysql-server mysql-client libmysqlclient-dev
     ```
 
 ### PhantomJS
 1.  Install PhantomJS from [PPA](https://launchpad.net/~tanguy-patte/+archive/ubuntu/phantomjs)
+
     ```
     sudo apt-add-repository ppa:tanguy-patte/phantomjs
     sudo apt-get update
@@ -52,10 +54,12 @@ For details on how to install **Node.js** see https://nodejs.org.
 
 ### Resolve Project Dependencies
 1.  Install the project related dependencies:
+
     ```
     bundle install
     ```
     In the command above failed, something like the following may be needed:
+
     ```
     bundle update <gem>
     ```
