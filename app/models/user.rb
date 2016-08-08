@@ -50,9 +50,9 @@ class User < ActiveRecord::Base
 
   def days_since_employment
     return 0 if employment_date.nil?
-    Date.new(2016, 3, 7) - employment_date + 1
+    # Date.new(2016, 3, 7) - employment_date + 1
     # Date.new(2015, 12, 31) - employment_date + 1
-    # Time.zone.today - employment_date + 1
+    Time.zone.today - employment_date + 1
   end
 
   def full_name
