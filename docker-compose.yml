@@ -21,8 +21,12 @@ services:
 
   db:
     image: mysql:5.7.13
+    env_file: .env
+    volumes:
+      - .container/mysql/data:/var/lib/mysql
+      - .container/mysql:/usr/var/dump
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=$DATABASE_PASS
 
   heroku:
     image: eleidan/heroku:jessie
