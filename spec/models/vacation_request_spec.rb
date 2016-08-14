@@ -489,6 +489,24 @@ RSpec.describe VacationRequest do
     end
   end
 
+  describe '.since_employment_for' do
+    let(:user) { create :user }
+
+    before do
+      create(:vacation_request,
+             user: user, start_date: user.employment_date - 1)
+      create(:vacation_request,
+             user: user, start_date: user.employment_date - 10)
+      create(:vacation_request,
+             user: user, start_date: user.employment_date + 10)
+    end
+
+    it 'provides accordingly filtered list of vacation requests' do
+      expect(user.vacation_requests.count).to eq(3)
+      expect(user.vacation_requests.since_employment_for(user).count).to eq(2)
+    end
+  end
+
   describe '.team_vacations' do
     let(:boy)   { create :user, :with_vacations_of_all_statuses }
     let(:girl)  { create :user, email: 'lady_in_red@i.ua' }

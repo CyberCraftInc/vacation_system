@@ -16,7 +16,9 @@ class VacationRequestsController < ApplicationController
   end
 
   def index
-    render json: current_user.vacation_requests
+    render json: current_user
+      .vacation_requests
+      .since_employment_for(current_user)
       .select(:id, :kind, :status, :start_date, :end_date, :user_id)
   end
 

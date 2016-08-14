@@ -80,6 +80,44 @@ RSpec.describe VacationRequestsController do
     end
   end
 
+  ################################################################### GET #index
+  describe 'GET #index' do
+    let(:send_request) { get :index }
+
+    context 'from authenticated user with manager role' do
+      before { sign_in user }
+
+      it_behaves_like 'a pretty request'
+      xit 'provides vacation requests' do
+      end
+    end
+
+    context 'from authenticated user with member role' do
+      let(:user) { member }
+
+      before { sign_in user }
+
+      it_behaves_like 'a pretty request'
+      xit 'provides vacation requests' do
+      end
+    end
+
+    context 'from authenticated user with guest role' do
+      let(:user) { guest }
+
+      before { sign_in user }
+
+      it_behaves_like 'a pretty request'
+      xit 'provides vacation requests' do
+      end
+    end
+
+    context 'from unauthenticated user' do
+      it_behaves_like 'unauthenticated request'
+    end
+  end
+
+
   ################################################################# POST #create
   describe 'POST #create' do
     let(:send_request) { post :create, params }
