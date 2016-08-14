@@ -38,3 +38,6 @@ config/initializers/secret_token.rb
 .rvmrc
 
 /db/schema.rb
+
+# Docker related storage
+.container/
