@@ -23,3 +23,10 @@ services:
     image: mysql:5.7.13
     environment:
       - MYSQL_ROOT_PASSWORD=password
+
+  heroku:
+    image: eleidan/heroku:jessie
+    env_file: .env
+    volumes:
+      - .:/usr/src/app
+      - .container/heroku:/root
