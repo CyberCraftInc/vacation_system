@@ -13,6 +13,7 @@ App.Router = Backbone.Router.extend({
     'holidays': [App.TeamRoles.guest, App.TeamRoles.member, App.TeamRoles.manager, App.TeamRoles.admin],
     'teams': [App.TeamRoles.admin],
     'users': [App.TeamRoles.admin],
+    'reports': [App.TeamRoles.member, App.TeamRoles.admin]
   },
 
   routes: {
@@ -21,6 +22,7 @@ App.Router = Backbone.Router.extend({
     'holidays':   'holidays',
     'teams':      'teams',
     'users':      'users',
+    'reports':    'reports'
   },
 
   dashboard: function() {
@@ -100,6 +102,19 @@ App.Router = Backbone.Router.extend({
     collection.fetch();
   },
 
+  reports: function() {
+    var reports = new App.Collections.Reports();
+
+    App.reports = new App.Views.Reports({
+      'reports': reports
+    });
+
+    reports.fetch()
+      .then(function() {
+          App.reports.render();
+      });
+  },
+  
   teams: function() {
     var roles = new App.Collections.Roles(),
         teams = new App.Collections.Teams(),
@@ -147,5 +162,7 @@ App.Router = Backbone.Router.extend({
       messageType:'error',
       message:msg,
     }).render();
-  }
+  },
+
+
 });

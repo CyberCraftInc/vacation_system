@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many  :vacation_requests, dependent: :destroy
   has_many  :available_vacations, dependent: :destroy
   has_many  :approval_requests, foreign_key: :manager_id, dependent: :destroy
+  has_many  :reports, dependent: :destroy
 
   validates :birth_date,
             inclusion: { in: Date.new(1900, 1, 1)..Date.new(2050, 1, 1) }

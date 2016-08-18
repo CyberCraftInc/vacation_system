@@ -33,6 +33,8 @@
               - if current_user && (current_user.admin? || current_user.member?)
                 %li
                   = link_to "Vacations", '/#vacations'
+                %li
+                  = link_to "Reports", '/#reports'
               - if current_user
                 %li
                   = link_to "Holidays", '/#holidays'

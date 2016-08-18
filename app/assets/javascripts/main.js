@@ -31,10 +31,18 @@ window.App = {
     }
   },
 
+  // ReportView: {
+  //   modes: {
+  //     readonly: 0,
+  //     editable: 1
+  //   }
+  // },
+
   TeamRoles: {
     guest: 'guest',
     member: 'member',
     manager: 'manager',
     admin: 'admin'
-  }
+  },
+  
 };
