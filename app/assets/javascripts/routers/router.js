@@ -13,6 +13,7 @@ App.Router = Backbone.Router.extend({
     'holidays': [App.TeamRoles.guest, App.TeamRoles.member, App.TeamRoles.manager, App.TeamRoles.admin],
     'teams': [App.TeamRoles.admin],
     'users': [App.TeamRoles.admin],
+    'notifications': [App.TeamRoles.admin]
   },
 
   routes: {
@@ -21,6 +22,7 @@ App.Router = Backbone.Router.extend({
     'holidays':   'holidays',
     'teams':      'teams',
     'users':      'users',
+    'notifications': 'notifications'
   },
 
   dashboard: function() {
@@ -131,6 +133,30 @@ App.Router = Backbone.Router.extend({
       .then(function() {
           App.users.render();
       });
+  },
+
+  notifications: function() {
+    var notifications = new App.Collections.Notifications();
+    var teams = new App.Collections.Teams();
+    var notification_teams = new App.Collections.NotificationTeams();
+
+    App.notifications = new App.Views.Notifications({
+      'notifications': notifications,
+      'teams': teams,
+      'notification_teams': notification_teams
+    });
+
+    notifications.fetch()
+        .then(function() {
+          return teams.fetch();
+        })
+        .then(function() {
+          return notification_teams.fetch();
+        })
+      .then(function() {
+          App.notifications.render();
+        });
+
   },
 
   authorize: function(name) {

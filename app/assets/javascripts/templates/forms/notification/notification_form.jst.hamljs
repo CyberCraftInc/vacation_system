@@ -1,0 +1,20 @@
+.form{role:'form'}
+  .form-group
+    .input-group
+      .input-group-addon Notification Type:
+      %input.form-control{name:'notification_type', type:'text'}
+
+  .form-group
+    .input-group
+      .input-group-addon Notification Period:
+      %input.form-control{name:'timer_days', type:'text'}
+
+  .form-group
+    .input-group
+      %p Notification Teams:
+      %br/
+      .btn-group{data-toggle:'buttons'}
+        :each team in this.teams.models
+          %label.btn.btn-default.active
+            %input{type:'checkbox',name:'teams',value:team.attributes.id,checked:'checked'}
+            #{team.attributes.name}

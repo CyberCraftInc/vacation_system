@@ -3,6 +3,7 @@ App.Views.BootstrapModal = Backbone.View.extend({
   className: 'modal',
 
   initialize: function(options) {
+    this.teams = options.teams;
     this.options = _.extend({
       'content': 'Put your content here',
       'buttons': this.defaultButtons(),

@@ -31,6 +31,11 @@ Rails.application.routes.draw do
             defaults: { format: :json } do
   end
 
+  resources :notification_teams,
+            only: [:index, :create, :destroy],
+            defaults: { format: :json } do
+  end
+
   resources :holidays,
             only: [:index, :create, :update, :destroy],
             defaults: { format: :json }

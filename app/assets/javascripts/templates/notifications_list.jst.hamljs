@@ -1,0 +1,6 @@
+.panel.panel-primary
+  .panel-heading Notifications
+  .panel-body
+    .usersTableToolbar
+      %button.btn.btn-primary{name:'add'} Add New Notification
+    %table.table.table-condesed.users

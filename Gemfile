@@ -14,12 +14,14 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.0'
   gem 'factory_girl_rails', '~> 4.5'
   gem 'pry-byebug'
+  gem 'whenever', :require => false
 end
 
 group :development do
   gem 'brice',          require: false
   gem 'hirb',           require: false
   gem 'awesome_print',  require: false
+  gem 'bullet'
 end
 
 group :test do

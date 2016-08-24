@@ -3,10 +3,19 @@ require File.join(Rails.root, 'lib', 'services', 'appraisal_notification')
 
 class Notification < ActiveRecord::Base
   CATEGORIES = ['Birthday email notification', 'Appraisal Notification'].freeze
-  has_and_belongs_to_many :teams,
-                          association_foreign_key: 'team_id',
-                          class_name: 'Team',
-                          join_table: 'notifications_teams'
+  has_many  :notification_teams, dependent: :destroy
+  has_many  :teams, through: :notification_teams
+
+  def as_json(options = {})
+    options[:only] = [
+        :id,
+        :notification_type,
+        :timer_days
+    ]
+
+    super options
+  end
+
   def self.check_reminder
     type = notification.notification_type
     Notification.all.each do |notification|

@@ -23,3 +23,13 @@
     .input-group
       .input-group-addon Date of Employment:
       %input.form-control{name:'employment_date', type:'text'}
+
+  .form-group
+     .input-group
+       .input-group-addon Date of Appraisal:
+       %input.form-control{name:'appraisal_date', type:'text'}
+
+  .form-group
+     .input-group
+       .input-group-addon Appraisal period:
+       %input.form-control{name:'appraisal_period', type:'text'}
