@@ -1,0 +1,9 @@
+#!/bin/bash
+
+DOCKER_PATH=/usr/src/app/.docker
+
+mkdir -p $DOCKER_PATH/heroku
+
+cp -R /root/. $DOCKER_PATH/heroku
+
+chown -R $CURRENT_USER_UID:$CURRENT_USER_GID $DOCKER_PATH/heroku

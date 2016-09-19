@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DOCKER_PATH=/usr/src/app/.docker
+
+mkdir -p $DOCKER_PATH/dev
+mkdir -p $DOCKER_PATH/mysql/data
+mkdir -p $DOCKER_PATH/ruby
+mkdir -p $DOCKER_PATH/test
+
+touch $DOCKER_PATH/dev/.bash_history
+touch $DOCKER_PATH/test/.bash_history
+
+cp -R /usr/local/bundle $DOCKER_PATH/ruby/
+cp -R /root/.gem $DOCKER_PATH/ruby/
+cp -R /usr/local/lib/ruby/gems $DOCKER_PATH/ruby/
+
+chown -R $CURRENT_USER_UID:$CURRENT_USER_GID $DOCKER_PATH

@@ -1,36 +1,67 @@
 version: '2'
 services:
-  dev:
+  bootstrap-heroku:
+    image: eleidan/heroku:jessie
+    env_file: .env
+    volumes:
+      - .:/usr/src/app
+    command: [/usr/src/app/.docker/bootstrap_heroku]
+
+  bootstrap:
+    image: vacation_system
+    env_file: .env
+    volumes:
+      - .:/usr/src/app
+    command: [/usr/src/app/.docker/bootstrap]
+
+  core:
     build: .
+    image: vacation_system
+    volumes:
+      - .:/usr/src/app
+      - .docker/ruby/bundle:/usr/local/bundle
+      - .docker/ruby/.gem:/root/.gem
+      - .docker/ruby/gems:/usr/local/lib/ruby/gems
+
+  dev:
+    extends:
+      service: core
+    image: vacation_system
     links:
       - db
-    volumes:
-      - .:/usr/src/app
     environment:
       - RAILS_ENV=development
+      - SERVICE_NAME=development@cybercraft-vacation-system
+    volumes:
+      - .docker/dev/.bash_history:/root/.bash_history
+    command: [rails, s, -b, 0.0.0.0]
 
   test:
-    build: .
-    volumes:
-      - .:/usr/src/app
+    extends:
+      service: core
+    image: vacation_system
     links:
       - db
     environment:
       - RAILS_ENV=test
+      - SERVICE_NAME=test@cybercraft-vacation-system
+    volumes:
+      - .docker/test/.bash_history:/root/.bash_history
     command: [rspec]
 
   db:
     image: mysql:5.7.13
     env_file: .env
     volumes:
-      - .container/mysql/data:/var/lib/mysql
-      - .container/mysql:/usr/var/dump
+      - .docker/mysql/data:/var/lib/mysql
+      - .docker/mysql:/usr/var/dump
     environment:
       - MYSQL_ROOT_PASSWORD=$DATABASE_PASS
+
 
   heroku:
     image: eleidan/heroku:jessie
     env_file: .env
     volumes:
       - .:/usr/src/app
-      - .container/heroku:/root
+      - .docker/heroku:/root
