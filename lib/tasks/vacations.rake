@@ -1,8 +1,8 @@
 namespace :vacations do
   desc 'Calculate all the reported vacations for each user till 2015-12-31'
   task annual_statistic: :environment do
-    # till_date = Time.zone.today
-    till_date = Date.new(2016, 7, 31)
+    till_date = Time.zone.today
+    # till_date = Date.new(2016, 8, 31)
     puts "Annual statistics till #{till_date} (including last day)"
 
     line  = format('%-20s', 'User,')
@@ -21,7 +21,6 @@ namespace :vacations do
         .where.not(status: [VacationRequest.statuses[:cancelled],
                             VacationRequest.statuses[:declined]])
         .where(kind: VacationRequest.kinds[:planned])
-        # .where.not(status: [VacationRequest.statuses[:cancelled],
 
       reported_days = vacations.inject(0) { |a, e| a + e.duration(holidays) }
       accumulated_days = user.accumulated_days('planned')
