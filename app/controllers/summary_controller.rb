@@ -5,15 +5,12 @@ class SummaryController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    # result = VacationRequest.not_cancelled_declined
     result = Vacations.summary(Time.zone.today)
 
-    # render json: result
-    # render text: result.inspect
     render text: result
   end
 
-  # def start
+  # def till
   #   result = VacationRequest.not_cancelled_declined
   #
   #   render json: result
