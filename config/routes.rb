@@ -24,10 +24,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :summary,
+            only: [:index],
+            defaults: { format: :text }
+
   resources :team_roles,
             only: [:index, :create, :destroy],
-            defaults: { format: :json } do
-  end
+            defaults: { format: :json }
 
   resources :holidays,
             only: [:index, :create, :update, :destroy],

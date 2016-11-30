@@ -35,8 +35,8 @@ class User < ActiveRecord::Base
     super options
   end
 
-  def accumulated_days(kind)
-    days_since_employment * AvailableVacations::RATES[kind.to_sym]
+  def accumulated_days(kind, till_date = nil)
+    days_since_employment(till_date) * AvailableVacations::RATES[kind.to_sym]
   end
 
   def accumulated_days_of_all_types
@@ -48,9 +48,10 @@ class User < ActiveRecord::Base
     ]
   end
 
-  def days_since_employment
+  def days_since_employment(till_date = nil)
     return 0 if employment_date.nil?
-    Time.zone.today - employment_date + 1
+    till_date ||= Time.zone.today
+    till_date - employment_date + 1
   end
 
   def full_name
