@@ -3,81 +3,82 @@ describe('Team model', function() {
     this.model = new App.Models.Team();
   });
 
-  it('should be able to create its instance object', function() {
+  it('is able to create its instance object', function() {
     expect(this.model).toBeDefined();
   });
 
   describe('with Backbone.Validation mixin', function() {
-    it('should have .validate() method', function() {
+    it('has .validate() method', function() {
       expect(this.model.isValid).toBeDefined();
     });
 
-    it('should have .isValid() method', function() {
+    it('has .isValid() method', function() {
       expect(this.model.isValid).toBeDefined();
     });
 
-    it('should have .preValidate() method', function() {
+    it('has .preValidate() method', function() {
       expect(this.model.preValidate).toBeDefined();
     });
   });
 
   describe('as a brand new object', function() {
-    it('should have its .name attribute to be empty string', function() {
+    it('has its .name attribute set to empty string', function() {
       expect(this.model.get('name')).toEqual('');
     });
 
-    it('should validate .name attribute with proper error message', function() {
+    it('validates .name attribute with proper error message', function() {
       var errors  = this.model.validate();
-
       expect(errors.name).toEqual('Name is required');
     });
 
-    it('should be invalid', function() {
+    it('is invalid', function() {
       var isValid = this.model.isValid(true);
       expect(isValid).toBeFalsy();
     });
   });
 
   describe('with invalid attributes,', function() {
-    describe('name="Ants"', function() {
+    describe('name="Oz"', function() {
       beforeEach(function() {
-        this.value = 'Ants';
-        this.model.set('name', this.value);
+        this.value = 'Oz';
+        this.attribute = 'name';
+        this.model.set(this.attribute, this.value);
       });
 
-      it('should have properly set attribute', function() {
-        expect(this.model.get('name')).toEqual(this.value);
+      it('sets attribute properly', function() {
+        expect(this.model.get(this.attribute)).toEqual(this.value);
       });
 
-      it('should validate attribute with proper error message', function() {
-        var errors  = this.model.validate();
-
-        expect(errors.name).toEqual('Name must be between 5 and 35 characters');
+      it('validates with proper error message', function() {
+        var errors = this.model.validate();
+        expect(errors[this.attribute]).toEqual('Name must be between 3 and 80 characters');
       });
 
-      it('should be invalid', function() {
+      it('is invalid', function() {
         var isValid = this.model.isValid(true);
         expect(isValid).toBeFalsy();
       });
     });
 
-    describe('name="SuperMegaIncrediblyTurboQuickAnts!!!"', function() {
+    describe('name is set to a very long string', function() {
       beforeEach(function() {
-        this.value = 'SuperMegaIncrediblyTurboQuickAnts!!!';
-        this.model.set('name', this.value);
+        this.value  = 'SuperMegaIncrediblyTurboQuickAnts!!!';
+        this.value += 'SuperMegaIncrediblyTurboQuickAnts!!!';
+        this.value += 'SuperMegaIncrediblyTurboQuickAnts!!!';
+        this.attribute = 'name';
+        this.model.set(this.attribute, this.value);
       });
 
-      it('should have properly set attribute', function() {
-        expect(this.model.get('name')).toEqual(this.value);
+      it('sets attribute properly', function() {
+        expect(this.model.get(this.attribute)).toEqual(this.value);
       });
 
-      it('should validate attribute with proper error message', function() {
+      it('validates with proper error message', function() {
         var errors  = this.model.validate();
-
-        expect(errors.name).toEqual('Name must be between 5 and 35 characters');
+        expect(errors[this.attribute]).toEqual('Name must be between 3 and 80 characters');
       });
 
-      it('should be invalid', function() {
+      it('is invalid', function() {
         var isValid = this.model.isValid(true);
         expect(isValid).toBeFalsy();
       });
@@ -85,23 +86,23 @@ describe('Team model', function() {
   });
 
   describe('with valid attributes,', function() {
-    describe('name="SuperAnts"', function() {
+    describe('name="Ant"', function() {
       beforeEach(function() {
-        this.value = 'SuperAnts';
-        this.model.set('name',this.value);
+        this.value = 'Ant';
+        this.attribute = 'name';
+        this.model.set(this.attribute, this.value);
       });
 
-      it('should have properly set attribute', function() {
-        expect(this.model.get('name')).toEqual(this.value);
+      it('sets attribute properly', function() {
+        expect(this.model.get(this.attribute)).toEqual(this.value);
       });
 
-      it('should validate attribute without any error messages', function() {
+      it('validates without any error messages', function() {
         var errors  = this.model.validate();
-
         expect(errors).toBeUndefined();
       });
 
-      it('should be valid', function() {
+      it('is valid', function() {
         var isValid = this.model.isValid(true);
         expect(isValid).toBeTruthy();
       });

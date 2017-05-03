@@ -2,7 +2,7 @@ describe('Team view', function() {
   beforeEach(function() {
     // Stub User roles
     App.currentUserRoles = new App.Collections.CurrentUserRoles([
-      {'id':1, 'team_id':1, 'role':'admin'}
+      {'id':1, 'team_id':1, 'role':App.TeamRoles.admin}
     ]);
   });
 
@@ -12,7 +12,9 @@ describe('Team view', function() {
         'id':   1,
         'name': 'Angrybirds'
       });
+      console.log(new App.Views.Team({'model': this.model}));
       this.view = new App.Views.Team({'model': this.model});
+      console.log(this.view);
 
       setFixtures('<ul class="teams-list"></ul>');
       this.container = $('.teams-list');

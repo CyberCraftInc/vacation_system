@@ -79,7 +79,6 @@ describe('Holiday model', function() {
 
       it('validates with proper error message', function() {
         var errors  = this.model.validate();
-
         expect(errors[this.attribute]).toEqual('Description must be between 5 and 25 characters');
       });
 
@@ -147,7 +146,6 @@ describe('Holiday model', function() {
 
     it('validates without any error messages', function() {
       var errors  = this.model.validate();
-
       expect(errors).toBeUndefined();
     });
 
