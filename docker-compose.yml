@@ -1,53 +1,16 @@
 version: '2'
 services:
-  bootstrap-heroku:
-    image: eleidan/heroku:jessie
-    env_file: .env
-    volumes:
-      - .:/usr/src/app
-    command: [/usr/src/app/.docker/bootstrap_heroku]
-
-  bootstrap:
-    image: vacation_system
-    env_file: .env
-    volumes:
-      - .:/usr/src/app
-    command: [/usr/src/app/.docker/bootstrap]
-
-  core:
+  dev:
     build: .
     image: vacation_system
-    volumes:
-      - .:/usr/src/app
-      - .docker/ruby/bundle:/usr/local/bundle
-      - .docker/ruby/.gem:/root/.gem
-      - .docker/ruby/gems:/usr/local/lib/ruby/gems
-
-  dev:
-    extends:
-      service: core
-    image: vacation_system
     links:
       - db
-    environment:
-      - RAILS_ENV=development
-      - SERVICE_NAME=development@cybercraft-vacation-system
     volumes:
-      - .docker/dev/.bash_history:/root/.bash_history
-    command: [rails, s, -b, 0.0.0.0]
-
-  test:
-    extends:
-      service: core
-    image: vacation_system
-    links:
-      - db
+      - .:/home/phantom/app
+      - .docker/.bash_history:/home/phantom/.bash_history
+      - .docker/ruby/:/home/phantom/.rbenv/versions/2.2.3/
     environment:
-      - RAILS_ENV=test
-      - SERVICE_NAME=test@cybercraft-vacation-system
-    volumes:
-      - .docker/test/.bash_history:/root/.bash_history
-    command: [rspec]
+      - SERVICE_NAME=vacation_system
 
   db:
     image: mysql:5.7.13
@@ -58,10 +21,15 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$DATABASE_PASS
 
-
   heroku:
     image: eleidan/heroku:jessie
     env_file: .env
     volumes:
       - .:/usr/src/app
       - .docker/heroku:/root
+
+  bootstrap:
+    image: vacation_system
+    volumes:
+      - .:/home/phantom/app
+    command: [.docker/scripts/bootstrap]

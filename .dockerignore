@@ -1,3 +1,9 @@
-*
-!.docker/.bashrc
-!.docker/bootstrap
+.env
+.git
+.gitignore
+.docker/mysql
+.docker/ruby
+.docker/heroku
+log/
+tmp/
+docker-compose.yml

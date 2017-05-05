@@ -40,8 +40,7 @@ config/initializers/secret_token.rb
 /db/schema.rb
 
 # Docker related storage
-.docker
-!.docker/.bashrc
-!.docker/bootstrap
-!.docker/bootstrap_heroku
-
+.docker/mysql
+.docker/ruby
+.docker/heroku
+.docker/.bash_history

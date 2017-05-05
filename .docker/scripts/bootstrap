@@ -1,0 +1,31 @@
+#!/bin/sh
+# This script copies some files from Docker container
+# into the project directory. This prevents deleting those files
+# inside container by mounting some repo directories
+# from container to the host file system.
+# NOTE: While mounting host directories to container, host has higher priority.
+# NOTE: By default, Docker creates directories if they do not exist.
+
+################################################################################
+### Create storage for DB
+DEST_DIR=".docker/mysql"
+echo "Creating directory $DEST_DIR (host)" \
+  && mkdir -p $DEST_DIR \
+  && echo "Done."
+
+################################################################################
+### Create storage for Ruby gems and copy already installed gems
+SRC_DIR="$HOME/.rbenv/versions/${RBENV_VERSION}"
+DEST_DIR=".docker/ruby"
+echo "Copying all the files from $SRC_DIR (container) to $DEST_DIR (host)" \
+  && mkdir -p $DEST_DIR \
+  && cp -rnp $SRC_DIR/* $DEST_DIR \
+  && echo "Done."
+
+################################################################################
+### Use bash history from container
+SRC_DIR=$HOME
+DEST_DIR=".docker/"
+echo "Copying some files from $SRC_DIR (container) to $DEST_DIR (host)" \
+  && cp $SRC_DIR/.bash_history $DEST_DIR \
+  && echo "Done."
